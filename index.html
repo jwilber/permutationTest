@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Permutation Test: Visual Explanation</title>
+	<meta name="description" content="Scrollama Demo: Fixed CSS">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js'></script>
+	<link rel="stylesheet" href="permutationTest.css">
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/2.2.5/rough.min.js"></script>
+	<!-- <script src=assets/d3v4.js></script> -->
+	<stylesheet href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+	<style>
+    @import 'https://fonts.googleapis.com/css?family=Indie+Flower';
+
+	</style>
+ 
+
+
+</head>
+
+<body>
+	<section id='intro'>
+		<p class='intro__overline'>
+			May 2018 By <a href='https://twitter.com/jdwlbr'>Jared Wilber</a>
+		</p>
+		<h1 class='intro__hed'>The Permutation Test</h1>
+		<p class='intro__dek'>
+			A Visual Explanation of Statistical Testing
+		</p>
+		<p class='intro__bod'>
+			The permutation test is a nonparametric statistical test. 
+			Statistical tests, also known as hypothesis tests, are used in the design of experiments, and are used to measure the <i>effect(s)</i> of some <i>treatment(s)</i> on <i>experimental units</i>. For example, we may wish to determine whether or not drug A is better than drug B at curing some disease, or whether facebook using <span class="fb_highlight_one">#3b5998</span> instead of <span class="fb_highlight_two">#8b9dc3</span> for it's LIKE button results in a higher number of clicks. 
+			<br><br>
+			We determine the results of such experiments via a summary statistic known as a <a href="">p-value</a>. 
+			For many statistical tests, the calculation of the p-value is complicated and unintuituve. 
+			To calculate the p-value for a permutation test, we employ the following:
+<!-- 			<br><br>
+			$$ {J(\theta) =\frac{1}{2m}
+[\sum^m_{i=1}(h_\theta(x^{(i)}) - 
+y^{(i)})2 + \lambda\sum^n_{j=1}\theta^2_j} $$
+			<br><br>
+			Although this equation looks intimidating, as you'll soon see, it lends itself well to a visual explanation:
+
+		</p> -->
+
+	</section>
+	<section id='scroll'>
+		<div class='scroll__graphic'>
+			<div class='chart'>
+				<!-- <svg style="width:100%;height:100%;"> -->
+				<svg id='svg' style="width:100%;height:100%;"></svg>
+				<!-- <script>
+					
+				</script> -->
+				
+
+			</div>
+		</div>
+		<div class='scroll__text'>
+			<div class='step' data-step='1'>
+				<h2 class="subheader">Now You're a Llama Herder</h2>
+				<p>
+<!-- 				Alpaca farmers can make more money from higher quality fleece in their herd. A new drug has entered the market, claimg just that. We want to test to see if applying the drug to our herd has effects on fleece quality.
+ -->			
+ 				Let's imagine that you're a llama herder and would like to determine if a popular new llama diet increases the fleece quality of your llamas.
+
+ 				
+ 			</p>
+			</div>
+			<div class='step' data-step='2'>
+				<h2 class='subheader'>Hypotheses</h2>
+				<p>As a first step, we randomly assign half of our herd the new diet (the <i>treatment</i> group), and leave the other half with the old diet (the <i>control</i> group).
+				<br><br>
+				We want to determine if the difference between fleece quality among llamas in the treatment group and those in the control group is <a href="https://en.wikipedia.org/wiki/Statistical_significance"><i>statistically significant</i></a>.
+				We'll conduct our test according to the following hypothesis test schema:
+				$$ {H_0: \mu_{treatment} = \mu_{control}} $$
+				$$ {H_A: \mu_{treatment} \neq \mu_{control}} $$
+				That is, our null hypothesis dictates that the drug has no effect on fleece quality, while our alternative dictates that there is some effect.
+				<br><br>
+				</p>
+			</div>
+			<div class='step' data-step='3'>
+				<h2 class='subheader'>Test Statistic</h2>
+				<p>
+					<!-- Next, we take the mean value of coughs for each group, and then subtract the two values. We call this our <i>test statistic</i>, and it will serve as our method of comparison -->
+				Our <i>test statistic</i> is a numerical summary of our data that we'll use to  distinguish the null hypothesis from the alternative hypothesis. 
+				<br><br>
+				 To detect any differences between the groups, we'll use the difference of mean response values between our two groups:
+				$$ {T = \mu_{treatment} - \mu_{control}} $$
+				 </p>
+			</div>
+			<div class='step' data-step='4'>
+				<h2 class='subheader'>The Reason for 'Permutation'</h2>
+				<p> The next step is where the test gets its name.
+				We permute our data randomly across treatment assignments, then
+				recalculate our assignment.
+
+				$$ { k! = (k - 1)/k! } $$
+
+				The logic behind this is intuitive: because we're operating assuming
+				our null hypothesis is true (that is, that the drug makes no difference),
+				shuffling our data should have no effect on the expected outcome.  </p>
+			</div>
+			<div class='step' data-step='5'>
+				<h2 class='subheader'>Create Test Statistic Distribution</h2>
+				<p> dots  </p>
+			</div>
+			<div class='step' data-step='6'>
+				<h2 class='subheader'>Is There An Effect?</h2>
+				<p> yeah, dude </p>
+			</div>
+			<div class='step' data-step='7'>
+				<h2 class='subheader'>Conclusion</h2>
+				<p> dots  </p>
+			</div>
+			<div class='step' data-step='8'>
+				<p> dots  </p>
+			</div>
+			<div class='step' data-step='9'>
+				<p> dots  </p>
+			</div>
+			<div class='step' data-step='10'>
+				<p> dots  </p>
+			</div>
+		</div>
+	</section>
+	<section id='outro'></section>
+	<div class='debug'></div>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/scrollama/1.3.0/scrollama.js'></script>
+	<!-- <script src=assets/scrollama.js></script> -->
+	<script>
+		var container = d3.select('#scroll');
+		var graphic = container.select('.scroll__graphic');
+		var chart = graphic.select('.chart');
+		var text = container.select('.scroll__text');
+		var step = text.selectAll('.step');
+
+		var scroller = scrollama();
+
+		// generic window resize listener event
+		function handleResize() {
+			// 1. update height of step elements
+			var stepHeight = Math.floor(window.innerHeight * 0.9); // was * .75
+			step.style('height', stepHeight + 'px');
+			// 2. update width/height of graphic element
+			var bodyWidth = d3.select('body').node().offsetWidth;
+			graphic
+				.style('width', bodyWidth + 'px')
+				.style('height', window.innerHeight + 'px');
+			var chartMargin = 32;
+			var textWidth = text.node().offsetWidth;
+			var chartWidth = graphic.node().offsetWidth - textWidth - chartMargin;
+			chart
+				.style('width', chartWidth + 'px')
+				.style('height', Math.floor(window.innerHeight / 1.2) + 'px');
+			// 3. tell scrollama to update new element dimensions
+			scroller.resize();
+		}
+
+		// scrollama event handlers
+		function handleStepEnter(response) {
+			// add color to current step only
+			step.classed('is-active', function (d, i) {
+				return i === response.index;
+			})
+
+			// console.log('response index:' + response.index)
+
+			if (response.index == 0) {
+				transitionZero()
+			} else if (response.index == 1) {
+				transitionOne()
+			} else if (response.index == 2) {
+				if (response.direction == 'up') {
+					console.log('going up bb')
+					transitionThreeUp()
+				} else {
+					transitionThree()
+				}
+			} else if (response.index == 3) {
+				transitionFour()
+			} else {
+				// console.log('undefined transition for response =' + response.index)
+			}
+		}
+		function handleContainerEnter(response) {
+			// response = { direction }
+			// sticky the graphic (old school)
+			graphic.classed('is-fixed', true);
+			graphic.classed('is-bottom', false);
+		}
+		function handleContainerExit(response) {
+			// response = { direction }
+			// un-sticky the graphic, and pin to top/bottom of container
+			graphic.classed('is-fixed', false);
+			graphic.classed('is-bottom', response.direction === 'down');
+		}
+
+		function init() {
+			// 1. force a resize on load to ensure proper dimensions are sent to scrollama
+			handleResize();
+			// 2. setup the scroller passing options
+			// this will also initialize trigger observations
+			// 3. bind scrollama event handlers (this can be chained like below)
+			scroller.setup({
+				container: '#scroll',
+				graphic: '.scroll__graphic',
+				text: '.scroll__text',
+				step: '.scroll__text .step',
+				debug: false,
+			})
+				.onStepEnter(handleStepEnter)
+				.onContainerEnter(handleContainerEnter)
+				.onContainerExit(handleContainerExit);
+			// setup resize event
+			window.addEventListener('resize', handleResize);
+		}
+		// kick things off
+		init();
+	</script>
+	<hr>
+	<script src="permutationTest.js"></script>
+</body>
+
+</html>
