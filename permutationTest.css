@@ -64,7 +64,7 @@ a:hover {
 #scroll {
 	position: relative;
 	/*border-top: 1px dashed #000;*/	
-	border-bottom: 1px dashed #000;
+	/*border-bottom: 1px dashed #000;*/
 }
 .scroll__graphic {
 	position: absolute;
@@ -113,7 +113,7 @@ a:hover {
 	width: 33%;
 }
 .step {
-	margin: 2rem auto;
+	margin: 10rem auto;
 	/*border: 1px solid #333;*/
 }
 .step.is-active {
@@ -121,14 +121,14 @@ a:hover {
 }
 
 .step.is-active p {
-	font-size: 1.15rem;
+	font-size: 1.2rem;
 	/*font-weight: bold;*/
 }
 
 .step p {
 	text-align: center;
 	padding: 1rem;
-	font-size: 1.15rem;
+	font-size: 1.2rem;
 }
 
 .fb_highlight_one {
