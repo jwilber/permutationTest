@@ -21,6 +21,15 @@ const svgD3 = d3.select('svg')
 const width = svgD3.node().getBoundingClientRect().width
 const height = svgD3.node().getBoundingClientRect().height
 
+const groupCentersX = {
+  trt: 800,
+  ctrl: 300
+};
+
+function nodeGroupPos(d) {
+  return d.index % 2 == 0 ? width / 8 : width / 1.5
+}
+
     const centPositions = {x: width / 2, y:height/3}
 
   const roleScale = d3.scaleOrdinal()
@@ -39,8 +48,8 @@ const height = svgD3.node().getBoundingClientRect().height
       .force('charge', manyBody)
       // .force('center', center)
       force.force('x', d3.forceX().strength(2).x( width/2))
-      force.force('y', d3.forceY().strength(1.5).y(height/3.4))
-      .force('collision', d3.forceCollide(d => 50))     
+      force.force('y', d3.forceY().strength(1.5).y(height/3))
+      .force('collision', d3.forceCollide(d => 30))     
       .alphaDecay(.3)
       .nodes(sampleData)
       .on('tick', changeNetwork)
@@ -50,6 +59,7 @@ const height = svgD3.node().getBoundingClientRect().height
       .enter()
       .append('g')
       .attr('class', 'dot')
+      .attr('group', (d,i) => i % 2 == 0 ? 'trt' : 'ctrl')
 
 
     function changeNetwork() {
@@ -83,18 +93,18 @@ const height = svgD3.node().getBoundingClientRect().height
     force.force('center', null)
     .force('collision', d3.forceCollide(d => 30))
     .alphaDecay(.2)
-    force.force('x', d3.forceX().strength(2).x( width/5))
-    force.force('y', d3.forceY().strength(1.5).y(300))
+    force.force('x', d3.forceX().strength(2).x( nodeGroupPos))
+    force.force('y', d3.forceY().strength(1.5).y(height/4.5))
     force.alpha(.5).restart();
   }
 
   function moveToCenter() {
     
     force.force('center', null)
-    .force('collision', d3.forceCollide(d => 40))
+    .force('collision', d3.forceCollide(d => 30))
     .alphaDecay(.16)
     force.force('x', d3.forceX().strength(2).x( width/2))
-    force.force('y', d3.forceY().strength(1.5).y(height/4))
+    force.force('y', d3.forceY().strength(1.5).y(height/3))
     force.alpha(.5).restart();
   }
 
@@ -221,7 +231,7 @@ function transitionOne() {
   // color based on treatment assignment
   d3.selectAll('.dot').select('path')
     .transition()
-    .style('fill', (d,i) => i<12 ? 'rgba(248,131,121, .15)' : 'rgba(131, 238, 248, .2')
+    .style('fill', (d,i) => d.index % 2 == 0 ? 'rgba(248,131,121, .15)' : 'rgba(131, 238, 248, .2')
 
   // position llamas in treatment groups
     moveNodes()
