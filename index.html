@@ -47,10 +47,6 @@
 			<div class='chart'>
 				<!-- <svg style="width:100%;height:100%;"> -->
 				<svg id='svg' style="width:100%;height:100%;"></svg>
-				<!-- <script>
-					
-				</script> -->
-				
 
 			</div>
 		</div>
@@ -192,9 +188,11 @@
 
 			// console.log('response index:' + response.index)
 
-			if (response.index == 0) {
-				transitionZero()
-			} else if (response.index == 1) {
+			if (response.index == 0 & response.direction == 'down') {
+				transitionZeroDown()
+			} else if (response.index == 0 & response.direction == 'up') {
+				transitionZeroUp()
+			}else if (response.index == 1 & response.direction == 'down') {
 				transitionOne()
 			} else if (response.index == 2) {
 				if (response.direction == 'up') {
@@ -245,7 +243,7 @@
 		init();
 	</script>
 	<hr>
-	<script src="permutationTest.js"></script>
+	<script src="perm2.js"></script>
 </body>
 
 </html>
