@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="permutationTest.css">
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/2.2.5/rough.min.js"></script>
+	<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 	<!-- <script src=assets/d3v4.js></script> -->
 	<stylesheet href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
 	<style>
@@ -39,14 +40,6 @@
 			For many statistical tests, the calculation of the p-value is complicated and unintuituve. 
 			To calculate the p-value for a permutation test, we employ the following:
 		</p>
-<!-- 			<br><br>
-			$$ {J(\theta) =\frac{1}{2m}
-[\sum^m_{i=1}(h_\theta(x^{(i)}) - 
-y^{(i)})2 + \lambda\sum^n_{j=1}\theta^2_j} $$
-			<br><br>
-			Although this equation looks intimidating, as you'll soon see, it lends itself well to a visual explanation:
-
-		</p> -->
 
 	</section>
 	<section id='scroll'>
@@ -65,8 +58,6 @@ y^{(i)})2 + \lambda\sum^n_{j=1}\theta^2_j} $$
 			<div class='step' data-step='1'>
 				<h2 class="subheader">Now You're a Llama Herder</h2>
 				<p>
-<!-- 				Alpaca farmers can make more money from higher quality fleece in their herd. A new drug has entered the market, claimg just that. We want to test to see if applying the drug to our herd has effects on fleece quality.
- -->			
  				You're a llama herder and would like to determine if a popular new llama diet increases the fleece quality of your llamas.<br><br>
  				In statistical testing, experiments are often structured in terms of a <a href="">null</a> and a <a href="">alternative</a> hypothesis.
  				We'll conduct our test with the following hypothesis schema<b>:</b>
@@ -80,16 +71,6 @@ y^{(i)})2 + \lambda\sum^n_{j=1}\theta^2_j} $$
  			</p>
 			</div>
 			<div class='step' data-step='2'>
-				<!-- <h2 class='subheader'>Hypotheses</h2>
-				<p>As a first step, we randomly assign half of our herd the new diet (the <i>treatment</i> group), and leave the other half with the old diet (the <i>control</i> group).
-				<br><br>
-				We want to determine if the difference between fleece quality among llamas in the treatment group and those in the control group is <a href="https://en.wikipedia.org/wiki/Statistical_significance"><i>statistically significant</i></a>.
-				We'll conduct our test according to the following hypothesis test schema:
-				$$ {H_0: \mu_{treatment} = \mu_{control}} $$
-				$$ {H_A: \mu_{treatment} \neq \mu_{control}} $$
-				That is, our null hypothesis dictates that the drug has no effect on fleece quality, while our alternative dictates that there is some effect.
-				<br><br>
-				</p> -->
 				<h2 class='subheader'>Randomization</h2>
 				<p>Before carrying out our experiment, we must randomly assign half of our llamas to the new diet. <br><br>
 				We say that the llamas receiving the new diet belong to the <i>treatment</i> group. The others to the <i>control</i> group. The assignment of a llama to a given diet is known as its <i>treatment assignment</i>.
@@ -100,7 +81,6 @@ y^{(i)})2 + \lambda\sum^n_{j=1}\theta^2_j} $$
 			<div class='step' data-step='3'>
 				<h2 class='subheader'>Test Statistic</h2>
 				<p>
-					<!-- Next, we take the mean value of coughs for each group, and then subtract the two values. We call this our <i>test statistic</i>, and it will serve as our method of comparison -->
 				Our <i>test statistic</i> is a numerical summary of our data that we'll use to  distinguish the null hypothesis from the alternative hypothesis. 
 				<br><br>
 				 Each llama has its own value for fleece quality, or "<i>response</i>" value. To detect any differences between the groups, we need a test statistic. Permutation tests allow us to use any value we want for our test statistic. 
@@ -113,15 +93,6 @@ y^{(i)})2 + \lambda\sum^n_{j=1}\theta^2_j} $$
 			</div>
 			<div class='step' data-step='4'>
 				<h2 class='subheader'>The 'P' in  'Permutation Test'</h2>
-				<!-- <p> The next step is where the test gets its name.
-				We permute our data randomly across treatment assignments, then
-				recalculate our assignment.
-
-				$$ { k! = (k - 1)/k! } $$
-
-				The logic behind this is intuitive: because we're operating assuming
-				our null hypothesis is true (that is, that the drug makes no difference),
-				shuffling our data should have no effect on the expected outcome.  </p> -->
 				<p>
 					This is the most important step in the test, as well as its namesake.
 					<br><br>
