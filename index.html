@@ -194,15 +194,11 @@
 				transitionZeroUp()
 			}else if (response.index == 1 & response.direction == 'down') {
 				transitionOne()
-			} else if (response.index == 2) {
-				if (response.direction == 'up') {
-					console.log('going up bb')
-					transitionThreeUp()
-				} else {
-					transitionThree()
-				}
-			} else if (response.index == 3) {
-				transitionFour()
+			} else if (response.index == 1 & response.direction == 'up') {
+				transitionOne()
+			} else if (response.index == 2 & response.direction == 'down') {
+				transitionTwoDown()
+				console.log('ea')
 			} else {
 				// console.log('undefined transition for response =' + response.index)
 			}

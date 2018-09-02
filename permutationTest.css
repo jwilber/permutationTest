@@ -144,7 +144,7 @@ a:hover {
 .groupTitle { 
   text-decoration-line: underline;
   text-decoration-style: dotted;
-  font-weight: 900;
+  font-weight: 100;
   font-size: 1.3rem;
   font-family: "Indie Flower";
 }

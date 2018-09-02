@@ -21,96 +21,110 @@ const svgD3 = d3.select('svg')
 const width = svgD3.node().getBoundingClientRect().width
 const height = svgD3.node().getBoundingClientRect().height
 
-const groupCentersX = {
-  trt: 800,
-  ctrl: 300
-};
+const trtCenter = width / 5;
+const cntrlCenter = width / 1.5;
 
-function nodeGroupPos(d) {
-  return d.index % 2 == 0 ? width / 8 : width / 1.5
+function nodeTreatmentPos(d) {
+  return d.index % 2 == 0 ? trtCenter : cntrlCenter;
 }
 
-    const centPositions = {x: width / 2, y:height/3}
+  const centPositions = {x: width / 2, y:height/3}
 
   const roleScale = d3.scaleOrdinal()
       .range(['coral', 'olive', 'skyblue']);
     
-    let sampleData = d3.range(24).map((d,i) => ({r: 40 - i * 0.5}))
-    
-    // set params for force layout
+  let sampleData = d3.range(24).map((d,i) => ({r: 40 - i * 0.5}))
+  
+  // set params for force layout
 
-    const center = d3.forceCenter().x(centPositions.x).y(centPositions.y)
+  const center = d3.forceCenter().x(centPositions.x).y(centPositions.y)
 
-    const manyBody = d3.forceManyBody().strength(2)
-        
-    // define force
-    let force = d3.forceSimulation()
-      .force('charge', manyBody)
-      // .force('center', center)
-      force.force('x', d3.forceX().strength(2).x( width/2))
-      force.force('y', d3.forceY().strength(1.5).y(height/3))
-      .force('collision', d3.forceCollide(d => 30))     
-      .alphaDecay(.3)
-      .nodes(sampleData)
-      .on('tick', changeNetwork)
+  const manyBody = d3.forceManyBody().strength(10)
+      
+  // define force
+  let force = d3.forceSimulation()
+    .force('charge', manyBody)
+    // .force('center', center)
+    force.force('x', d3.forceX().strength(1.5).x( width/2))
+    force.force('y', d3.forceY().strength(5.5).y(height/3))
+    .force('collision', d3.forceCollide(d => 45))     
+    .alphaDecay(.3)
+    .nodes(sampleData)
+    .on('tick', changeNetwork)
 
-    let dots = svgD3.selectAll('.dot')
-      .data(sampleData)
-      .enter()
-      .append('g')
-      .attr('class', 'dot')
-      .attr('group', (d,i) => i % 2 == 0 ? 'trt' : 'ctrl')
+  let dots = svgD3.selectAll('.dot')
+    .data(sampleData)
+    .enter()
+    .append('g')
+    .attr('class', 'dot')
+    .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false')
 
 
-    function changeNetwork() {
-      d3.selectAll('g.dot')
-        .attr('transform', d=> `translate(${d.x}, ${d.y})`)
-    }
-    
-    function loadRoughsvgD3(svgD3Data) {
-    d3.selectAll('.dot').each(function(d,i) {
-      let gParent = this
-      d3.select(svgD3Data).selectAll('path').each(function() {
-        gParent.appendChild( rc.path(d3.select(this).node().getAttribute('d'), {
-        stroke: 'black',
-        fillStyle: 'hachure',
-        strokeWidth: 0.25,
-        fill: 'rgba(131,131,131, .15)',
-        roughness: 0.85,
-          })
-        )
-      })
+  function changeNetwork() {
+    d3.selectAll('g.dot')
+      .attr('transform', d=> `translate(${d.x}, ${d.y})`)
+  }
+  
+  function loadRoughsvgD3(svgD3Data) {
+  d3.selectAll('.dot').each(function(d,i) {
+    let gParent = this
+    d3.select(svgD3Data).selectAll('path').each(function() {
+      gParent.appendChild( rc.path(d3.select(this).node().getAttribute('d'), {
+      stroke: 'black',
+      fillStyle: 'hachure',
+      strokeWidth: 0.25,
+      fill: 'rgba(131,131,131, .15)',
+      roughness: 0.85,
+        })
+      )
     })
-  }
+  })
+}
 
-  var rc = rough.svg(svg);
+var rc = rough.svg(svg);
 
-  d3.html("noun_28240_cc.svg", loadRoughsvgD3) 
+d3.html("noun_28240_cc.svg", loadRoughsvgD3) 
 
 
-  function moveNodes() {
+function moveNodes() {
 
-    force.force('center', null)
-    .force('collision', d3.forceCollide(d => 30))
-    .alphaDecay(.2)
-    force.force('x', d3.forceX().strength(2).x( nodeGroupPos))
-    force.force('y', d3.forceY().strength(1.5).y(height/4.5))
-    force.alpha(.5).restart();
-  }
+  force.force('center', null)
+  .force('collision', d3.forceCollide(d => 33))
+  .alphaDecay(.08)
+  force.force('x', d3.forceX().strength(2).x(nodeTreatmentPos))
+  force.force('y', d3.forceY().strength(1.5).y(height / 3.5))
+  force.alpha(.4).restart();
+}
 
-  function moveToCenter() {
-    
-    force.force('center', null)
-    .force('collision', d3.forceCollide(d => 30))
-    .alphaDecay(.16)
-    force.force('x', d3.forceX().strength(2).x( width/2))
-    force.force('y', d3.forceY().strength(1.5).y(height/3))
-    force.alpha(.5).restart();
-  }
+function moveToCenter() {
+  
+  force.force('center', null)
+  .force('collision', d3.forceCollide(d => 30))
+  // .velocityDecay(0.7)
+  force.force('x', d3.forceX().strength(1.5).x( width / 2))
+  // force.force('y', d3.forceY().strength(1.5).y(height / 3))
+  force.alpha(.7).restart();
+}
 
+
+function nodeRandomPos(d) {
+  return d.index  <= 12 ? trtCenter : cntrlCenter;
+}
+
+
+function moveRandomly() {
+
+  // for each group, randomly select 4 llamas, and swap their role.
+  force.force('center', null)
+  .force('collision', d3.forceCollide(d => 33))
+  force.velocityDecay(.7)
+  force.force('x', d3.forceX().strength(2.5).x(nodeRandomPos))
+  // force.force('y', d3.forceY().strength(1.5).y(height / 3.5))
+  force.alpha(.4).restart();
+}
 
   
-// const margin = 20;
+const margin = 20;
 
 // const xScale = d3.scaleLinear().domain([0, 8]).range([margin, width - margin])
 // const yScale = xScale.copy().range([height - margin, margin])
@@ -120,24 +134,25 @@ function nodeGroupPos(d) {
 // const xAxis = d3.axisBottom(xScale).ticks(4)
 // const yAxis = d3.axisLeft(yScale).ticks(4)
 
-// // group titles (transition 1 -> beyond)
-// const treatmentTitleCenter = width / 4.5
-// const controlTitleCenter =   width / 1.39
-// let treatmentTitle = svgD3.append('text')
-//   .html('TREATMENT')
-//   .attr('x', treatmentTitleCenter)
-//   .attr('y', height / 9)
-//   .attr('class', 'groupTitle')
-//   // .style('fill', d3.rgb('coral').darker(2))
-//   .style('fill', 'black')
-//   .attr('visibility', 'hidden')
-// let controlTitle = svgD3.append('text')
-//   .html('CONTROL')
-//   .attr('x', controlTitleCenter)
-//   .attr('y', height / 9)
-//   .attr('class', 'groupTitle')
-//   .style('fill', 'black')
-//   .attr('visibility', 'hidden')
+// group titles (transition 1 -> beyond)
+const treatmentTitleCenter = trtCenter
+const controlTitleCenter =   cntrlCenter
+let treatmentTitle = svgD3.append('text')
+  .html('TREATMENT')
+  .attr('x', treatmentTitleCenter - 10)
+  .attr('y', margin)
+  .attr('class', 'groupTitle')
+  // .style('fill', d3.rgb('coral').darker(2))
+  .style('fill', 'black')
+  .attr('text-align', 'right')
+  .attr('visibility', 'hidden')
+let controlTitle = svgD3.append('text')
+  .html('CONTROL')
+  .attr('x', controlTitleCenter)
+  .attr('y', margin)
+  .attr('class', 'groupTitle')
+  .style('fill', 'black')
+  .attr('visibility', 'hidden')
 
 
 
@@ -207,7 +222,7 @@ function transitionZeroDown() {
   // initial position for dots
 
   d3.selectAll('.groupTitle').each(function() {
-    d3.select(this).transition().delay(1500).attr('visibility', 'hidden')
+    d3.select(this).transition().delay(100).attr('visibility', 'hidden')
   })
 }
 
@@ -215,12 +230,12 @@ function transitionZeroUp() {
   // initial position for dots
   moveToCenter()
   d3.selectAll('.groupTitle').each(function() {
-    d3.select(this).transition().delay(1500).attr('visibility', 'hidden')
+    d3.select(this).transition().delay(100).attr('visibility', 'hidden')
   })
 
   d3.selectAll('.dot').select('path')
     .transition()
-    .style('fill', 'rgba(131, 131, 131, .15')
+    .style('fill', 'rgba(131, 131, 131, .05')
 }
 
 // // create array to store positions
@@ -237,8 +252,12 @@ function transitionOne() {
     moveNodes()
   // // show titles
   d3.selectAll('.groupTitle').each(function() {
-    d3.select(this).transition().delay(1500).attr('visibility', 'visible')
+    d3.select(this).transition().delay(800).attr('visibility', 'visible')
   })
+}
+
+function transitionTwoDown() {
+  moveRandomly()
 }
 
 
@@ -361,7 +380,7 @@ function transitionOne() {
 
 
 
-// // annot
+// annot
 // const annotations = [
 //         {
 //           //below in makeAnnotations has type set to d3.annotationLabel
@@ -374,10 +393,10 @@ function transitionOne() {
 //           },
 //           //settings for the subject, in this case the circle radius
 //           subject: {
-//             radius: 100
+//             radius: 146
 //           },
-//           x: (width/2), //
-//           y: (height/2), //
+//           x: trtCenter + 5, //
+//           y: (height / 3.4), //
 //           dy: 0, // y-pos for text
 //           dx: 102 // x-pos for text
 //         },
@@ -394,8 +413,8 @@ function transitionOne() {
 //           subject: {
 //             radius: 20
 //           },
-//           x: 40,
-//           y: 140,
+//           x: cntrlCenter,
+//           y: (height / 3.4),
 //           dy: -60,
 //           dx: 30
 //         }].map(function(d){ d.color = "darkseagreen"; return d})
