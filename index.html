@@ -198,9 +198,10 @@
 				transitionOne()
 			} else if (response.index == 2 & response.direction == 'down') {
 				transitionTwoDown()
-				console.log('ea')
-			} else {
-				// console.log('undefined transition for response =' + response.index)
+			} else if (response.index == 2 & response.direction == 'up') {
+				transitionTwoUp()
+			} else if (response.index == 3 & response.direction == 'down') {
+				transitionThreeDown()
 			}
 		}
 		function handleContainerEnter(response) {
@@ -239,7 +240,7 @@
 		init();
 	</script>
 	<hr>
-	<script src="perm2.js"></script>
+	<script src="perm3.js"></script>
 </body>
 
 </html>
