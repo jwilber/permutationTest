@@ -280,13 +280,16 @@ function transitionThreeDown() {
     .attr('class', 'responseValue')
     .attr('r', 0)
     .attr('cx', 20)
-    .attr('cy', 60)
+    .attr('cy', 62)
+    .style('opacity', .2)
     .transition()
     .duration(1000)
-    .attr('r', d => d.r)
-    .attr('fill' ,'rgba(221, 160, 221, .5)')
+    .attr('r', d => 6)
+    .attr('fill', 'rgba(255, 192, 203, .1')
+  d3.selectAll('circle.responseValue')
+    .attr('stroke-width', .3)
     .attr('stroke', 'black')
-    .attr('stroke-width', .1)
+
 }
 
 
