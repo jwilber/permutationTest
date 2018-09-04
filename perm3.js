@@ -265,6 +265,7 @@ function transitionTwoDown() {
 }
 
 function transitionTwoUp() {
+  d3.selectAll('.responseText').remove();
   d3.selectAll('.responseValue')
     .transition()
     .duration(1000)
@@ -283,10 +284,26 @@ function transitionThreeDown() {
     .attr('cy', 60)
     .transition()
     .duration(1000)
-    .attr('r', d => d.r)
-    .attr('fill' ,'rgba(221, 160, 221, .5)')
+    .attr('r', d => 6)
+    .attr('fill' ,'pink')
     .attr('stroke', 'black')
     .attr('stroke-width', .1)
+
+  dots.append('text')
+    .attr('class', 'responseText')
+    .html(() => Math.round(Math.random() * 10))
+    .attr('fill', 'black')
+    .style('font-size', '.7rem')
+    .attr('x', 17)
+    .attr('y', 64)
+    .attr('visibility', 'hidden')
+    .raise()
+
+  d3.selectAll('.responseText')
+    .transition()
+    .delay(1000)
+    .attr('visibility', 'visible')
+    .raise()
 }
 
 
