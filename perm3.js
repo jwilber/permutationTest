@@ -281,7 +281,8 @@ function transitionThreeDown() {
     .attr('class', 'responseValue')
     .attr('r', 0)
     .attr('cx', 20)
-    .attr('cy', 60)
+    .attr('cy', 62)
+    .style('opacity', .2)
     .transition()
     .duration(1000)
     .attr('r', d => 6)
@@ -295,7 +296,7 @@ function transitionThreeDown() {
     .attr('fill', 'black')
     .style('font-size', '.7rem')
     .attr('x', 17)
-    .attr('y', 64)
+    .attr('y', 66)
     .attr('visibility', 'hidden')
     .raise()
 
@@ -304,6 +305,7 @@ function transitionThreeDown() {
     .delay(1000)
     .attr('visibility', 'visible')
     .raise()
+
 }
 
 
