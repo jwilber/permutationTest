@@ -34,7 +34,7 @@ function nodeTreatmentPos(d) {
       .range(['coral', 'olive', 'skyblue']);
     
   let sampleData = d3.range(24).map((d,i) => ({r: 40 - i * 0.5}));
-  let sampleResponse = d3.range(24).map((d,i) => ({r: d3.randomUniform(1, 5)()}));
+  let sampleResponse = d3.range(1).map((d,i) => ({r: d3.randomUniform(1, 5)()}));
   
   // set params for force layout
 
@@ -45,7 +45,6 @@ function nodeTreatmentPos(d) {
 
   let force = d3.forceSimulation()
     .force('charge', manyBody)
-    // .force('center', center)
     force.force('x', d3.forceX().strength(1.5).x( width/2))
     force.force('y', d3.forceY().strength(5.5).y(height/3))
     .force('collision', d3.forceCollide(d => 45))     
@@ -158,40 +157,40 @@ let controlTitle = svgD3.append('text')
 
 // // mu titles
 // // Titles for algebra in transition four
-// const controlMuCenter = (width / 2) + 100
-// const treatmentMuCenter =   (width / 2) - 100
-// const heightMuCenter = (height / 1.5)
+const controlMuCenter = (width / 2) + 100
+const treatmentMuCenter =   (width / 2) - 100
+const heightMuCenter = (height / 1.5)
 
-// let muTreatment = svgD3.append('text')
-//       .attr('x', treatmentMuCenter)
-//       .attr('y', heightMuCenter)
-//       .attr('class', 'muTreatment')
-//       .html('&mu;')
-//       .style('font-size', '2rem')
-//       .append('tspan')
-//         .text('treatment')
-//         .attr('class', 'muTreatment')
-//         .style('font-size', '.65rem')
-//         .style('font-family', 'Indie Flower')
-//         .attr('dx', '.05em')
-//         .attr('dy', '.5em')
+let muTreatment = svgD3.append('text')
+      .attr('x', treatmentMuCenter)
+      .attr('y', heightMuCenter)
+      .attr('class', 'muTreatment')
+      .html('&mu;')
+      .style('font-size', '2rem')
+      .append('tspan')
+        .text('treatment')
+        .attr('class', 'muTreatment')
+        .style('font-size', '.65rem')
+        .style('font-family', 'Indie Flower')
+        .attr('dx', '.05em')
+        .attr('dy', '.5em')
 
-// let muControl = svgD3.append('text')
-//       .attr('x', controlMuCenter)
-//       .attr('y', heightMuCenter)
-//       .attr('class', 'muControl')
-//       .html('&mu;')
-//       .style('font-size', '2rem')
-//       .append('tspan')
-//         .text('control')
-//         .attr('class', 'muControl')
-//         .style('font-size', '.65rem')
-//         .style('font-family', 'Indie Flower')
-//         .attr('dx', '.05em')
-//         .attr('dy', '.5em')
+let muControl = svgD3.append('text')
+      .attr('x', controlMuCenter)
+      .attr('y', heightMuCenter)
+      .attr('class', 'muControl')
+      .html('&mu;')
+      .style('font-size', '2rem')
+      .append('tspan')
+        .text('control')
+        .attr('class', 'muControl')
+        .style('font-size', '.65rem')
+        .style('font-family', 'Indie Flower')
+        .attr('dx', '.05em')
+        .attr('dy', '.5em')
 
-// d3.selectAll('.muTreatment').attr('visibility', 'hidden')
-// d3.selectAll('.muControl').attr('visibility', 'hidden')
+d3.selectAll('.muTreatment').attr('visibility', 'hidden')
+d3.selectAll('.muControl').attr('visibility', 'hidden')
 
 
 
@@ -238,10 +237,6 @@ function transitionZeroUp() {
     .style('fill', 'rgba(131, 131, 131, .05')
 }
 
-// // create array to store positions
-// // we'll use this later when shuffling assignment groups
-// let positionArray = [];
-
 function transitionOne() {
   // color based on treatment assignment
   d3.selectAll('.dot').select('path')
@@ -265,78 +260,73 @@ function transitionTwoDown() {
 }
 
 function transitionTwoUp() {
-  d3.selectAll('.responseText').remove();
-  d3.selectAll('.responseValue')
+  d3.selectAll('text.responseText').remove();
+  d3.selectAll('circle.responseValue')
     .transition()
     .duration(1000)
     .attr('r', 0)
     .remove()
+
+  d3.selectAll('g.responseStuff')
+    .transition().duration(1100).remove()
 }
 
 function transitionThreeDown() {
-  dots.selectAll('circle')
+  let respGroups = dots.selectAll('g.responseStuff')
     .data(sampleResponse)
     .enter()
-    .append('circle')
+    .append('g')
+    .attr('class', 'responseStuff')
+    .attr('ggg', function() {
+      return getTranslation(d3.select(this.parentNode).attr('transform'))[0] < (width / 2)
+    })
+
+  respGroups.append('circle')
     .attr('class', 'responseValue')
+    // .attr('respGroup', ())
     .attr('r', 0)
     .attr('cx', 20)
     .attr('cy', 62)
-    .style('opacity', .2)
+    .style('opacity', .85)
     .transition()
     .duration(1000)
-    .attr('r', d => 6)
+    .attr('r', d => 6.4)
     .attr('fill' ,'pink')
     .attr('stroke', 'black')
     .attr('stroke-width', .1)
 
-  dots.append('text')
+  respGroups.append('text')
     .attr('class', 'responseText')
-    .html(() => Math.round(Math.random() * 10))
+    .html(() => Math.round(Math.random() * 9))
     .attr('fill', 'black')
-    .style('font-size', '.7rem')
-    .attr('x', 17)
-    .attr('y', 66)
+    .style('font-size', '.66rem')
+    .attr('x', 17.3)
+    .attr('y', 66.2)
     .attr('visibility', 'hidden')
     .raise()
 
   d3.selectAll('.responseText')
     .transition()
     .delay(1000)
-    .attr('visibility', 'visible')
-    .raise()
+    .attr('visibility', 'visible');
+
+
+  d3.selectAll('g.responseStuff')
+    .transition()
+    // .ease(d3.easeBack)
+    .delay(1500)
+    .duration(2000)
+    .attr('transform', function(d,i) {
+      let transX = getTranslation(d3.select(this.parentNode).attr('transform'))[0]
+      let transY = getTranslation(d3.select(this.parentNode).attr('transform'))[1]
+      // let groupAsn = d3.select(this.parentNode).attr('group')
+      let groupAsn = d3.select(this).attr('ggg')
+      console.log(groupAsn)
+      let currentLlamaX = groupAsn == 'true' ? treatmentMuCenter : controlMuCenter
+      return 'translate(' + (currentLlamaX - transX) + ',' + (heightMuCenter - transY) + ')'
+    })
 
 }
-
-
-
-// function transitionThree() {
-//   // randomly shuffle treatment group assignment
-//   dot.each(function(d,i) {
-//     shufflePosition = randomChoice(positionArray)
-//     d3.select(this)
-//       .attr('group', () => shufflePosition[0] > (width / 2) ? 'control' : 'treatment')
-//       .transition()
-//       .delay((d,i) => (i+1)*300)
-//       .duration(2000)
-//         .attr('transform', function() {
-//             return 'translate(' + shufflePosition[0] + ',' + shufflePosition[1] + ')' 
-//         })
-//   })
-
-
-//   // SCROLLING-UP STUFF BELOW
-//   // ------------------------
-//   // remove llamaText if scrolling up
-//   d3.selectAll('.llamaText').each(function() {
-//     d3.select(this).transition().delay(1500).attr('visibility', 'hidden')
-//   })
-
-//   // Hide mu titles if already scrolled down
-//   d3.selectAll('.muTreatment').attr('visibility', 'hidden')
-//   d3.selectAll('.muControl').attr('visibility', 'hidden')
-
-// }
 
 
 // function transitionThreeUp() {
@@ -401,94 +391,34 @@ function transitionThreeDown() {
 // }
 
 
-// var rc = rough.svg(svg);
+function circleGen() {
+  //set defaults
+  var r = function(d) { return d.radius; },
+      x = function(d) { return d.x; },
+      y = function(d) { return d.y; };
+  
+  //returned function to generate circle path
+  function circle(d) {
+    var cx = d3.functor(x).call(this, d),
+        cy = d3.functor(y).call(this, d),
+        myr = d3.functor(r).call(this, d);
 
-// // load llama svg icons
-// d3.html("noun_28240_cc.svg", loadRoughSVG)
-
-
-
-
-// function loadRoughSVG(svgData) {
-//   d3.selectAll('.dot').each(function(d,i) {
-//     let gParent = this
-//     d3.select(svgData).selectAll('path').each(function() {
-//       console.log(i)
-//       gParent.appendChild( rc.path(d3.select(this).node().getAttribute('d'), {
-//       stroke: 'black',
-//       fillStyle: 'hachure',
-//       strokeWidth: 0.25,
-//       fill: 'rgba(131, 131, 131, .05)',
-//       roughness: 0.85,
-//         })
-//       )
-//     })
-//   })
-// }
-
-
-
-// annot
-// const annotations = [
-//         {
-//           //below in makeAnnotations has type set to d3.annotationLabel
-//           //you can add this type value below to override that default
-//           type: d3.annotationCalloutCircle,
-//           note: {
-//             label: "Here's the text for 'label'",
-//             title: "This is the text for  'title'",
-//             wrap: 190 // how long label can be
-//           },
-//           //settings for the subject, in this case the circle radius
-//           subject: {
-//             radius: 146
-//           },
-//           x: trtCenter + 5, //
-//           y: (height / 3.4), //
-//           dy: 0, // y-pos for text
-//           dx: 102 // x-pos for text
-//         },
-//         {
-//           type: d3.annotationCalloutCircle,
-//           note: {
-//             label: "yep, that's smaller circle",
-//             title: "small",
-//             wrap: 90
-//           },
-//           connector: {
-//             end: "arrow" // 'dot' also available
-//           },
-//           subject: {
-//             radius: 20
-//           },
-//           x: cntrlCenter,
-//           y: (height / 3.4),
-//           dy: -60,
-//           dx: 30
-//         }].map(function(d){ d.color = "darkseagreen"; return d})
-
-//         const makeAnnotations = d3.annotation()
-//           .type(d3.annotationLabel)
-//           .annotations(annotations)
-
-//         d3.select("svg")
-//           .append("g")
-//           .attr("class", "annotation-group")
-//           .call(makeAnnotations)
-
-// d3.selectAll('.annotation-subject').select('path')
-//   .attr('visibility', 'hidden')
-      
-// d3.selectAll('.annotation-subject').each(function() {
-//     let gParent = this
-//     console.log(gParent)
-//     d3.select('svg').select('path.subject').each(function() {
-//       gParent.appendChild( rc.path(d3.select(this).node().getAttribute('d'), {
-//       stroke: 'black',
-//       fillStyle: 'hachure',
-//       strokeWidth: 0.55,
-//       roughness: 2.5,
-//         })
-//       )
-//     })
-//   })
+    return "M" + cx + "," + cy + " " +
+           "m" + -myr + ", 0 " +
+           "a" + myr + "," + myr + " 0 1,0 " + myr*2  + ",0 " +
+           "a" + myr + "," + myr + " 0 1,0 " + -myr*2 + ",0Z";
+  }
+  
+  //getter-setter methods
+  circle.r = function(value) {
+    if (!arguments.length) return r; r = value; return circle;
+  };  
+  circle.x = function(value) {
+    if (!arguments.length) return x; x = value; return circle;
+  };  
+  circle.y = function(value) {
+    if (!arguments.length) return y; y = value; return circle;
+  };
+  
+  return circle;
+}
