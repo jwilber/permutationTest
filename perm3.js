@@ -23,6 +23,7 @@ const height = svgD3.node().getBoundingClientRect().height
 
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
+const heightMuCenter = (height / 1.8)
 
 function nodeTreatmentPos(d) {
   return d.index % 2 == 0 ? trtCenter : cntrlCenter;
@@ -40,7 +41,7 @@ function nodeTreatmentPos(d) {
 
   const center = d3.forceCenter().x(centPositions.x).y(centPositions.y)
 
-  const manyBody = d3.forceManyBody().strength(10)
+  const manyBody = d3.forceManyBody().strength(1)
       
 
   let force = d3.forceSimulation()
@@ -90,20 +91,24 @@ function moveNodes() {
 
   force.force('center', null)
   .force('collision', d3.forceCollide(d => 33))
-  .alphaDecay(.08)
-  force.force('x', d3.forceX().strength(2).x(nodeTreatmentPos))
-  force.force('y', d3.forceY().strength(1.5).y(height / 3.5))
-  force.alpha(.4).restart();
+  .alphaDecay(.0005)
+  .velocityDecay(0.5)
+  force.force('x', d3.forceX().strength(1).x(nodeTreatmentPos))
+  force.force('y', d3.forceY().strength(1).y(height / 3.5))
+  force.alpha(.1).restart();
 }
 
 function moveToCenter() {
   
-  force.force('center', null)
-  .force('collision', d3.forceCollide(d => 30))
-  // .velocityDecay(0.7)
-  force.force('x', d3.forceX().strength(1.5).x( width / 2))
+  force.force('center', null)  
+    // .force('charge', manyBody)
+    .alphaDecay(.045)
+    .velocityDecay(0.7)
+    force.force('x', d3.forceX().strength(1.5).x( width/2))
+    force.force('y', d3.forceY().strength(5.5).y(height/3))
+    .force('collision', d3.forceCollide(d => 45))
   // force.force('y', d3.forceY().strength(1.5).y(height / 3))
-  force.alpha(.7).restart();
+  force.alpha(.1).restart();
 }
 
 
@@ -157,40 +162,37 @@ let controlTitle = svgD3.append('text')
 
 // // mu titles
 // // Titles for algebra in transition four
-const controlMuCenter = (width / 2) + 100
-const treatmentMuCenter =   (width / 2) - 100
-const heightMuCenter = (height / 1.5)
 
-let muTreatment = svgD3.append('text')
-      .attr('x', treatmentMuCenter)
-      .attr('y', heightMuCenter)
-      .attr('class', 'muTreatment')
-      .html('&mu;')
-      .style('font-size', '2rem')
-      .append('tspan')
-        .text('treatment')
-        .attr('class', 'muTreatment')
-        .style('font-size', '.65rem')
-        .style('font-family', 'Indie Flower')
-        .attr('dx', '.05em')
-        .attr('dy', '.5em')
+// let muTreatment = svgD3.append('text')
+//       .attr('x', trtCenter + 100)
+//       .attr('y', heightMuCenter + 100)
+//       .attr('class', 'muTreatment')
+//       .html('&mu;')
+//       .style('font-size', '1.8rem')
+//       .append('tspan')
+//         .text('treatment')
+//         .attr('class', 'muTreatment')
+//         .style('font-size', '.6rem')
+//         .style('font-family', 'Indie Flower')
+//         .attr('dx', '.05em')
+//         .attr('dy', '.5em')
 
-let muControl = svgD3.append('text')
-      .attr('x', controlMuCenter)
-      .attr('y', heightMuCenter)
-      .attr('class', 'muControl')
-      .html('&mu;')
-      .style('font-size', '2rem')
-      .append('tspan')
-        .text('control')
-        .attr('class', 'muControl')
-        .style('font-size', '.65rem')
-        .style('font-family', 'Indie Flower')
-        .attr('dx', '.05em')
-        .attr('dy', '.5em')
+// let muControl = svgD3.append('text')
+//       .attr('x', cntrlCenter - 100)
+//       .attr('y', heightMuCenter + 100)
+//       .attr('class', 'muControl')
+//       .html('&mu;')
+//       .style('font-size', '1.8rem')
+//       .append('tspan')
+//         .text('control')
+//         .attr('class', 'muControl')
+//         .style('font-size', '.6rem')
+//         .style('font-family', 'Indie Flower')
+//         .attr('dx', '.05em')
+//         .attr('dy', '.5em')
 
-d3.selectAll('.muTreatment').attr('visibility', 'hidden')
-d3.selectAll('.muControl').attr('visibility', 'hidden')
+// d3.selectAll('.muTreatment').attr('visibility', 'hidden')
+// d3.selectAll('.muControl').attr('visibility', 'hidden')
 
 
 
@@ -234,14 +236,14 @@ function transitionZeroUp() {
 
   d3.selectAll('.dot').select('path')
     .transition()
-    .style('fill', 'rgba(131, 131, 131, .05')
+    .style('fill', 'rgba(131, 131, 131, .05)')
 }
 
 function transitionOne() {
   // color based on treatment assignment
   d3.selectAll('.dot').select('path')
     .transition()
-    .style('fill', (d,i) => d.index % 2 == 0 ? 'rgba(248,131,121, .15)' : 'rgba(131, 238, 248, .2')
+    .style('fill', (d,i) => d.index % 2 == 0 ? 'rgba(248,131,121, .15)' : 'rgba(131, 238, 248, .2)')
 
   // position llamas in treatment groups
     moveNodes()
@@ -254,14 +256,16 @@ function transitionOne() {
 function transitionTwoDown() {
   force.force('center', null)
     .force('collision', d3.forceCollide(d => 33))
-    .velocityDecay(.7)
-    .force('x', d3.forceX().strength(2.5).x(nodeRandomPos))
-    .alpha(.4).restart();
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    .force('x', d3.forceX().strength(1).x(nodeRandomPos))
+    .alpha(.1).restart();
 }
 
 function transitionTwoUp() {
   d3.selectAll('text.responseText').remove();
   d3.selectAll('circle.responseValue')
+    .attr('stroke-width', 0)
     .transition()
     .duration(1000)
     .attr('r', 0)
@@ -269,9 +273,61 @@ function transitionTwoUp() {
 
   d3.selectAll('g.responseStuff')
     .transition().duration(1100).remove()
+
+  d3.selectAll('.muTreatment').remove()
+  d3.selectAll('.muControl').remove()
 }
 
 function transitionThreeDown() {
+
+  let muTreatment = svgD3.append('text')
+      .attr('x', trtCenter)
+      // .attr('x', (width / 2) - 35)
+      .attr('y', heightMuCenter + 100)
+      .attr('class', 'muTreatment')
+      .html('&mu;')
+      .style('font-size', '2rem')
+      .append('tspan')
+        .text('treatment')
+        .attr('class', 'muTreatment')
+        .style('font-size', '.4rem')
+        .style('font-family', 'Indie Flower')
+        .attr('dx', '.05em')
+        .attr('dy', '.6em')
+
+let muControl = svgD3.append('text')
+      .attr('x', cntrlCenter)
+      // .attr('x', (width / 2) + 20)
+      .attr('y', heightMuCenter + 100)
+      .attr('class', 'muControl')
+      .html('&mu;')
+      .style('font-size', '2rem')
+      .append('tspan')
+        .text('control')
+        .attr('class', 'muControl')
+        .style('font-size', '.4rem')
+        .style('font-family', 'Indie Flower')
+        .attr('dx', '.05em')
+        .attr('dy', '.7em')
+
+  let tau = svgD3.append('text')
+      .attr('x', (width / 2))
+      .attr('y', heightMuCenter + 150)
+      .attr('class', 'muTreatment')
+      .html('&tau;')
+      .style('font-size', '2rem')
+      .append('tspan')
+        .text('0')
+        .attr('class', 'muTreatment')
+        .style('font-size', '.4rem')
+        .style('font-family', 'Indie Flower')
+        .attr('dx', '.05em')
+        .attr('dy', '.6em')
+      
+// d3.selectAll('.muTreatment').attr('visibility', 'hidden')
+// d3.selectAll('.muControl').attr('visibility', 'hidden')
+
+
   let respGroups = dots.selectAll('g.responseStuff')
     .data(sampleResponse)
     .enter()
@@ -280,6 +336,23 @@ function transitionThreeDown() {
     .attr('ggg', function() {
       return getTranslation(d3.select(this.parentNode).attr('transform'))[0] < (width / 2)
     })
+
+  svgD3.append('circle')
+    .attr('class', 'responseValue')
+    // .attr('respGroup', ())
+    .attr('r', 0)
+    .attr('cx', trtCenter)
+    .attr('cy', heightMuCenter + 100)
+    .style('opacity', .85)
+    .transition()
+    .delay(1270)
+    .duration(200)
+    .attr('r', 19)
+    .attr('fill' ,'pink')
+    .attr('stroke', 'black')
+    .attr('stroke-width', .1)
+    .transition()
+    .attr('r', 16)
 
   respGroups.append('circle')
     .attr('class', 'responseValue')
@@ -292,39 +365,55 @@ function transitionThreeDown() {
     .duration(1000)
     .attr('r', d => 6.4)
     .attr('fill' ,'pink')
-    .attr('stroke', 'black')
+    // .attr('stroke', 'black')
     .attr('stroke-width', .1)
+    .transition()
+    .duration(100)
+    .attr('r', 9)
+    .attr('stroke-width', .51)
+    .attr('stroke', 'black')
+    .transition()
+    .delay(450)
+    .remove()
 
   respGroups.append('text')
     .attr('class', 'responseText')
     .html(() => Math.round(Math.random() * 9))
-    .attr('fill', 'black')
+    .attr('fill', 'white')
     .style('font-size', '.66rem')
+    .attr('stroke', 'black')
+    .attr('stroke-width', .3)
     .attr('x', 17.3)
     .attr('y', 66.2)
     .attr('visibility', 'hidden')
     .raise()
 
+
   d3.selectAll('.responseText')
     .transition()
-    .delay(1000)
-    .attr('visibility', 'visible');
-
-
-  d3.selectAll('g.responseStuff')
+    .delay(900)
+    .attr('visibility', 'visible')
     .transition()
-    // .ease(d3.easeBack)
-    .delay(1500)
-    .duration(2000)
-    .attr('transform', function(d,i) {
-      let transX = getTranslation(d3.select(this.parentNode).attr('transform'))[0]
-      let transY = getTranslation(d3.select(this.parentNode).attr('transform'))[1]
-      // let groupAsn = d3.select(this.parentNode).attr('group')
-      let groupAsn = d3.select(this).attr('ggg')
-      console.log(groupAsn)
-      let currentLlamaX = groupAsn == 'true' ? treatmentMuCenter : controlMuCenter
-      return 'translate(' + (currentLlamaX - transX) + ',' + (heightMuCenter - transY) + ')'
-    })
+    .delay(0)
+    .remove()
+
+
+  // d3.selectAll('g.responseStuff')
+  //   .transition()
+  //   .delay(1000)
+  //   .duration(600)
+  //   .attr('transform', function(d,i) {
+  //     let transX = getTranslation(d3.select(this.parentNode).attr('transform'))[0]
+  //     let transY = getTranslation(d3.select(this.parentNode).attr('transform'))[1]
+  //     // let groupAsn = d3.select(this.parentNode).attr('group')
+  //     let groupAsn = d3.select(this).attr('ggg')
+  //     console.log(groupAsn)
+  //     let currentLlamaX = groupAsn == 'true' ? (trtCenter) : (cntrlCenter)
+  //     return 'translate(' + (currentLlamaX - transX) + ',' + (heightMuCenter + 40 - transY) + ')'
+  //   })
+
+  d3.selectAll('.muTreatment').transition().delay(2000).attr('visibility', 'visible')
+  d3.selectAll('.muControl').transition().delay(2000).attr('visibility', 'visibile')
 
 }
 

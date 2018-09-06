@@ -196,14 +196,17 @@
 				transitionOne()
 			} else if (response.index == 1 & response.direction == 'up') {
 				transitionOne()
-			} else if (response.index == 2 & response.direction == 'down') {
-				transitionTwoDown()
 			} else if (response.index == 2 & response.direction == 'up') {
-				transitionTwoUp()
-			} else if (response.index == 3 & response.direction == 'down') {
-				transitionThreeDown()
-			}
-		}
+                  transitionTwoUp()
+           } else if (response.index == 2 & response.direction == 'down') {
+                  transitionTwoDown()
+		   } else if (response.index == 3 & response.direction == 'up'){
+		   	console.log(todo)
+		   } else if (response.index == 3 & response.direction == 'down'){
+		   		transitionThreeDown()
+		   }
+		 }
+
 		function handleContainerEnter(response) {
 			// response = { direction }
 			// sticky the graphic (old school)
