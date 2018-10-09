@@ -75,6 +75,12 @@
 				</p>
 			</div>
 			<div class='step' data-step='3'>
+				<h2 class='subheader'>Response Values</h2>
+				<p>
+				Every experimantal unit receives a response value.
+				 </p>
+			</div>
+			<div class='step' data-step='4'>
 				<h2 class='subheader'>Test Statistic</h2>
 				<p>
 				Our <i>test statistic</i> is a numerical summary of our data that we'll use to  distinguish the null hypothesis from the alternative hypothesis. 
@@ -87,7 +93,7 @@
 				Once our llamas have gone through their assigned diets and we get our fleece quality response values, we calculate our initial test statistic and save it for later.
 				 </p>
 			</div>
-			<div class='step' data-step='4'>
+			<div class='step' data-step='5'>
 				<h2 class='subheader'>The 'P' in  'Permutation Test'</h2>
 				<p>
 					This is the most important step in the test, as well as its namesake.
@@ -101,7 +107,7 @@
 					<br>
 				</p>
 			</div>
-			<div class='step' data-step='5'>
+			<div class='step' data-step='6'>
 				<h2 class='subheader'>Create Test Statistic Distribution</h2>
 				<p>
 					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
@@ -112,7 +118,7 @@
 					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test. <br>The <i>p-value</i>.
 				</p>
 			</div>
-			<div class='step' data-step='6'>
+			<div class='step' data-step='7'>
 				<h2 class='subheader'>Results: The P-Value</h2>
 				<p> The p-value is the probability of observing the response values we did, if the null hypothesis was true.
 					<br><br>
@@ -199,11 +205,17 @@
 			} else if (response.index == 2 & response.direction == 'up') {
                   transitionTwoUp()
            } else if (response.index == 2 & response.direction == 'down') {
-                  transitionTwoDown()
+                transitionTwoDown()
 		   } else if (response.index == 3 & response.direction == 'up'){
-		   	console.log(todo)
+			   	console.log('todo')
+			   	transitionThreeUp()
 		   } else if (response.index == 3 & response.direction == 'down'){
 		   		transitionThreeDown()
+		   } else if (response.index == 4 & response.direction == 'up'){
+			   	console.log('todo')
+			   	// transitionFourUp()
+		   } else if (response.index == 4 & response.direction == 'down'){
+		   		transitionFourDown()
 		   }
 		 }
 
@@ -243,7 +255,7 @@
 		init();
 	</script>
 	<hr>
-	<script src="perm3.js"></script>
+	<script src="permTest.js"></script>
 </body>
 
 </html>
