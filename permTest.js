@@ -159,66 +159,6 @@ let controlTitle = svgD3.append('text')
   .attr('visibility', 'hidden')
 
 
-
-// // mu titles
-// // Titles for algebra in transition four
-
-// let muTreatment = svgD3.append('text')
-//       .attr('x', trtCenter + 100)
-//       .attr('y', heightMuCenter + 100)
-//       .attr('class', 'muTreatment')
-//       .html('&mu;')
-//       .style('font-size', '1.8rem')
-//       .append('tspan')
-//         .text('treatment')
-//         .attr('class', 'muTreatment')
-//         .style('font-size', '.6rem')
-//         .style('font-family', 'Indie Flower')
-//         .attr('dx', '.05em')
-//         .attr('dy', '.5em')
-
-// let muControl = svgD3.append('text')
-//       .attr('x', cntrlCenter - 100)
-//       .attr('y', heightMuCenter + 100)
-//       .attr('class', 'muControl')
-//       .html('&mu;')
-//       .style('font-size', '1.8rem')
-//       .append('tspan')
-//         .text('control')
-//         .attr('class', 'muControl')
-//         .style('font-size', '.6rem')
-//         .style('font-family', 'Indie Flower')
-//         .attr('dx', '.05em')
-//         .attr('dy', '.5em')
-
-// d3.selectAll('.muTreatment').attr('visibility', 'hidden')
-// d3.selectAll('.muControl').attr('visibility', 'hidden')
-
-
-
-// function groupClass(d) {
-//   if (d % 4 == 0){
-//     return xScale(1.8)
-//   } else if (d % 4 == 1) {
-//     return xScale(2.2)
-//   } else if (d % 4 == 2) {
-//     return xScale(5.8)
-//   } else {
-//     return xScale(6.2)
-//   }
-// }
-
-
-
-
-// groupXPosition = {'one': xScale(1.8), 
-//                   'two': xScale(2.2),
-//                   'three': xScale(5.8),
-//                   'four': xScale(6.2)
-//                   }
-
-
-
 function transitionZeroDown() {
   // initial position for dots
 
@@ -309,7 +249,7 @@ function transitionThreeDown() {
 
   respGroups.append('text')
     .attr('class', 'responseText')
-    .html(() => Math.round(Math.random() * 9))
+    .html(() => '&tau; ' + Math.round(Math.random() * 9))
     .attr('fill', 'white')
     .style('font-size', '.6rem')
     .attr('stroke', 'black')

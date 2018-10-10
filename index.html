@@ -77,7 +77,7 @@
 			<div class='step' data-step='3'>
 				<h2 class='subheader'>Response Values</h2>
 				<p>
-				Every experimantal unit receives a response value.
+				Every experimental unit receives a response value.
 				 </p>
 			</div>
 			<div class='step' data-step='4'>
@@ -195,27 +195,36 @@
 			// console.log('response index:' + response.index)
 
 			if (response.index == 0 & response.direction == 'down') {
+				console.log('0 down')
 				transitionZeroDown()
 			} else if (response.index == 0 & response.direction == 'up') {
+				console.log('0 up')
 				transitionZeroUp()
 			}else if (response.index == 1 & response.direction == 'down') {
+				console.log('1 down')
 				transitionOne()
 			} else if (response.index == 1 & response.direction == 'up') {
-				transitionOne()
+				console.log('1 up')
+				transitionTwoUp()
 			} else if (response.index == 2 & response.direction == 'up') {
-                  transitionTwoUp()
+				console.log('t2 up')
+                  transitionThreeUp()
            } else if (response.index == 2 & response.direction == 'down') {
-                transitionTwoDown()
+                // transitionTwoDown()
+                console.log('2 down')
+                transitionThreeDown()
 		   } else if (response.index == 3 & response.direction == 'up'){
-			   	console.log('todo')
-			   	transitionThreeUp()
-		   } else if (response.index == 3 & response.direction == 'down'){
-		   		transitionThreeDown()
-		   } else if (response.index == 4 & response.direction == 'up'){
-			   	console.log('todo')
+			   	console.log('3 up')
 			   	// transitionFourUp()
-		   } else if (response.index == 4 & response.direction == 'down'){
+		   } else if (response.index == 3 & response.direction == 'down'){
+		   		console.log('3 down')
 		   		transitionFourDown()
+		   } else if (response.index == 4 & response.direction == 'up'){
+			   	console.log('4 up')
+			   	transitionTwoUp()
+		   } else if (response.index == 4 & response.direction == 'down'){
+			   	console.log('4 down')
+		   		transitionTwoDown()
 		   }
 		 }
 
