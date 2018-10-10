@@ -25,16 +25,44 @@ const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = (height / 1.8)
 
-function nodeTreatmentPos(d) {
-  return d.index % 2 == 0 ? trtCenter : cntrlCenter;
-}
+const nodeTreatmentWidth = (d) => {
+  if (d.nodeGroup == 'resp') {
+    return width / 2
+  } else if (d.index % 2 == 0) {
+    return trtCenter
+  } else {
+    return cntrlCenter
+  }
+};
+
+const nodeTreatmentHeight = (d) => {
+  if (d.nodeGroup == 'resp') {
+    return height / 1.1
+  } else {
+    return height / 3.5
+  }
+};
+
+const nodeGroupForceCollide = (d) => {
+    return d.nodeGroup === 'llama' ? 45 : 10;
+  }
+
+const nodeInitialXPlacement = (d) => {
+  console.log(d)
+    return d.nodeGroup === 'llama' ? (width / 2) : (width / 5);
+  };
+
+const nodeInitialYPlacement = (d) => {
+    return d.nodeGroup === 'llama' ? (height / 3) : (height / 1.1);
+  }
 
   const centPositions = {x: width / 2, y:height/3}
 
   const roleScale = d3.scaleOrdinal()
       .range(['coral', 'olive', 'skyblue']);
     
-  let sampleData = d3.range(24).map((d,i) => ({r: 40 - i * 0.5}));
+  let sampleData = d3.range(35).map((d,i) => ({r: 40 - i * 0.5,
+                                               nodeGroup: i <= 23 ? 'llama' : 'resp'}));
   let sampleResponse = d3.range(1).map((d,i) => ({r: d3.randomUniform(1, 5)()}));
   
   // set params for force layout
@@ -46,8 +74,8 @@ function nodeTreatmentPos(d) {
 
   let force = d3.forceSimulation()
     .force('charge', manyBody)
-    force.force('x', d3.forceX().strength(1.5).x( width/2))
-    force.force('y', d3.forceY().strength(5.5).y(height/3))
+    force.force('x', d3.forceX().strength(1.5).x(nodeInitialXPlacement))
+    force.force('y', d3.forceY().strength(5.5).y(nodeInitialYPlacement))
     .force('collision', d3.forceCollide(d => 45))     
     .alphaDecay(.3)
     .nodes(sampleData)
@@ -57,12 +85,19 @@ function nodeTreatmentPos(d) {
     .data(sampleData)
     .enter()
     .append('g')
-    .attr('class', 'dot')
-    .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false')
+    .attr('class', d => d.nodeGroup === 'llama' ? 'dot' : 'dotResponse')
+    .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false');
+
+  let responseDots = svgD3.selectAll('.dotResponse')    
+    .append('circle')
+    .attr('r', 10);
 
 
   function changeNetwork() {
     d3.selectAll('g.dot')
+      .attr('transform', d=> `translate(${d.x}, ${d.y})`)
+
+    d3.selectAll('g.dotResponse')
       .attr('transform', d=> `translate(${d.x}, ${d.y})`)
   }
   
@@ -93,8 +128,8 @@ function moveNodes() {
   .force('collision', d3.forceCollide(d => 33))
   .alphaDecay(.0005)
   .velocityDecay(0.5)
-  force.force('x', d3.forceX().strength(1).x(nodeTreatmentPos))
-  force.force('y', d3.forceY().strength(1).y(height / 3.5))
+  force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
+  force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
   force.alpha(.1).restart();
 }
 
@@ -104,8 +139,8 @@ function moveToCenter() {
     // .force('charge', manyBody)
     .alphaDecay(.045)
     .velocityDecay(0.7)
-    force.force('x', d3.forceX().strength(1.5).x( width/2))
-    force.force('y', d3.forceY().strength(5.5).y(height/3))
+    force.force('x', d3.forceX().strength(1.5).x(nodeInitialXPlacement))
+    force.force('y', d3.forceY().strength(5.5).y(nodeInitialYPlacement))
     .force('collision', d3.forceCollide(d => 45))
   // force.force('y', d3.forceY().strength(1.5).y(height / 3))
   force.alpha(.1).restart();
@@ -221,10 +256,7 @@ function transitionThreeDown() {
     .data(sampleResponse)
     .enter()
     .append('g')
-    .attr('class', 'responseStuff')
-    .attr('ggg', function() {
-      return getTranslation(d3.select(this.parentNode).attr('transform'))[0] < (width / 2)
-    })
+    .attr('class', 'responseStuff') // issue because no tran
 
   respGroups.append('circle')
     .attr('class', 'responseValue')
@@ -308,67 +340,6 @@ function transitionFourDown() {
     .attr('r', 16)
 }
 
-
-// function transitionThreeUp() {
-//   // reverse transition of transitionFour
-//   d3.selectAll('.muTreatment').attr('visibility', 'hidden')
-//   d3.selectAll('.muControl').attr('visibility', 'hidden')
-//   d3.selectAll('.llamaText').attr('visibility', 'visible')
-
-//   d3.selectAll('.llamaText')
-//     .transition()
-//     .duration(1000)
-//     .attr('transform', 'translate(' + (15) + ',' + (30) + ')')
-
-//   d3.selectAll('.llamaText')
-//     .transition()
-//     .delay(1500)
-//     .attr('visibility', ' hidden')
-// }
-
-// function transitionFour() {
-
-//   let centerX = width / 4
-//   let centerY = height / 4
-//   dot.append('text')
-//     .attr('class', 'llamaText')
-//     .html(() => Math.round(Math.random() * 10))
-//     .attr('fill', 'black')
-//     .style('font-family', 'consolas')
-//     .style('font-size', '1.4rem')
-//     .attr('transform', 'translate(15,' + (30) + ')')
-//     .attr('visibility', 'hidden')
-//     .raise()
-
-//   // delayed reveal of response values (for each llama)
-//   d3.selectAll('.llamaText')
-//     .transition()
-//     .delay(500)
-//     .attr('visibility', 'visible')
-
-//   // code to move response values to mu positions
-//   // TODO
-
-//   // Show mu title just under response clump, then replace response values
-//   // with mean
-//   // TODO: move response here
-//   d3.selectAll('.muTreatment').transition().delay(1000).attr('visibility', 'visible')
-//   d3.selectAll('.muControl').transition().delay(1000).attr('visibility', 'visible')
-
-//   d3.selectAll('.llamaText')
-//     .transition()
-//     .delay(1500)
-//     .duration(1000)
-//     .attr('transform', function(d,i) {
-//       let transX = getTranslation(d3.select(this.parentNode).attr('transform'))[0]
-//       let transY = getTranslation(d3.select(this.parentNode).attr('transform'))[1]
-//       // console.log('transX: ', transX, ' transY: ', transY)
-//       let groupAsn = d3.select(this.parentNode).attr('group')
-//       let currentLlamaX = groupAsn == 'treatment' ? treatmentMuCenter : controlMuCenter
-//       return 'translate(' + (currentLlamaX - transX) + ',' + (heightMuCenter - transY) + ')'
-//     })
-
-// }
 
 
 function circleGen() {
