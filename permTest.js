@@ -97,32 +97,17 @@ const nodeInitialYPlacement = (d) => {
     .attr('testStatGroup', function(d,i) {
       if (d.nodeGroup === 'resp') {
         if (i == 1) {
-          el = d3.select(this)
-          el.classed('testStat1', true)
-      } else if (i == 2) {
-        return 'testStat2'
-      } else if (i >= 3 & i < 7) {
-        return 'testStat6'
+            d3.select(this).classed('testStat1', true)
+        } else if (i == 2) {
+            d3.select(this).classed('testStat2', true)
+        } else if (i >= 3 & i < 7) {
+            d3.select(this).classed('testStat3', true)
+        }  
       } else {
-        return 'testStats'
-      } } else {
-        return 'ignore'
+          return 'ignore'
       }
     })
 
-  // let responseDots = svgD3.selectAll('.dotResponse')    
-  //   .append('g')
-  //   .attr('class', (d,i) => {
-  //     if (i == 1) {
-  //       return 'testStat1'
-  //     } else if (i == 2) {
-  //       return 'testStat2'
-  //     } else if (i >= 3 & i < 7) {
-  //       return 'testStat6'
-  //     } else {
-  //       return 'testStat'
-  //     }
-  //   });
 
   function changeNetwork() {
     d3.selectAll('g.dot')
@@ -260,12 +245,20 @@ function transitionOne() {
 }
 
 function transitionTwoDown() {
+  // shuffle ('permute') nodes
   force.force('center', null)
     .force('collision', d3.forceCollide(d => 33))
     .alphaDecay(.0005)
     .velocityDecay(0.5)
     .force('x', d3.forceX().strength(1).x(nodeRandomPos))
     .alpha(.1).restart();
+
+  // move test statistic back to it's original position
+  d3.selectAll('.testStat1')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(0, 0) scale(2,2)')
 }
 
 function transitionTwoUp() {
@@ -334,22 +327,21 @@ function transitionThreeDown() {
 function transitionThreeUp() {
 
   d3.selectAll('.tauTreatment').remove();
-  d3.select('.testStat')
+  d3.selectAll('.testStat1')
+    .select('.testStat')
     .transition()
+    .duration(1000)
     .attr('transform', 'translate(0, 0)')
 
 }
 
 function transitionFourDown() {
   // select chosen class and move it
-  d3.select('.testStat1')
-    .transition()
-    .duration(100)
-    .attr('fill', 'red')
-    .attr('transform', 'translate(-50, -150)')
+  d3.selectAll('.testStat1')
+    .select('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', 'translate(-50, -150) scale(2)')
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
 
 }
 
