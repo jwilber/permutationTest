@@ -46,7 +46,7 @@ const nodeTreatmentHeight = (d) => {
 };
 
 const nodeGroupInitialForceCollide = (d) => {
-    return d.nodeGroup === 'llama' ? 45 : 20;
+    return d.nodeGroup === 'llama' ? 35 : 10;
   }
 
 const nodeGroupMoveForceCollide = (d) => {
@@ -247,18 +247,25 @@ function transitionOne() {
 function transitionTwoDown() {
   // shuffle ('permute') nodes
   force.force('center', null)
-    .force('collision', d3.forceCollide(d => 33))
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
     .alphaDecay(.0005)
     .velocityDecay(0.5)
     .force('x', d3.forceX().strength(1).x(nodeRandomPos))
     .alpha(.1).restart();
 
-  // move test statistic back to it's original position
+  // move test statistic1 back to it's original position
   d3.selectAll('.testStat1')
     .select('.testStat')
     .transition()
     .duration(2000)
     .attr('transform', 'translate(0, 0) scale(2,2)')
+
+  // move test statistic 2 to center of focus
+  d3.selectAll('.testStat2')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
 }
 
 function transitionTwoUp() {
@@ -288,7 +295,7 @@ function transitionThreeDown() {
     .attr('r', 0)
     .attr('cx', 20)
     .attr('cy', 62)
-    .style('opacity', .85)
+    .style('opacity', .75)
     .transition()
     .duration(1000)
     .attr('r', d => 6.4)
@@ -305,13 +312,14 @@ function transitionThreeDown() {
 
   respGroups.append('text')
     .attr('class', 'responseText')
-    .html(() => '&tau; ' + Math.round(Math.random() * 9))
+    .html(() => Math.round(Math.random() * 9))
     .attr('fill', 'white')
     .style('font-size', '.6rem')
     .attr('stroke', 'black')
     .attr('stroke-width', .3)
     .attr('x', 17.8)
     .attr('y', 65.2)
+    // .style('font-family', 'Indie Flower')
     .attr('visibility', 'hidden')
     .raise()
 
@@ -378,3 +386,5 @@ function circleGen() {
   
   return circle;
 }
+
+//d3.selectAll('.dot').selectAll('path').transition().duration(3000).attr('transform', 'translate(0,-900)')
