@@ -94,10 +94,11 @@ const nodeInitialYPlacement = (d) => {
     .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false');
 
   d3.selectAll('.dotResponse')
-    .attr('testStatGroup', (d,i) => {
+    .attr('testStatGroup', function(d,i) {
       if (d.nodeGroup === 'resp') {
         if (i == 1) {
-        return 'testStat1'
+          el = d3.select(this)
+          el.classed('testStat1', true)
       } else if (i == 2) {
         return 'testStat2'
       } else if (i >= 3 & i < 7) {
@@ -287,11 +288,10 @@ function transitionThreeDown() {
     .data(sampleResponse)
     .enter()
     .append('g')
-    .attr('class', 'responseStuff') // issue because no tran
+    .attr('class', 'responseStuff') 
 
   respGroups.append('circle')
     .attr('class', 'responseValue')
-    // .attr('respGroup', ())
     .attr('r', 0)
     .attr('cx', 20)
     .attr('cy', 62)
@@ -342,7 +342,7 @@ function transitionThreeUp() {
 
 function transitionFourDown() {
   // select chosen class and move it
-  d3.select('.testStat')
+  d3.select('.testStat1')
     .transition()
     .duration(100)
     .attr('fill', 'red')
