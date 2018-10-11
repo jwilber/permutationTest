@@ -163,7 +163,7 @@ d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function
       )
     });
 
-  d3.selectAll('.dotResponse').selectAll('path').attr("transform", "scale(0.15,0.15) translate(-250,-50)")
+  d3.selectAll('.dotResponse').selectAll('path').attr("transform", "scale(0.05,0.05) translate(-250,-50)")
 
 
 
@@ -344,9 +344,12 @@ function transitionFourDown() {
   // select chosen class and move it
   d3.select('.testStat')
     .transition()
+    .duration(100)
     .attr('fill', 'red')
-    .attr('transform', 'translate(-50, -150) scale(2, 2)')
-    .attr('r', 15)
+    .attr('transform', 'translate(-50, -150)')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(-50, -150) scale(2)')
 
 }
 

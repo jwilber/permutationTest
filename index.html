@@ -119,6 +119,28 @@
 				</p>
 			</div>
 			<div class='step' data-step='7'>
+				<h2 class='subheader'>Create Test Statistic Distribution</h2>
+				<p>
+					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
+					<br><br>
+					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample <a href="">enough</a> permutations to build an approximation to our distribution. 
+					<br><br>
+					This distribution approximates all possible mean-difference values we could have seen under the assumption that fleece quality is independent of llama diet. 
+					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test. <br>The <i>p-value</i>.
+				</p>
+			</div>
+			<div class='step' data-step='8'>
+				<h2 class='subheader'>Create Test Statistic Distribution</h2>
+				<p>
+					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
+					<br><br>
+					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample <a href="">enough</a> permutations to build an approximation to our distribution. 
+					<br><br>
+					This distribution approximates all possible mean-difference values we could have seen under the assumption that fleece quality is independent of llama diet. 
+					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test. <br>The <i>p-value</i>.
+				</p>
+			</div>
+			<div class='step' data-step='9'>
 				<h2 class='subheader'>Results: The P-Value</h2>
 				<p> The p-value is the probability of observing the response values we did, if the null hypothesis was true.
 					<br><br>
@@ -208,12 +230,12 @@
 				transitionTwoUp()
 			} else if (response.index == 2 & response.direction == 'up') {
 				console.log('2 up')
-                  transitionThreeUp()
+                transitionThreeUp()
            } else if (response.index == 2 & response.direction == 'down') {
                 transitionThreeDown()
 		   } else if (response.index == 3 & response.direction == 'up'){
 			   	console.log('3 up')
-			   	// transitionFourUp()
+			   	// transitionFourUp()	
 			   	moveNodes()
 		   } else if (response.index == 3 & response.direction == 'down'){
 		   		console.log('3 down')
@@ -224,6 +246,24 @@
 		   } else if (response.index == 4 & response.direction == 'down'){
 			   	console.log('4 down')
 		   		transitionTwoDown()
+		   } else if (response.index == 5 & response.direction == 'up'){
+			   	console.log('5 up')
+			   	// transitionTwoUp()
+		   } else if (response.index == 5 & response.direction == 'down'){
+			   	console.log('5 down')
+		   		// transitionTwoDown()
+		   } else if (response.index == 6 & response.direction == 'up'){
+			   	console.log('6 up')
+			   	// transitionTwoUp()
+		   } else if (response.index == 6 & response.direction == 'down'){
+			   	console.log('6 down')
+		   		// transitionTwoDown()
+		   } else if (response.index == 7 & response.direction == 'up'){
+			   	console.log('7 up')
+			   	// transitionTwoUp()
+		   } else if (response.index == 7 & response.direction == 'down'){
+			   	console.log('7 down')
+		   		// transitionTwoDown()
 		   }
 		 }
 
