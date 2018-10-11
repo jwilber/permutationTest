@@ -21,6 +21,8 @@ const svgD3 = d3.select('svg')
 const width = svgD3.node().getBoundingClientRect().width
 const height = svgD3.node().getBoundingClientRect().height
 
+const headPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
+
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = (height / 1.8)
@@ -43,12 +45,15 @@ const nodeTreatmentHeight = (d) => {
   }
 };
 
-const nodeGroupForceCollide = (d) => {
-    return d.nodeGroup === 'llama' ? 45 : 10;
+const nodeGroupInitialForceCollide = (d) => {
+    return d.nodeGroup === 'llama' ? 45 : 20;
+  }
+
+const nodeGroupMoveForceCollide = (d) => {
+    return d.nodeGroup === 'llama' ? 45 : 15;
   }
 
 const nodeInitialXPlacement = (d) => {
-  console.log(d)
     return d.nodeGroup === 'llama' ? (width / 2) : (width / 5);
   };
 
@@ -76,7 +81,7 @@ const nodeInitialYPlacement = (d) => {
     .force('charge', manyBody)
     force.force('x', d3.forceX().strength(1.5).x(nodeInitialXPlacement))
     force.force('y', d3.forceY().strength(5.5).y(nodeInitialYPlacement))
-    .force('collision', d3.forceCollide(d => 45))     
+    .force('collision', d3.forceCollide(nodeGroupInitialForceCollide))     
     .alphaDecay(.3)
     .nodes(sampleData)
     .on('tick', changeNetwork)
@@ -88,10 +93,35 @@ const nodeInitialYPlacement = (d) => {
     .attr('class', d => d.nodeGroup === 'llama' ? 'dot' : 'dotResponse')
     .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false');
 
-  let responseDots = svgD3.selectAll('.dotResponse')    
-    .append('circle')
-    .attr('r', 10);
+  d3.selectAll('.dotResponse')
+    .attr('testStatGroup', (d,i) => {
+      if (d.nodeGroup === 'resp') {
+        if (i == 1) {
+        return 'testStat1'
+      } else if (i == 2) {
+        return 'testStat2'
+      } else if (i >= 3 & i < 7) {
+        return 'testStat6'
+      } else {
+        return 'testStats'
+      } } else {
+        return 'ignore'
+      }
+    })
 
+  // let responseDots = svgD3.selectAll('.dotResponse')    
+  //   .append('g')
+  //   .attr('class', (d,i) => {
+  //     if (i == 1) {
+  //       return 'testStat1'
+  //     } else if (i == 2) {
+  //       return 'testStat2'
+  //     } else if (i >= 3 & i < 7) {
+  //       return 'testStat6'
+  //     } else {
+  //       return 'testStat'
+  //     }
+  //   });
 
   function changeNetwork() {
     d3.selectAll('g.dot')
@@ -102,24 +132,39 @@ const nodeInitialYPlacement = (d) => {
   }
   
   function loadRoughsvgD3(svgD3Data) {
-  d3.selectAll('.dot').each(function(d,i) {
-    let gParent = this
-    d3.select(svgD3Data).selectAll('path').each(function() {
-      gParent.appendChild( rc.path(d3.select(this).node().getAttribute('d'), {
-      stroke: 'black',
-      fillStyle: 'hachure',
-      strokeWidth: 0.25,
-      fill: 'rgba(131,131,131, .15)',
-      roughness: 0.85,
-        })
-      )
+    d3.selectAll('.dot').each(function(d,i) {
+      let gParent = this
+      d3.select(svgD3Data).selectAll('path').each(function() {
+        gParent.appendChild( rc.path(d3.select(this).node().getAttribute('d'), {
+        stroke: 'black',
+        fillStyle: 'hachure',
+        strokeWidth: 0.25,
+        fill: 'rgba(131,131,131, .15)',
+        roughness: 0.85,
+          })
+        )
+      })
     })
-  })
 }
 
 var rc = rough.svg(svg);
 
 d3.html("noun_28240_cc.svg", loadRoughsvgD3) 
+
+
+d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function(d,i) {
+      d3.select(this).node().appendChild( rc.path(headPath, {
+      stroke: 'black',
+      fillStyle: 'hachure',
+      strokeWidth: 2.25,
+      fill: 'red',
+      roughness: 5.85,
+        })
+      )
+    });
+
+  d3.selectAll('.dotResponse').selectAll('path').attr("transform", "scale(0.15,0.15) translate(-250,-50)")
+
 
 
 function moveNodes() {
@@ -130,48 +175,33 @@ function moveNodes() {
   .velocityDecay(0.5)
   force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
   force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
+  .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
   force.alpha(.1).restart();
 }
 
 function moveToCenter() {
   
   force.force('center', null)  
-    // .force('charge', manyBody)
     .alphaDecay(.045)
     .velocityDecay(0.7)
     force.force('x', d3.forceX().strength(1.5).x(nodeInitialXPlacement))
     force.force('y', d3.forceY().strength(5.5).y(nodeInitialYPlacement))
-    .force('collision', d3.forceCollide(d => 45))
-  // force.force('y', d3.forceY().strength(1.5).y(height / 3))
+    .force('collision', d3.forceCollide(nodeGroupInitialForceCollide))
   force.alpha(.1).restart();
 }
 
 
 function nodeRandomPos(d) {
-  return d.index  <= 12 ? trtCenter : cntrlCenter;
-}
-
-
-// function moveRandomly() {
-
-//   // for each group, randomly select 4 llamas, and swap their role.
-//   force.force('center', null)
-//     .force('collision', d3.forceCollide(d => 33))
-//     .velocityDecay(.7)
-//     .force('x', d3.forceX().strength(2.5).x(nodeRandomPos))
-//     .alpha(.4).restart();
-// }
+  if (d.nodeGroup === 'llama') {
+    return d.index  <= 12 ? trtCenter : cntrlCenter;
+  } else {
+    return (width / 2)
+  }
+};
 
   
 const margin = 20;
 
-// const xScale = d3.scaleLinear().domain([0, 8]).range([margin, width - margin])
-// const yScale = xScale.copy().range([height - margin, margin])
-// const yGroupScale = yScale.copy().range([height / 5, height / 6])
-// const colorScale = d3.scaleOrdinal().domain(['even', 'odd']).range(['red', 'blue'])
-
-// const xAxis = d3.axisBottom(xScale).ticks(4)
-// const yAxis = d3.axisLeft(yScale).ticks(4)
 
 // group titles (transition 1 -> beyond)
 const treatmentTitleCenter = trtCenter
@@ -252,7 +282,8 @@ function transitionTwoUp() {
 
 function transitionThreeDown() {
       
-  let respGroups = dots.selectAll('g.responseStuff')
+  let respGroups = dots.filter(d => d.nodeGroup === 'llama')
+    .selectAll('g.responseStuff')
     .data(sampleResponse)
     .enter()
     .append('g')
@@ -303,41 +334,20 @@ function transitionThreeDown() {
 function transitionThreeUp() {
 
   d3.selectAll('.tauTreatment').remove();
+  d3.select('.testStat')
+    .transition()
+    .attr('transform', 'translate(0, 0)')
 
 }
 
 function transitionFourDown() {
-
-  let tau = svgD3.append('text')
-      .attr('x', (width / 2) - 5)
-      .attr('y', heightMuCenter + 150)
-      .attr('class', 'tauTreatment')
-      .html('&tau;')
-      .style('font-size', '2rem')
-      .append('tspan')
-        .text('0')
-        .attr('class', 'tauTreatment')
-        .style('font-size', '.4rem')
-        .style('font-family', 'Indie Flower')
-        .attr('dx', '.05em')
-        .attr('dy', '.6em')
-        .attr('text-anchor', 'start')
-
-  svgD3.append('circle')
-    .attr('class', 'responseValue')
-    .attr('r', 0)
-    .attr('cx', (width / 2))
-    .attr('cy', heightMuCenter + 100)
-    .style('opacity', .85)
+  // select chosen class and move it
+  d3.select('.testStat')
     .transition()
-    .delay(1270)
-    .duration(200)
-    .attr('r', 19)
-    .attr('fill' ,'pink')
-    .attr('stroke', 'black')
-    .attr('stroke-width', .1)
-    .transition()
-    .attr('r', 16)
+    .attr('fill', 'red')
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
+    .attr('r', 15)
+
 }
 
 
