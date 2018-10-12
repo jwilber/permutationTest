@@ -247,18 +247,23 @@ function transitionOneDown() {
 
 function transitionTwoUp() {
 
-  d3.selectAll('.tauTreatment').remove();
-  d3.selectAll('.testStat1')
-    .select('.testStat')
-    .transition()
-    .duration(1000)
-    .attr('transform', 'translate(0, 0)')
+  // d3.selectAll('.tauTreatment').remove();
+  // d3.selectAll('.testStat1')
+  //   .select('.testStat')
+  //   .transition()
+  //   .duration(1000)
+  //   .attr('transform', 'translate(0, 0)')
+  // d3.selectAll('.testStat1')
+  //   .select('.testStat')
+  //   .transition()
+  //   .duration(2000)
+  //   .attr('transform', 'translate(-50, -150) scale(2, 2)')
+  // move node back to original position
   d3.selectAll('.testStat1')
     .select('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', 'translate(-50, -150) scale(2, 2)')
-
+    .attr('transform', 'translate(0, 0)')
 }
 
 
@@ -275,15 +280,6 @@ function transitionOneUp() {
     .transition().duration(1100).remove()
 }
 
-
-function transitionThreeDown() {
-    // select chosen class and move it
-  d3.selectAll('.testStat1')
-    .select('.testStat')
-    .transition()
-    .duration(2000)
-    .attr('transform', 'translate(-50, -150) scale(2, 2)')
-}
 
 
 
@@ -339,12 +335,28 @@ function transitionTwoDown() {
 }
 
 function transitionThreeUp() {
-  // move node back to original position
+  // move testStat2 back to original position
   d3.selectAll('.testStat2')
     .select('.testStat')
     .transition()
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
+
+  // move testStat1 back to center of focus
+  d3.selectAll('.testStat1')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
+}
+
+function transitionThreeDown() {
+  // select chosen class and move it
+  d3.selectAll('.testStat1')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
 }
 
 
