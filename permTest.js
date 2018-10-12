@@ -1,4 +1,22 @@
-// util funcs
+//////////////////////////
+////// util funcs ////////
+//////////////////////////
+
+function loop() {
+  // loop through async func calls
+  var args = arguments;
+  if (args.length <= 0)
+      return;
+  (function chain(i) {
+      if (i >= args.length || typeof args[i] !== 'function')
+          return;
+      window.setTimeout(function() {
+          args[i]();
+          chain(i + 1);
+      }, 1100);
+  })(0);
+}    
+
 function randomChoice(choices) {
   let index = Math.floor(Math.random() * choices.length);
   // get desired element
@@ -153,8 +171,24 @@ d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function
 
 
 
-function moveNodes() {
+function nodeRandomPos(d) {
+  if (d.nodeGroup === 'llama') {
+    return d.index  <= 12 ? trtCenter : cntrlCenter;
+  } else {
+    return (width / 2)
+  }
+};
 
+function nodeRandomPosTwo(d) {
+  if (d.nodeGroup === 'llama') {
+    return d.index  > 12 ? trtCenter : cntrlCenter;
+  } else {
+    return (width / 2)
+  }
+};
+
+function moveNodes() {
+  console.log('moveNodes')
   force.force('center', null)
   .force('collision', d3.forceCollide(d => 33))
   .alphaDecay(.0005)
@@ -163,6 +197,28 @@ function moveNodes() {
   force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
   .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
   force.alpha(.1).restart();
+}
+
+function randomizeNodes() {
+  console.log('randomizeNodes')
+  // shuffle ('permute') nodes
+  force.force('center', null)
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    .force('x', d3.forceX().strength(1).x(nodeRandomPos))
+    .alpha(.1).restart();
+}
+
+function randomizeNodesTwo() {
+  console.log('randomizeNodesTwo')
+  // shuffle ('permute') nodes
+  force.force('center', null)
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    .force('x', d3.forceX().strength(1).x(nodeRandomPosTwo))
+    .alpha(.1).restart();
 }
 
 function moveToCenter() {
@@ -177,13 +233,6 @@ function moveToCenter() {
 }
 
 
-function nodeRandomPos(d) {
-  if (d.nodeGroup === 'llama') {
-    return d.index  <= 12 ? trtCenter : cntrlCenter;
-  } else {
-    return (width / 2)
-  }
-};
 
   
 const margin = 20;
@@ -210,13 +259,9 @@ let controlTitle = svgD3.append('text')
   .attr('visibility', 'hidden')
 
 
-function transitionZeroDown() {
-  // initial position for dots
-
-  d3.selectAll('.groupTitle').each(function() {
-    d3.select(this).transition().delay(100).attr('visibility', 'hidden')
-  })
-}
+//////////////////////////////////////////////////
+////////// Transition Functions /////////////////
+//////////////////////////////////////////////////
 
 function transitionZeroUp() {
   // initial position for dots
@@ -228,6 +273,27 @@ function transitionZeroUp() {
   d3.selectAll('.dot').select('path')
     .transition()
     .style('fill', 'rgba(131, 131, 131, .05)')
+}
+
+function transitionZeroDown() {
+  // initial position for dots
+
+  d3.selectAll('.groupTitle').each(function() {
+    d3.select(this).transition().delay(100).attr('visibility', 'hidden')
+  })
+}
+
+function transitionOneUp() {
+  d3.selectAll('text.responseText').remove();
+  d3.selectAll('circle.responseValue')
+    .attr('stroke-width', 0)
+    .transition()
+    .duration(1000)
+    .attr('r', 0)
+    .remove()
+
+  d3.selectAll('g.responseStuff')
+    .transition().duration(1100).remove()
 }
 
 function transitionOneDown() {
@@ -243,7 +309,6 @@ function transitionOneDown() {
     d3.select(this).transition().delay(800).attr('visibility', 'visible')
   })
 }
-
 
 function transitionTwoUp() {
 
@@ -265,23 +330,6 @@ function transitionTwoUp() {
     .duration(2000)
     .attr('transform', 'translate(0, 0)')
 }
-
-
-function transitionOneUp() {
-  d3.selectAll('text.responseText').remove();
-  d3.selectAll('circle.responseValue')
-    .attr('stroke-width', 0)
-    .transition()
-    .duration(1000)
-    .attr('r', 0)
-    .remove()
-
-  d3.selectAll('g.responseStuff')
-    .transition().duration(1100).remove()
-}
-
-
-
 
 function transitionTwoDown() {
       
@@ -331,10 +379,12 @@ function transitionTwoDown() {
     .attr('visibility', 'visible')
     .transition()
     .delay(0)
-
 }
 
 function transitionThreeUp() {
+  // move llamas back to original group
+  moveNodes()
+
   // move testStat2 back to original position
   d3.selectAll('.testStat2')
     .select('.testStat')
@@ -359,15 +409,18 @@ function transitionThreeDown() {
     .attr('transform', 'translate(-50, -150) scale(2, 2)')
 }
 
+function transitionFourUp() {
+  // move node back to original position
+  d3.selectAll('.testStat2')
+    .select('.testStat')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
+}
 
 function transitionFourDown() {
   // shuffle ('permute') nodes
-  force.force('center', null)
-    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
-    .alphaDecay(.0005)
-    .velocityDecay(0.5)
-    .force('x', d3.forceX().strength(1).x(nodeRandomPos))
-    .alpha(.1).restart();
+  randomizeNodes()
 
   // move test statistic1 back to it's original position
   d3.selectAll('.testStat1')
@@ -384,13 +437,18 @@ function transitionFourDown() {
     .attr('transform', 'translate(-50, -150) scale(2, 2)')
 }
 
-function transitionFourUp() {
-  // move node back to original position
-  d3.selectAll('.testStat2')
-    .select('.testStat')
-    .transition()
-    .duration(1000)
-    .attr('transform', 'translate(0, 0)')
+function transitionFiveUp() {
+  return "todo"
+}
+
+function ShuffleOne() {
+  executeAsynchronously(
+    [moveNodes, randomizeNodes, moveNodes, randomizeNodes], 500);
+}
+
+function ShuffleTwo() {
+  executeAsynchronously(
+    [moveNodes, randomizeNodes, moveNodes, randomizeNodes], 500);
 }
 
 function transitionFiveDown() {
@@ -400,17 +458,19 @@ function transitionFiveDown() {
     .select('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', 'translate(0, 0) scale(2,2)')
+    .attr('transform', 'translate(0, 0) scale(2,2)');
+
+  // permute llama groupings multiple times
+  loop(
+    function() { randomizeNodesTwo() },
+    function() { moveNodes() }, 
+    function() { randomizeNodes() })
+  ;
 }
 
-function transitionSixUp() {
-  // move test statistic 1 to center of focus
-  d3.selectAll('.testStat1')
-    .select('.testStat')
-    .transition()
-    .duration(2000)
-    .attr('transform', 'translate(-50, -150) scale(2, 2)')
-}
+
+
+
 
 
 
