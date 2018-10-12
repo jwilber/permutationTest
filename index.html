@@ -224,49 +224,47 @@
 				transitionZeroUp()
 			}else if (response.index == 1 & response.direction == 'down') {
 				console.log('1 down')
-				transitionOne()
+				transitionOneDown()
 			} else if (response.index == 1 & response.direction == 'up') {
 				console.log('1 up')
-				transitionTwoUp()
+				transitionOneUp()
 			} else if (response.index == 2 & response.direction == 'up') {
 				console.log('2 up')
-                transitionThreeUp()
+                transitionTwoUp()
            } else if (response.index == 2 & response.direction == 'down') {
            	    console.log('2 down')
-                transitionThreeDown()
+                transitionTwoDown()
 		   } else if (response.index == 3 & response.direction == 'up'){
 			   	console.log('3 up')
-			   	// transitionFourUp()	
+			   	transitionThreeUp()
 			   	moveNodes()
 		   } else if (response.index == 3 & response.direction == 'down'){
 		   		console.log('3 down')
-		   		transitionFourDown()
+		   		transitionThreeDown()
 		   } else if (response.index == 4 & response.direction == 'up'){
 			   	console.log('4 up')
-			   	// transitionTwoUp()
 		   } else if (response.index == 4 & response.direction == 'down'){
 			   	console.log('4 down')
-		   		transitionTwoDown()
+		   		transitionFourDown()
 		   } else if (response.index == 5 & response.direction == 'up'){
 			   	console.log('5 up')
-			   	// transitionTwoUp()
 		   } else if (response.index == 5 & response.direction == 'down'){
 			   	console.log('5 down')
-		   		// transitionTwoDown()
+			   	transitionFiveDown()
 		   } else if (response.index == 6 & response.direction == 'up'){
 			   	console.log('6 up')
-			   	// transitionTwoUp()
 		   } else if (response.index == 6 & response.direction == 'down'){
 			   	console.log('6 down')
-		   		// transitionTwoDown()
 		   } else if (response.index == 7 & response.direction == 'up'){
 			   	console.log('7 up')
-			   	// transitionTwoUp()
 		   } else if (response.index == 7 & response.direction == 'down'){
 			   	console.log('7 down')
-		   		// transitionTwoDown()
 		   }
-		 }
+		 } 
+		 // new 2down == 3down
+		 // new threedown == fourdown
+		 //new 4down == 2down
+		 // make fourdown 2down
 
 		function handleContainerEnter(response) {
 			// response = { direction }

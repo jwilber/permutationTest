@@ -230,8 +230,8 @@ function transitionZeroUp() {
     .style('fill', 'rgba(131, 131, 131, .05)')
 }
 
-function transitionOne() {
-  // color based on treatment assignment
+function transitionOneDown() {
+  // color based on eatment assignment
   d3.selectAll('.dot').select('path')
     .transition()
     .style('fill', (d,i) => d.index % 2 == 0 ? 'rgba(248,131,121, .15)' : 'rgba(131, 238, 248, .2)')
@@ -244,31 +244,25 @@ function transitionOne() {
   })
 }
 
-function transitionTwoDown() {
-  // shuffle ('permute') nodes
-  force.force('center', null)
-    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
-    .alphaDecay(.0005)
-    .velocityDecay(0.5)
-    .force('x', d3.forceX().strength(1).x(nodeRandomPos))
-    .alpha(.1).restart();
 
-  // move test statistic1 back to it's original position
+function transitionTwoUp() {
+
+  d3.selectAll('.tauTreatment').remove();
+  d3.selectAll('.testStat1')
+    .select('.testStat')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
   d3.selectAll('.testStat1')
     .select('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', 'translate(0, 0) scale(2,2)')
-
-  // move test statistic 2 to center of focus
-  d3.selectAll('.testStat2')
-    .select('.testStat')
-    .transition()
-    .duration(2000)
     .attr('transform', 'translate(-50, -150) scale(2, 2)')
+
 }
 
-function transitionTwoUp() {
+
+function transitionOneUp() {
   d3.selectAll('text.responseText').remove();
   d3.selectAll('circle.responseValue')
     .attr('stroke-width', 0)
@@ -281,7 +275,19 @@ function transitionTwoUp() {
     .transition().duration(1100).remove()
 }
 
+
 function transitionThreeDown() {
+    // select chosen class and move it
+  d3.selectAll('.testStat1')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
+}
+
+
+
+function transitionTwoDown() {
       
   let respGroups = dots.filter(d => d.nodeGroup === 'llama')
     .selectAll('g.responseStuff')
@@ -333,24 +339,65 @@ function transitionThreeDown() {
 }
 
 function transitionThreeUp() {
-
-  d3.selectAll('.tauTreatment').remove();
-  d3.selectAll('.testStat1')
+  // move node back to original position
+  d3.selectAll('.testStat2')
     .select('.testStat')
     .transition()
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
-
 }
 
+
 function transitionFourDown() {
-  // select chosen class and move it
+  // shuffle ('permute') nodes
+  force.force('center', null)
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    .force('x', d3.forceX().strength(1).x(nodeRandomPos))
+    .alpha(.1).restart();
+
+  // move test statistic1 back to it's original position
+  d3.selectAll('.testStat1')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(0, 0) scale(2,2)')
+
+  // move test statistic 2 to center of focus
+  d3.selectAll('.testStat2')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(-50, -150) scale(2, 2)')
+}
+
+function transitionFourUp() {
+  // move node back to original position
+  d3.selectAll('.testStat2')
+    .select('.testStat')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
+}
+
+function transitionFiveDown() {
+
+  // move test statistic1 back to it's original position
+  d3.selectAll('.testStat2')
+    .select('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', 'translate(0, 0) scale(2,2)')
+}
+
+function transitionSixUp() {
+  // move test statistic 1 to center of focus
   d3.selectAll('.testStat1')
     .select('.testStat')
     .transition()
     .duration(2000)
     .attr('transform', 'translate(-50, -150) scale(2, 2)')
-
 }
 
 
