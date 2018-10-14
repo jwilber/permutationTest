@@ -13,31 +13,18 @@ function loop() {
       window.setTimeout(function() {
           args[i]();
           chain(i + 1);
-      }, 500);
+      }, 300);
   })(0);
 } 
 
-function shuffle(arr) {
-    let a = arr;
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
+//////////////////////////
+/////// constants ////////
+//////////////////////////
 
-function getTranslation(transform) {
-  // Get translation of a transformation
-  var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-  g.setAttributeNS(null, "transform", transform);
-  var matrix = g.transform.baseVal.consolidate().matrix;
-  return [matrix.e, matrix.f];
-};
-
-const svgD3 = d3.select('svg')
-
+const svgD3 = d3.select('svg');
 const width = svgD3.node().getBoundingClientRect().width;
 const height = svgD3.node().getBoundingClientRect().height;
+const margin = 20;
 
 const initialScale = 0.01;
 const showScale = 15;
@@ -48,6 +35,11 @@ const headPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = (height / 1.8)
+
+
+//////////////////////////
+/////// node functions ////////
+//////////////////////////
 
 const nodeTreatmentWidth = (d) => {
   if (d.nodeGroup == 'resp') {
@@ -83,7 +75,7 @@ const nodeInitialYPlacement = (d) => {
     return d.nodeGroup === 'llama' ? (height / 3) : (height / 1.1);
   }
 
-  const centPositions = {x: width / 2, y:height/3}
+  const centPositions = {x: width / 2, y: height / 3}
 
   const roleScale = d3.scaleOrdinal()
       .range(['coral', 'olive', 'skyblue']);
@@ -159,7 +151,7 @@ d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function
       fillStyle: 'hachure',
       strokeWidth: 2.25,
       fill: 'red',
-      roughness: 5.85,
+      roughness: 6.85,
         })
       )
     });
@@ -167,6 +159,15 @@ d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function
 d3.selectAll('.dotResponse').selectAll('path').attr("transform", `scale(${initialScale}, ${initialScale}) translate(-250,-50)`)
 
 
+// function removeTestStat(testStats) {
+//   // remove added test statistic nodes
+
+  // d3.selectAll(testStat)
+  //   .select('.testStat')
+  //   .transition()
+  //   .duration(700)
+  //   .attr('transform', 'translate(0, 0) scale(0, 0)')
+// }
 
 function nodeRandomPos(d) {
   if (d.nodeGroup === 'llama') {
@@ -269,7 +270,7 @@ function shuffleTestStat(nodePositions, testStat) {
 
 
 function moveNodes() {
-  console.log('moveNodes')
+  // move nodes to treatment groups
   force.force('center', null)
   .force('collision', d3.forceCollide(d => 33))
   .alphaDecay(.0005)
@@ -281,7 +282,6 @@ function moveNodes() {
 }
 
 function randomizeNodes(nodePositions) {
-  console.log('randomizeNodes')
   // shuffle ('permute') nodes
   force.force('center', null)
     .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
@@ -293,7 +293,7 @@ function randomizeNodes(nodePositions) {
 
 
 function moveToCenter() {
-  
+  // move nodes to center (initial state)
   force.force('center', null)  
     .alphaDecay(.045)
     .velocityDecay(0.7)
@@ -302,11 +302,6 @@ function moveToCenter() {
     .force('collision', d3.forceCollide(nodeGroupInitialForceCollide))
   force.alpha(.1).restart();
 }
-
-
-
-  
-const margin = 20;
 
 
 // group titles (transition 1 -> beyond)
@@ -382,20 +377,8 @@ function transitionOneDown() {
 }
 
 function transitionTwoUp() {
-
-  // d3.selectAll('.tauTreatment').remove();
-  // d3.selectAll('.testStat1')
-  //   .select('.testStat')
-  //   .transition()
-  //   .duration(1000)
-  //   .attr('transform', 'translate(0, 0)')
-  // d3.selectAll('.testStat1')
-  //   .select('.testStat')
-  //   .transition()
-  //   .duration(2000)
-  //   .attr('transform', 'translate(-50, -150) scale(2, 2)')
   // move node back to original position
-  d3.selectAll('.testStat1')
+  d3.selectAll('.testStat0')
     .select('.testStat')
     .transition()
     .duration(2000)
@@ -464,7 +447,7 @@ function transitionThreeUp() {
     .attr('transform', 'translate(0, 0)')
 
   // move testStat1 back to center of focus
-  d3.selectAll('.testStat1')
+  d3.selectAll('.testStat0')
     .select('.testStat')
     .transition()
     .duration(2000)
@@ -473,7 +456,7 @@ function transitionThreeUp() {
 
 function transitionThreeDown() {
   // select chosen class and move it
-  d3.selectAll('.testStat1')
+  d3.selectAll('.testStat0')
     .select('.testStat')
     .transition()
     .duration(50)
@@ -485,11 +468,20 @@ function transitionThreeDown() {
 
 function transitionFourUp() {
   // move node back to original position
-  d3.selectAll('.testStat2')
+  d3.selectAll('.testStat0')
     .select('.testStat')
     .transition()
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
+
+  // hide all test statistic nodes
+  Array.from(Array(16).keys()).slice(4,16).map(i => '.testStat'.concat(i)).map( testStat => {
+      d3.selectAll(testStat)
+        .select('.testStat')
+        .transition()
+        .duration(700)
+        .attr('transform', 'translate(0, 0) scale(0, 0)') 
+  });
 
 }
 
@@ -498,7 +490,7 @@ function transitionFourDown() {
   randomizeNodes(nodeRandomPos)
 
   // move test statistic1 back to it's original position
-  d3.selectAll('.testStat1')
+  d3.selectAll('.testStat0')
     .select('.testStat')
     .transition()
     .duration(2000)
@@ -517,7 +509,8 @@ function transitionFourDown() {
 
 function transitionFiveUp() {
   // return llamas to their positions
-  // d3.selectAll('.dot').selectAll('path').transition().duration(3000).attr('transform', 'translate(0, -1000)');
+  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0)');
+
 }
 
 
@@ -551,7 +544,7 @@ function transitionSixUp() {
 
 function transitionSixDown() {
   // move llamas off-screen
-  d3.selectAll('.dot').selectAll('path').transition().duration(3000).attr('transform', `translate(0, ${-height})`);
+  d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
 }
 
 
