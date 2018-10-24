@@ -83,12 +83,9 @@ const nodeInitialYPlacement = (d) => {
   let sampleData = d3.range(40).map((d,i) => ({r: 40 - i * 0.5,
                                                nodeGroup: i <= 23 ? 'llama' : 'resp',
                                                dotValue: i % 2 === 0 ? 
-                                                 Math.round(d3.randomNormal(3, 1)()) : 
-                                                 Math.round(d3.randomNormal(10, 3)())
+                                                 Math.round(d3.randomNormal(9, 1)()) : 
+                                                 Math.round(d3.randomNormal(4, 3)())
                                               }));
-
-
-  let sampleResponse = d3.range(1).map((d,i) => ({r: d3.randomUniform(1, 5)()}));
   
   // set params for force layout
 
@@ -395,9 +392,7 @@ function transitionTwoDown() {
       
   let respGroups = dots.filter(d => d.nodeGroup === 'llama')
     .append('g')
-    .attr('class', 'responseStuff') 
-    .attr('dotValue', 10)
-
+    .attr('class', 'responseStuff');
 
   respGroups.append('circle')
     .attr('class', 'responseValue')
@@ -421,12 +416,7 @@ function transitionTwoDown() {
 
   respGroups.append('text')
     .attr('class', 'responseText')
-    // .html(() => Math.round(Math.random() * 9))
-    // .style('fill', (d,i) => d.index % 2 == 0 ? 'rgba(248,131,121, .15)' : 'rgba(131, 238, 248, .2)')
-    .html( (d,i) => {
-      console.log(d)
-      return d.dotValue;
-    })
+    .html(d => d.dotValue)
     .attr('fill', 'white')
     .style('font-size', '.6rem')
     .attr('stroke', 'black')
@@ -515,6 +505,10 @@ function transitionFourDown() {
     .transition()
     .duration(2000)
     .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
+
+  // TODO, calculate desired test-statistic value. (left response - right response)
+  // give it to .teststat0.testStat as an attribute
+  // function should be global
 }
 
 function transitionFiveUp() {
@@ -557,6 +551,18 @@ function transitionSixDown() {
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
 }
 
+function calculateTestStatistic() {
+  let testStatistics = d3.selectAll('.dot')
+  // get left group (treatment) mean
+  leftStats = testStatistics.filter(d => d.x < (width / 2) - 15)['_groups'][0];
+  leftMean = d3.mean(leftStats, d => d['__data__'].dotValue);
+  // get right group (control) mean
+  rightStats = testStatistics.filter(d => d.x >= (width / 2) - 15)['_groups'][0];
+  rightMean = d3.mean(rightStats, d => d['__data__'].dotValue);
+
+  return leftMean - rightMean;
+
+}
 
 
 
