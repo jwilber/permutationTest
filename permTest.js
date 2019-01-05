@@ -554,10 +554,10 @@ function transitionSixDown() {
 function calculateTestStatistic() {
   let testStatistics = d3.selectAll('.dot')
   // get left group (treatment) mean
-  leftStats = testStatistics.filter(d => d.x < (width / 2) - 15)['_groups'][0];
+  leftStats = testStatistics.filter(d => d.x < (width / 2) + 15)['_groups'][0];
   leftMean = d3.mean(leftStats, d => d['__data__'].dotValue);
   // get right group (control) mean
-  rightStats = testStatistics.filter(d => d.x >= (width / 2) - 15)['_groups'][0];
+  rightStats = testStatistics.filter(d => d.x >= (width / 2) + 15)['_groups'][0];
   rightMean = d3.mean(rightStats, d => d['__data__'].dotValue);
 
   return leftMean - rightMean;
