@@ -53,10 +53,22 @@ const nodeTreatmentWidth = (d) => {
 const nodeTreatmentHeight = (d) => {
   if (d.nodeGroup == 'resp') {
     return height / 1.1
-  } else {
+  } else if (d.nodeGroup == 'llama') {
     return height / 3.5
+  } else {
+    return height * 1.5
   }
 };
+
+
+  // if (d.nodeGroup === 'llama') {
+  //     return (height / 3)
+  //   } else if (d.nodeGroup === 'resp') {
+  //     return (width / 1.1)
+  //   } else {
+  //     return height
+  //   }
+  // };
 
 const nodeGroupInitialForceCollide = (d) => {
     return d.nodeGroup === 'llama' ? 35 : 10;
@@ -67,12 +79,24 @@ const nodeGroupMoveForceCollide = (d) => {
   }
 
 const nodeInitialXPlacement = (d) => {
-    return d.nodeGroup === 'llama' ? (width / 2) : (width / 5);
+    if (d.nodeGroup === 'llama') {
+      return (width / 2)
+    } else if (d.nodeGroup === 'resp') {
+      return (width / 5)
+    } else {
+      return (width / 5)
+    }
   };
 
 const nodeInitialYPlacement = (d) => {
-    return d.nodeGroup === 'llama' ? (height / 3) : (height / 1.1);
-  }
+  if (d.nodeGroup === 'llama') {
+      return (height / 3)
+    } else if (d.nodeGroup === 'resp') {
+      return (width / 1.1)
+    } else {
+      return height
+    }
+  };
 
   const centPositions = {x: width / 2, y: height / 3}
 
@@ -80,8 +104,9 @@ const nodeInitialYPlacement = (d) => {
       .range(['coral', 'olive', 'skyblue']);
     
 
-  let sampleData = d3.range(40).map((d,i) => ({r: 40 - i * 0.5,
-                                               nodeGroup: i <= 23 ? 'llama' : i <= 30 ? 'resp' : 'added',
+  // dsn dots need to live off-screen, until the final dsn build (so don't mess w/ other nodes)
+  let sampleData = d3.range(100).map((d,i) => ({r: 40 - i * 0.5,
+                                               nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
                                                dotValue: i % 2 === 0 ? 
                                                  d3.randomNormal(8, 2.5)().toFixed(1): 
                                                  d3.randomNormal(4.5, .75)().toFixed(1)
@@ -115,7 +140,9 @@ const nodeInitialYPlacement = (d) => {
       if (d.nodeGroup === 'resp') {
         testStatClass = 'testStat'.concat(i)
         d3.select(this).classed(testStatClass, true)
-      } 
+      } else {
+        d3.select(this).classed('testStatDsn', true)
+      }
     })
 
   function changeNetwork() {
@@ -539,21 +566,26 @@ function transitionSixUp() {
 }
 
 function transitionSixDown() {
-  // move llamas & test-statistics off-screen
+  // move llamas off-screen, test-statistics off-screen & hide titles
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
   // d3.selectAll('.responseValue').transition().duration(2000).attr('cy', -2000) 
   d3.selectAll('.responseText').transition().duration(2000).attr('y', -2000) 
-
-  // hide titles
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'hidden')
+
+  // do stuff with test-statistic nodes
+  d3.selectAll('.testStatDsn')
+    .selectAll('.testStat')
+    .transition()
+    .duration(2000)
+    .attr('transform', `translate(-50, -550) scale(${showScale}, ${showScale})`)
 }
 
 function calculateTestStatistic() {
   let testStatistics = d3.selectAll('.dot')
-  // get left group (treatment) mean
+  // Calculate TREATMENT mean
   leftStats = testStatistics.filter(d => d.x < (width / 2) + 15)['_groups'][0];
   leftMean = d3.mean(leftStats, d => d['__data__'].dotValue);
-  // get right group (control) mean
+  // Calculate CONTROL mean
   rightStats = testStatistics.filter(d => d.x >= (width / 2) + 15)['_groups'][0];
   rightMean = d3.mean(rightStats, d => d['__data__'].dotValue);
 
