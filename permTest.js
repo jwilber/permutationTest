@@ -29,7 +29,7 @@ const margin = 20;
 const initialScale = 0.01;
 const showScale = 15;
 
-const headPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
+const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
 
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
@@ -81,10 +81,10 @@ const nodeInitialYPlacement = (d) => {
     
 
   let sampleData = d3.range(40).map((d,i) => ({r: 40 - i * 0.5,
-                                               nodeGroup: i <= 23 ? 'llama' : 'resp',
+                                               nodeGroup: i <= 23 ? 'llama' : i <= 30 ? 'resp' : 'added',
                                                dotValue: i % 2 === 0 ? 
-                                                 Math.round(d3.randomNormal(9, 1)()) : 
-                                                 Math.round(d3.randomNormal(4, 3)())
+                                                 d3.randomNormal(8, 2.5)().toFixed(1): 
+                                                 d3.randomNormal(4.5, .75)().toFixed(1)
                                               }));
   
   // set params for force layout
@@ -135,7 +135,7 @@ const nodeInitialYPlacement = (d) => {
         fillStyle: 'hachure',
         strokeWidth: 0.25,
         fill: 'rgba(131,131,131, .15)',
-        roughness: 0.85,
+        roughness: 0.75,
           })
         )
       })
@@ -149,7 +149,7 @@ d3.html("noun_28240_cc.svg", loadRoughsvgD3)
 
 // add test statistics
 d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function(d,i) {
-      d3.select(this).node().appendChild( rc.path(headPath, {
+      d3.select(this).node().appendChild( rc.path(roundPath, {
       stroke: 'black',
       fillStyle: 'hachure',
       strokeWidth: 2.25,
@@ -160,17 +160,6 @@ d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function
     });
 
 d3.selectAll('.dotResponse').selectAll('path').attr("transform", `scale(${initialScale}, ${initialScale}) translate(-250,-50)`)
-
-
-// function removeTestStat(testStats) {
-//   // remove added test statistic nodes
-
-  // d3.selectAll(testStat)
-  //   .select('.testStat')
-  //   .transition()
-  //   .duration(700)
-  //   .attr('transform', 'translate(0, 0) scale(0, 0)')
-// }
 
 function nodeRandomPos(d) {
   if (d.nodeGroup === 'llama') {
@@ -354,12 +343,12 @@ function transitionZeroDown() {
 
 function transitionOneUp() {
   d3.selectAll('text.responseText').remove();
-  d3.selectAll('circle.responseValue')
-    .attr('stroke-width', 0)
-    .transition()
-    .duration(1000)
-    .attr('r', 0)
-    .remove()
+  // d3.selectAll('circle.responseValue')
+  //   .attr('stroke-width', 0)
+  //   .transition()
+  //   .duration(1000)
+  //   .attr('r', 0)
+  //   .remove()
 
   d3.selectAll('g.responseStuff')
     .transition().duration(1100).remove()
@@ -394,25 +383,25 @@ function transitionTwoDown() {
     .append('g')
     .attr('class', 'responseStuff');
 
-  respGroups.append('circle')
-    .attr('class', 'responseValue')
-    .attr('r', 0)
-    .attr('cx', 20)
-    .attr('cy', 62)
-    .style('opacity', .75)
-    .transition()
-    .duration(1000)
-    .attr('r', d => 6.4)
-    .attr('fill' ,'pink')
-    // .attr('stroke', 'black')
-    .attr('stroke-width', .1)
-    .transition()
-    .duration(100)
-    .attr('r', 8)
-    .attr('stroke-width', .51)
-    .attr('stroke', 'black')
-    .transition()
-    .delay(450)
+  // respGroups.append('circle')
+  //   .attr('class', 'responseValue')
+  //   .attr('r', 0)
+  //   .attr('cx', 20)
+  //   .attr('cy', 62)
+  //   .style('opacity', .75)
+  //   .transition()
+  //   .duration(1000)
+  //   .attr('r', d => 6.4)
+  //   .attr('fill' ,'pink')
+  //   // .attr('stroke', 'black')
+  //   .attr('stroke-width', .1)
+  //   .transition()
+  //   .duration(100)
+  //   .attr('r', 8)
+  //   .attr('stroke-width', .51)
+  //   .attr('stroke', 'black')
+  //   .transition()
+  //   .delay(450)
 
   respGroups.append('text')
     .attr('class', 'responseText')
@@ -475,7 +464,7 @@ function transitionFourUp() {
     .attr('transform', 'translate(0, 0)')
 
   // hide all test statistic nodes
-  Array.from(Array(16).keys()).slice(4,16).map(i => '.testStat'.concat(i)).map( testStat => {
+  Array.from(Array(16).keys()).slice(3,16).map(i => '.testStat'.concat(i)).map( testStat => {
       d3.selectAll(testStat)
         .select('.testStat')
         .transition()
@@ -514,6 +503,9 @@ function transitionFourDown() {
 function transitionFiveUp() {
   // return llamas to their positions
   d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0)');
+  d3.selectAll('.responseText').transition().duration(1600).attr('y', 65.2) 
+  // re-add group titles
+  d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'visible')
 
 }
 
@@ -547,8 +539,13 @@ function transitionSixUp() {
 }
 
 function transitionSixDown() {
-  // move llamas off-screen
+  // move llamas & test-statistics off-screen
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
+  // d3.selectAll('.responseValue').transition().duration(2000).attr('cy', -2000) 
+  d3.selectAll('.responseText').transition().duration(2000).attr('y', -2000) 
+
+  // hide titles
+  d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'hidden')
 }
 
 function calculateTestStatistic() {
