@@ -29,12 +29,18 @@ const margin = 20;
 const initialScale = 0.01;
 const showScale = 15;
 
-const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
+// const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
 
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = height / 1.8;
 
+const radius = 5;
+
+  function changeNetwork2() {
+      d3.selectAll('.dotResponse')
+        .attr('transform', d => `translate(${d.x}, ${Math.min(d.y, height + 500 - 1)})`)
+    }
 
 //////////////////////////
 ///// node functions /////
@@ -59,16 +65,6 @@ const nodeTreatmentHeight = (d) => {
     return height * 1.5
   }
 };
-
-
-  // if (d.nodeGroup === 'llama') {
-  //     return (height / 3)
-  //   } else if (d.nodeGroup === 'resp') {
-  //     return (width / 1.1)
-  //   } else {
-  //     return height
-  //   }
-  // };
 
 const nodeGroupInitialForceCollide = (d) => {
     return d.nodeGroup === 'llama' ? 35 : 10;
@@ -106,11 +102,12 @@ const nodeInitialYPlacement = (d) => {
 
   // dsn dots need to live off-screen, until the final dsn build (so don't mess w/ other nodes)
   let sampleData = d3.range(100).map((d,i) => ({r: 40 - i * 0.5,
-                                               nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
-                                               dotValue: i % 2 === 0 ? 
-                                                 d3.randomNormal(8, 2.5)().toFixed(1): 
-                                                 d3.randomNormal(4.5, .75)().toFixed(1)
-                                              }));
+                                                value: width/2 + d3.randomNormal(0, 1.5)() * 50,
+                                                nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
+                                                dotValue: i % 2 === 0 ? 
+                                                  d3.randomNormal(8, 2.5)().toFixed(1): 
+                                                  d3.randomNormal(4.5, .75)().toFixed(1)
+                                                }));
   
   // set params for force layout
 
@@ -136,6 +133,12 @@ const nodeInitialYPlacement = (d) => {
     .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false');
 
   d3.selectAll('.dotResponse')
+    .append('circle')
+    .style('opacity', .75)
+    .attr('fill' ,'pink')
+    .attr('r', 0)
+    .attr('stroke-width', .51)
+    .attr('stroke', 'black')
     .attr('testStatGroup', function(d,i) {
       if (d.nodeGroup === 'resp') {
         testStatClass = 'testStat'.concat(i)
@@ -175,18 +178,18 @@ d3.html("noun_28240_cc.svg", loadRoughsvgD3)
 
 
 // add test statistics
-d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function(d,i) {
-      d3.select(this).node().appendChild( rc.path(roundPath, {
-      stroke: 'black',
-      fillStyle: 'hachure',
-      strokeWidth: 2.25,
-      fill: 'red',
-      roughness: 6.85,
-        })
-      )
-    });
+// d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function(d,i) {
+//       d3.select(this).node().appendChild( rc.path(roundPath, {
+//       stroke: 'black',
+//       fillStyle: 'hachure',
+//       strokeWidth: 2.25,
+//       fill: 'red',
+//       roughness: 6.85,
+//         })
+//       )
+//     });
 
-d3.selectAll('.dotResponse').selectAll('path').attr("transform", `scale(${initialScale}, ${initialScale}) translate(-250,-50)`)
+// d3.selectAll('.dotResponse').selectAll('path').attr("transform", `scale(${initialScale}, ${initialScale}) translate(-250,-50)`)
 
 function nodeRandomPos(d) {
   if (d.nodeGroup === 'llama') {
@@ -281,10 +284,10 @@ function shuffleTestStat(nodePositions, testStat) {
   randomizeNodes(nodePositions)
   // select chosen class and move it
   d3.selectAll(testStat)
-    .select('.testStat')
     .transition()
     .duration(700)
-    .attr('transform', `translate(0, 0) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(0, 0)`)
+    .attr('r', 10)
 }
 
 
@@ -298,6 +301,16 @@ function moveNodes() {
   force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
   .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
   force.alpha(.1).restart();
+}
+
+function moveHist(){
+  force.force('center', null)
+  .force('collision', d3.forceCollide(d => 12).strength(1))
+  .alphaDecay(.025) 
+    .force('x', d3.forceX((d,i) => d.value).strength(5))
+    .force('y', d3.forceY(height - radius).strength(.7))
+    .on('tick', changeNetwork2)
+    force.alpha(.1).restart()
 }
 
 function randomizeNodes(nodePositions) {
@@ -389,6 +402,7 @@ function transitionOneDown() {
 
   // position llamas in treatment groups
     moveNodes()
+
   // // show titles
   d3.selectAll('.groupTitle').each(function() {
     d3.select(this).transition().delay(800).attr('visibility', 'visible')
@@ -398,10 +412,10 @@ function transitionOneDown() {
 function transitionTwoUp() {
   // move node back to original position
   d3.selectAll('.testStat0')
-    .select('.testStat')
     .transition()
     .duration(2000)
     .attr('transform', 'translate(0, 0)')
+    .attr('r', 0)
 }
 
 function transitionTwoDown() {
@@ -457,35 +471,33 @@ function transitionThreeUp() {
 
   // move testStat2 back to original position
   d3.selectAll('.testStat2')
-    .select('.testStat')
     .transition()
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
+    .attr('r', 0)
 
   // move testStat1 back to center of focus
   d3.selectAll('.testStat0')
-    .select('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(-50, -150)`)
+    .attr('r', 10)
 }
 
 function transitionThreeDown() {
   // select chosen class and move it
   d3.selectAll('.testStat0')
-    .select('.testStat')
     .transition()
     .duration(50)
     .attr('transform', 'translate(-50, -150)')
     .transition()
     .duration(2000)
-    .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
+    .attr('r', 12)
 }
 
 function transitionFourUp() {
   // move node back to original position
   d3.selectAll('.testStat0')
-    .select('.testStat')
     .transition()
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
@@ -493,10 +505,10 @@ function transitionFourUp() {
   // hide all test statistic nodes
   Array.from(Array(16).keys()).slice(3,16).map(i => '.testStat'.concat(i)).map( testStat => {
       d3.selectAll(testStat)
-        .select('.testStat')
         .transition()
         .duration(700)
-        .attr('transform', 'translate(0, 0) scale(0, 0)') 
+        .attr('transform', 'translate(0, 0)') 
+        .attr('r', 0)
   });
 
 }
@@ -507,20 +519,20 @@ function transitionFourDown() {
 
   // move test statistic1 back to it's original position
   d3.selectAll('.testStat0')
-    .select('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', `translate(0, 0) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(0, 0)`)
+    .attr
 
   // move test statistic 2 to center of focus
   d3.selectAll('.testStat2')
-    .select('.testStat')
     .transition()
     .duration(50)
     .attr('transform', 'translate(-50, -150)')
     .transition()
     .duration(2000)
-    .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(-50, -150)`)
+    .attr('r', 10)
 
   // TODO, calculate desired test-statistic value. (left response - right response)
   // give it to .teststat0.testStat as an attribute
@@ -541,10 +553,9 @@ function transitionFiveDown() {
 
   // move test statistic1 back to it's original position
   d3.selectAll('.testStat2')
-    .select('.testStat')
     .transition()
     .duration(700)
-    .attr('transform', `translate(0, 0) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(0, 0)`)
 
   // permute llama groupings multiple times
   loop(
@@ -574,10 +585,11 @@ function transitionSixDown() {
 
   // do stuff with test-statistic nodes
   d3.selectAll('.testStatDsn')
-    .selectAll('.testStat')
     .transition()
     .duration(2000)
-    .attr('transform', `translate(-50, -550) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(-50, -550)`)
+    .attr('r', 20)
+  moveHist()
 }
 
 function calculateTestStatistic() {
