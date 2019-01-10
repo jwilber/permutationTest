@@ -24,6 +24,7 @@ function loop() {
 const svgD3 = d3.select('svg');
 const width = svgD3.node().getBoundingClientRect().width;
 const height = svgD3.node().getBoundingClientRect().height;
+console.log(height)
 const margin = 20;
 
 const initialScale = 0.01;
@@ -39,7 +40,10 @@ const radius = 5;
 
   function changeNetwork2() {
       d3.selectAll('.dotResponse')
-        .attr('transform', d => `translate(${d.x}, ${Math.min(d.y, height + 500 - 1)})`)
+        .attr('transform', function(d) {
+          // console.log(d);
+          return `translate(${d.x}, ${Math.min(d.value, height - radius - 1)})`
+        })
     }
 
 //////////////////////////
@@ -47,7 +51,7 @@ const radius = 5;
 //////////////////////////
 
 const nodeTreatmentWidth = (d) => {
-  if (d.nodeGroup == 'resp') {
+  if (d.nodeGroup === 'resp' || d.nodeGroup === 'dsn') {
     return width / 2
   } else if (d.index % 2 == 0) {
     return trtCenter
@@ -62,7 +66,8 @@ const nodeTreatmentHeight = (d) => {
   } else if (d.nodeGroup == 'llama') {
     return height / 3.5
   } else {
-    return height * 1.5
+    // return height * 1.5
+    return height / 1.1
   }
 };
 
@@ -71,15 +76,31 @@ const nodeGroupInitialForceCollide = (d) => {
   }
 
 const nodeGroupMoveForceCollide = (d) => {
-    return d.nodeGroup === 'llama' ? 45 : 15;
+  if (d.nodeGroup == 'resp') {
+    return 15
+  } else if (d.nodeGroup == 'llama') {
+    return 45
+  } else {
+    return 0
   }
+};
+
+const nodeGroupMoveForceCollideUp = (d) => {
+  if (d.nodeGroup == 'resp') {
+    return 15
+  } else if (d.nodeGroup == 'llama') {
+    return 45
+  } else {
+    return 15
+  }
+};
 
 const nodeInitialXPlacement = (d) => {
     if (d.nodeGroup === 'llama') {
       return (width / 2)
     } else if (d.nodeGroup === 'resp') {
       return (width / 5)
-    } else {
+    } else { // dsn
       return (width / 5)
     }
   };
@@ -88,9 +109,9 @@ const nodeInitialYPlacement = (d) => {
   if (d.nodeGroup === 'llama') {
       return (height / 3)
     } else if (d.nodeGroup === 'resp') {
-      return (width / 1.1)
-    } else {
-      return height
+      return (height / 1.1)
+    } else { // dsn
+      return height / 1.1
     }
   };
 
@@ -176,21 +197,6 @@ var rc = rough.svg(svg);
 
 d3.html("noun_28240_cc.svg", loadRoughsvgD3) 
 
-
-// add test statistics
-// d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function(d,i) {
-//       d3.select(this).node().appendChild( rc.path(roundPath, {
-//       stroke: 'black',
-//       fillStyle: 'hachure',
-//       strokeWidth: 2.25,
-//       fill: 'red',
-//       roughness: 6.85,
-//         })
-//       )
-//     });
-
-// d3.selectAll('.dotResponse').selectAll('path').attr("transform", `scale(${initialScale}, ${initialScale}) translate(-250,-50)`)
-
 function nodeRandomPos(d) {
   if (d.nodeGroup === 'llama') {
     return d.index  <= 12 ? trtCenter : cntrlCenter;
@@ -241,6 +247,7 @@ function nodeRandomPosSix(d) {
 
 function nodeRandomPosSeven(d) {
   if (d.nodeGroup === 'llama') {
+    // randomly assign i-th llamas to treatment center, others to control center
     return [2, 4, 6, 9, 11, 16, 17, 18, 19, 3, 5, 7].indexOf(d.index) > -1 ? trtCenter : cntrlCenter;
   } else {
     return (width / 2)
@@ -305,12 +312,30 @@ function moveNodes() {
 
 function moveHist(){
   force.force('center', null)
-  .force('collision', d3.forceCollide(d => 12).strength(1))
+  .force('collision', d3.forceCollide(d => 4).strength(1))
   .alphaDecay(.025) 
+  // .velocityDecay(.5)
     .force('x', d3.forceX((d,i) => d.value).strength(5))
-    .force('y', d3.forceY(height - radius).strength(.7))
+    .force('y', d3.forceY(height/2 - radius).strength(2))
     .on('tick', changeNetwork2)
-    force.alpha(.1).restart()
+    force.alpha(.5).restart()
+}
+
+function showAllTestDsnNodes() {
+  d3.selectAll('.testStatDsn')
+    .transition()
+    .duration(1000)
+    .attr('r', 10);
+
+  force.force('center', null)
+    .force('collision', d3.forceCollide(d => 33))
+    .alphaDecay(.02)
+    .velocityDecay(0.5)
+  force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
+  force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollideUp))
+    .on('tick', changeNetwork)
+  force.alpha(.1).restart();
 }
 
 function randomizeNodes(nodePositions) {
@@ -394,12 +419,6 @@ function transitionZeroDown() {
 
 function transitionOneUp() {
   d3.selectAll('text.responseText').remove();
-  // d3.selectAll('circle.responseValue')
-  //   .attr('stroke-width', 0)
-  //   .transition()
-  //   .duration(1000)
-  //   .attr('r', 0)
-  //   .remove()
 
   d3.selectAll('g.responseStuff')
     .transition().duration(1100).remove()
@@ -434,26 +453,6 @@ function transitionTwoDown() {
   let respGroups = dots.filter(d => d.nodeGroup === 'llama')
     .append('g')
     .attr('class', 'responseStuff');
-
-  // respGroups.append('circle')
-  //   .attr('class', 'responseValue')
-  //   .attr('r', 0)
-  //   .attr('cx', 20)
-  //   .attr('cy', 62)
-  //   .style('opacity', .75)
-  //   .transition()
-  //   .duration(1000)
-  //   .attr('r', d => 6.4)
-  //   .attr('fill' ,'pink')
-  //   // .attr('stroke', 'black')
-  //   .attr('stroke-width', .1)
-  //   .transition()
-  //   .duration(100)
-  //   .attr('r', 8)
-  //   .attr('stroke-width', .51)
-  //   .attr('stroke', 'black')
-  //   .transition()
-  //   .delay(450)
 
   respGroups.append('text')
     .attr('class', 'responseText')
@@ -513,7 +512,7 @@ function transitionFourUp() {
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
 
-  // hide all test statistic nodes
+  // hide all display test-statistic nodes
   Array.from(Array(16).keys()).slice(3,16).map(i => '.testStat'.concat(i)).map( testStat => {
       d3.selectAll(testStat)
         .transition()
@@ -521,6 +520,11 @@ function transitionFourUp() {
         .attr('transform', 'translate(0, 0)') 
         .attr('r', 0)
   });
+      // hide the force test-statistic nodes
+      d3.selectAll('.testStatDsn')
+        .transition()
+        .duration(700)
+        .attr('r', 0);
 
 }
 
@@ -575,6 +579,8 @@ function transitionFiveUp() {
     .on('tick', changeNetwork)
   force.alpha(.1).restart();
 
+  setTimeout(showAllTestDsnNodes, 2200);
+
 }
 
 
@@ -597,8 +603,10 @@ function transitionFiveDown() {
     function() { shuffleTestStat(nodeRandomPosEight, '.testStat9') },
     function() { shuffleTestStat(nodeRandomPosNine, '.testStat10') },
     function() { shuffleTestStat(nodeRandomPosTen, '.testStat11') },
-    function() { shuffleTestStat(nodeRandomPosEight, '.testStat0') }, )
-  ;
+    function() { shuffleTestStat(nodeRandomPosEight, '.testStat0') }, 
+    );
+
+  setTimeout(showAllTestDsnNodes, 3500);
 }
 
 function transitionSixUp() {
@@ -612,12 +620,7 @@ function transitionSixDown() {
   d3.selectAll('.responseText').transition().duration(2000).attr('y', -2000) 
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'hidden')
 
-  // do stuff with test-statistic nodes
-  d3.selectAll('.testStatDsn')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -550)`)
-    .attr('r', 20)
+  
 
   // move nodes to distribution
   moveHist()
