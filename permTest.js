@@ -323,6 +323,17 @@ function randomizeNodes(nodePositions) {
     .alpha(.1).restart();
 }
 
+function randomizeNodes2(nodePositions) {
+  // shuffle ('permute') nodes
+  force.force('center', null)
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    .force('x', d3.forceX().strength(1).x(nodePositions))
+    .alpha(.6).restart();
+}
+
+
 
 function moveToCenter() {
   // move nodes to center (initial state)
@@ -546,6 +557,24 @@ function transitionFiveUp() {
   // re-add group titles
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'visible')
 
+  // do stuff with test-statistic nodes
+  d3.selectAll('.testStatDsn')
+    .transition()
+    .duration(2000)
+    .attr('transform', `translate(0, 0)`)
+    .attr('r', 0)
+
+
+  force.force('center', null)
+  .force('collision', d3.forceCollide(d => 33))
+  .alphaDecay(.0005)
+  .velocityDecay(0.5)
+  force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
+  force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
+  .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .on('tick', changeNetwork)
+  force.alpha(.1).restart();
+
 }
 
 
@@ -589,6 +618,8 @@ function transitionSixDown() {
     .duration(2000)
     .attr('transform', `translate(-50, -550)`)
     .attr('r', 20)
+
+  // move nodes to distribution
   moveHist()
 }
 
