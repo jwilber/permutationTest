@@ -122,13 +122,13 @@ const nodeInitialYPlacement = (d) => {
     
 
   // dsn dots need to live off-screen, until the final dsn build (so don't mess w/ other nodes)
-  let sampleData = d3.range(100).map((d,i) => ({r: 40 - i * 0.5,
-                                                value: width/2 + d3.randomNormal(0, 1.5)() * 50,
-                                                nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
-                                                dotValue: i % 2 === 0 ? 
-                                                  d3.randomNormal(8, 2.5)().toFixed(1): 
-                                                  d3.randomNormal(4.5, .75)().toFixed(1)
-                                                }));
+      let sampleData = d3.range(100).map((d,i) => ({r: 40 - i * 0.5,
+                                                    value: width/2 + d3.randomNormal(0, 1.5)() * 50,
+                                                    nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
+                                                    dotValue: i % 2 === 0 ? 
+                                                      d3.randomNormal(8, 2.5)().toFixed(1): 
+                                                      d3.randomNormal(4.5, .75)().toFixed(1)
+                                                    }));
   
   // set params for force layout
 
@@ -393,6 +393,60 @@ let controlTitle = svgD3.append('text')
   .attr('visibility', 'hidden')
 
 
+  // stuff for distribution
+  //x scales
+    const x = d3.scaleLinear()
+        .domain(d3.extent(sampleData, d => +d.dotValue))
+        .rangeRound([width/6, width]);  
+
+        //number of bins for histogram
+    const nbins = 30;
+
+    function moveToDistribution(){ 
+
+        //histogram binning
+        const histogram = d3.histogram()
+          .domain(x.domain())
+          .thresholds(x.ticks(nbins))
+          .value(d => +d.dotValue);
+
+        //binning data and filtering out empty bins
+        const bins = histogram(sampleData);
+
+        console.log(bins)
+        //g container for each bin
+        let binContainer = svgD3
+          .append('g')
+          .attr('transform', `translate(100, ${-height/2})`)
+          .selectAll("g.gBin")
+          .data(bins)
+          .enter()
+          .append("g" )
+          .attr("class", "gBin")
+          .attr("transform", d => `translate(${x(d.x0)}, ${height})`)
+          .selectAll("circle")
+          .data(d => d.map((p, i) => {
+              return {value: p.Value,
+                      radius: (x(d.x1)-x(d.x0))/2.5}
+          }))
+          .enter()
+          .append("circle")
+          .attr("class", "enter")
+          .attr("cx", 0) //g element already at correct x pos
+          .attr("cy", (d, i) => {
+              return - i * 2 * d.radius - d.radius})
+          .attr("r", d => d.radius/2);
+      
+      // add x axis
+      svgD3.append("g")
+        .attr("class", "axis axis--x")
+        .attr("transform", "translate(0," + (height/2) + ")")
+        .call(d3.axisBottom(x));
+      
+    };//moveToDistribution
+
+
+
 //////////////////////////////////////////////////
 ////////// Transition Functions /////////////////
 //////////////////////////////////////////////////
@@ -623,7 +677,8 @@ function transitionSixDown() {
   
 
   // move nodes to distribution
-  moveHist()
+  // moveHist()
+  moveToDistribution();
 }
 
 function calculateTestStatistic() {
