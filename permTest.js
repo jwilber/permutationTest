@@ -122,7 +122,7 @@ const nodeInitialYPlacement = (d) => {
     
 
   // dsn dots need to live off-screen, until the final dsn build (so don't mess w/ other nodes)
-      let sampleData = d3.range(150).map((d,i) => ({r: 40 - i * 0.5,
+      let sampleData = d3.range(350).map((d,i) => ({r: 40 - i * 0.5,
                                                     value: width/2 + d3.randomNormal(0, 1.5)() * 50,
                                                     nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
                                                     dotValue: i % 2 === 0 ? 
@@ -160,14 +160,14 @@ const nodeInitialYPlacement = (d) => {
     .attr('r', 0)
     .attr('stroke-width', .51)
     .attr('stroke', 'black')
-    .attr('testStatGroup', function(d,i) {
-      if (d.nodeGroup === 'resp') {
-        testStatClass = 'testStat'.concat(i)
-        d3.select(this).classed(testStatClass, true)
-      } else {
-        d3.select(this).classed('testStatDsn', true)
-      }
-    })
+    // .attr('testStatGroup', function(d,i) {
+    //   if (d.nodeGroup === 'resp') {
+    //     testStatClass = 'testStat'.concat(i)
+    //     d3.select(this).classed(testStatClass, true)
+    //   } else {
+    //     d3.select(this).classed('testStatDsn', true)
+    //   }
+    // })
 
   function changeNetwork() {
     d3.selectAll('g.dot')
@@ -287,14 +287,13 @@ function nodeRandomPosition(d) {
 };
 
 
-function shuffleTestStat(nodePositions, testStat) {
+function shuffleTestStat(nodePositions, responseNode) {
   randomizeNodes(nodePositions)
   // select chosen class and move it
-  d3.selectAll(testStat)
+  d3.selectAll(responseNode)
     .transition()
-    .duration(700)
-    .attr('transform', `translate(0, 0)`)
-    .attr('r', 10)
+    .duration(800)
+    .attr('r', d => d.radius / 1.2)
 }
 
 
@@ -421,11 +420,44 @@ const nbins = 25;
 
 
 //number of bins for histogram
+function showCircles(){
+  d3.selectAll('circle.histCirc')
+    .transition()
+    .duration(800)
+    .attr("r", (d,i) => (i < 4 && d.dataIndex < 5) ? d.radius/1.2 : 0)
+}
 
-function update(num){
+function showSecondResponseNode(){
+  // i controls row, d.dataIndex is count in row, left-to-right
+  d3.selectAll('circle.histCirc')
+      // .filter((d,i) => (i < 10 && d.dataIndex < 15))
+    // .enter()
+    .transition()
+    // .append('circle')
+    .attr("r", (d,i) => (i < 20) ? d.radius/1.2 : d.radius / 10.2)
+    // .attr("visibility", (d,i) => (i < 10 && d.dataIndex < 15) ? 'hidden' : 'visible')
+}
+
+// .attr('testStatGroup', function(d,i) {
+//           if (i < 1 && d.dataIndex == 12) {
+//             d3.select(this).classed('response1', true)
+//           } else if (i < 1 && d.dataIndex == 9) {
+//             d3.select(this).classed('response2', true)
+//           }
+
+function assignResponseNodes(d,i) {
+  'testStat'.concat(i)
+  if (i < 1 && d.dataIndex < 15) {
+    d3.select(this).classed('resonse'.concat(d.dataIndex), true)
+  }
+}
+
+function update(){
   // force.stop()
 
-    let data = sampleData.filter(d => d.nodeGroup === 'dsn').slice(0, num);
+    // let data = sampleData.filter(d => d.nodeGroup === 'dsn')
+    //       .slice(startNum, endNum);
+    let data = sampleData.filter(d => d.nodeGroup === 'dsn')
 
     //histogram binning
     const histogram = d3.histogram()
@@ -451,8 +483,9 @@ function update(num){
 
     //need to populate the bin containers with data the first time
     binContainerEnter.selectAll(".preHistPosit")
-        .data(d => d.map((p, i) => {
-          return {idx: i,
+        .data((d,i) => d.map((p, j) => {
+          return {idx: j,
+                  dataIndex: i,
                   value: p.Value,
                   radius: (x(d.x1)-x(d.x0))/1.9
                 }
@@ -460,16 +493,46 @@ function update(num){
       .enter()
       .append("circle")
       .attr('class', 'histCirc')
+      .attr('rowIndex', (d,i) => i)
+      .attr('circleIndex', (d,i) => d.dataIndex * (i + 1))
+      .attr('testStatGroup', function(d,i) {
+        if (i < 1 && d.dataIndex == 12) {
+          d3.select(this).classed('response1', true)
+        } else if (i < 1 && d.dataIndex == 9) {
+          d3.select(this).classed('response2', true)
+        } else if (i < 1 && d.dataIndex == 5) {
+          d3.select(this).classed('response3', true)
+        } else if (i < 1 && d.dataIndex == 11) {
+          d3.select(this).classed('response4', true)
+        } else if (i < 1 && d.dataIndex == 7) {
+          d3.select(this).classed('response5', true)
+        } else if (i < 1 && d.dataIndex == 6) {
+          d3.select(this).classed('response6', true)
+        } else if (i < 1 && d.dataIndex == 13) {
+          d3.select(this).classed('response7', true)
+        } else if (i < 1 && d.dataIndex == 8) {
+          d3.select(this).classed('response8', true)
+        } else if (i < 1 && d.dataIndex == 2) {
+          d3.select(this).classed('response9', true)
+        } else if (i < 1 && d.dataIndex == 10) {
+          d3.select(this).classed('response10', true)
+        } else {
+          d3.select(this).classed('histogramNode', true)
+        }
+      })
       .transition()
         .attr("cx", 0) //g element already at correct x pos
         .attr("cy", d => - d.idx * 2 * d.radius - d.radius - (height/8)) // control height here
         .attr("r", 0)
         .transition()
           .duration(800)
-          .attr("r", d =>(d.length==0) ? 0 : d.radius/1.1)
-          .style('opacity', .75)
+          .attr('r', d => 0)
+          // .attr("r", (d,i) => (i < 1 && d.dataIndex == 12) ? d.radius/1.2 : 0)
+          // .attr('visibility', (d,i) => (i < 1 && d.dataIndex == 12) ? 'visible' : 'hidden')
+          .style('opacity', 1)
           .attr('fill' ,'pink')
-          .attr('stroke-width', .51)
+          .transition()
+          .attr('stroke-width', .3)
           .attr('stroke', 'black')
 
     binContainerEnter.merge(binContainer)
@@ -620,6 +683,11 @@ function transitionOneDown() {
   d3.selectAll('.groupTitle').each(function() {
     d3.select(this).transition().delay(800).attr('visibility', 'visible')
   })
+
+  update()
+
+  // init dsn chart, but make them all invisible
+  // update(0,250);
 }
 
 function transitionTwoUp() {
@@ -629,6 +697,11 @@ function transitionTwoUp() {
     .duration(2000)
     .attr('transform', 'translate(0, 0)')
     .attr('r', 0)
+
+  // hide response node
+  d3.selectAll('circle.response1')
+    .transition()
+    .attr('r', d => 0)
 }
 
 function transitionTwoDown() {
@@ -656,6 +729,8 @@ function transitionTwoDown() {
     .attr('visibility', 'visible')
     .transition()
     .delay(0)
+
+  // showCircles();
 }
 
 function transitionThreeUp() {
@@ -675,41 +750,28 @@ function transitionThreeUp() {
     .duration(2000)
     .attr('transform', `translate(-50, -150)`)
     .attr('r', 10)
+
+  d3.selectAll('circle.response2')
+    .transition()
+    .attr('r', d => 0)
 }
 
 function transitionThreeDown() {
-  // select chosen class and move it
-  d3.selectAll('.testStat0')
-    .transition()
-    .duration(50)
-    .attr('transform', 'translate(-50, -150)')
-    .transition()
-    .duration(2000)
-    .attr('r', 12)
 
-  // HIST ENTER
+  d3.selectAll('circle.response1')
+    .transition()
+    .attr('r', d => d.radius / 1.2)
+
 }
 
 function transitionFourUp() {
-  // move node back to original position
-  d3.selectAll('.testStat0')
-    .transition()
-    .duration(1000)
-    .attr('transform', 'translate(0, 0)')
 
-  // hide all display test-statistic nodes
-  Array.from(Array(16).keys()).slice(3,16).map(i => '.testStat'.concat(i)).map( testStat => {
-      d3.selectAll(testStat)
+  Array.from(Array(10).keys()).slice(3,10).map(i => '.response'.concat(i)).map( responseNode => {
+      d3.selectAll(responseNode)
         .transition()
         .duration(700)
-        .attr('transform', 'translate(0, 0)') 
         .attr('r', 0)
   });
-      // hide the force test-statistic nodes
-      d3.selectAll('.testStatDsn')
-        .transition()
-        .duration(700)
-        .attr('r', 0);
 
 }
 
@@ -717,24 +779,10 @@ function transitionFourDown() {
   // shuffle ('permute') nodes
   randomizeNodes(nodeRandomPos)
 
-  // move test statistic1 back to it's original position
-  d3.selectAll('.testStat0')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(0, 0)`)
-    .attr
-
-  // move test statistic 2 to center of focus
-  d3.selectAll('.testStat2')
-    .transition()
-    .duration(50)
-    .attr('transform', 'translate(-50, -150)')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -150)`)
-    .attr('r', 10)
-
   // HIST ENTER
+  d3.selectAll('circle.response2')
+    .transition()
+    .attr('r', d => d.radius / 1.2)
 
   // TODO, calculate desired test-statistic value. (left response - right response)
   // give it to .teststat0.testStat as an attribute
@@ -749,20 +797,29 @@ function transitionFiveUp() {
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'visible')
 
   // do stuff with test-statistic nodes
-  d3.selectAll('.testStatDsn')
+  // d3.selectAll('.testStatDsn')
+  //   .transition()
+  //   .duration(2000)
+  //   .attr('transform', `translate(0, 0)`)
+  //   .attr('r', 0)
+
+  // remove histogram nodes
+  d3.selectAll('circle.histogramNode')
     .transition()
-    .duration(2000)
-    .attr('transform', `translate(0, 0)`)
+    .duration(800)
     .attr('r', 0)
+
+  // remove axis
+  d3.select('.axis--x').remove();
 
 
   force.force('center', null)
-  .force('collision', d3.forceCollide(d => 33))
-  .alphaDecay(.0005)
-  .velocityDecay(0.5)
-  force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
-  force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
-  .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .force('collision', d3.forceCollide(d => 33))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
+    force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
     .on('tick', changeNetwork)
   force.alpha(.1).restart();
 
@@ -781,20 +838,20 @@ function transitionFiveDown() {
 
   // permute llama groupings multiple times
   loop(
-    function() { shuffleTestStat(nodeRandomPosTwo, '.testStat3') },
-    function() { shuffleTestStat(nodeRandomPosThree, '.testStat4') },
-    function() { shuffleTestStat(nodeRandomPosFour, '.testStat5') }, 
-    function() { shuffleTestStat(nodeRandomPosFive, '.testStat6') },
-    function() { shuffleTestStat(nodeRandomPosSix, '.testStat7') },
-    function() { shuffleTestStat(nodeRandomPosSeven, '.testStat8') },
-    function() { shuffleTestStat(nodeRandomPosEight, '.testStat9') },
-    function() { shuffleTestStat(nodeRandomPosNine, '.testStat10') },
-    function() { shuffleTestStat(nodeRandomPosTen, '.testStat11') },
-    function() { shuffleTestStat(nodeRandomPosEight, '.testStat0') }, 
+    function() { shuffleTestStat(nodeRandomPosTwo, '.response3') },
+    function() { shuffleTestStat(nodeRandomPosThree, '.response4') },
+    function() { shuffleTestStat(nodeRandomPosFour, '.response5') }, 
+    function() { shuffleTestStat(nodeRandomPosFive, '.response6') },
+    function() { shuffleTestStat(nodeRandomPosSix, '.response7') },
+    function() { shuffleTestStat(nodeRandomPosSeven, '.response8') },
+    function() { shuffleTestStat(nodeRandomPosEight, '.response9') },
+    // function() { shuffleTestStat(nodeRandomPosNine, 'response3') },
+    // function() { shuffleTestStat(nodeRandomPosTen, 'response3') },
+    // function() { shuffleTestStat(nodeRandomPosEight, 'response3') }, 
     );
 
   // setTimeout(showAllTestDsnNodes, 3200);
-  setTimeout(update(1), 3200)
+  // setTimeout(update(5, 200), 3200)
 
 
   // HIST ENTER
@@ -807,7 +864,6 @@ function transitionSixUp() {
 function transitionSixDown() {
   // move llamas off-screen, test-statistics off-screen & hide titles
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
-  // d3.selectAll('.responseValue').transition().duration(2000).attr('cy', -2000) 
   d3.selectAll('.responseText').transition().duration(2000).attr('y', -2000) 
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'hidden')
 
@@ -816,11 +872,14 @@ function transitionSixDown() {
   // move nodes to distribution
   // moveHist()
   // moveToDistribution();
-  update(200);
+  d3.selectAll('circle.histogramNode')
+    .transition()
+    .duration(1400)
+    .attr('r', d => d.radius / 1.2)
 
   svgD3.append("g")
   .attr("class", "axis axis--x")
-  .attr("transform", "translate(0," + (height / 2) + ")")
+  .attr("transform", "translate(0," + (height/1.12) + ")")
   .call(d3.axisBottom(x));
 }
 
