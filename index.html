@@ -12,6 +12,7 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/2.2.5/rough.min.js"></script>
 	<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.4/seedrandom.min.js"></script>
 	<!-- <script src=assets/d3v4.js></script> -->
 	<stylesheet href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
 	<style>
@@ -179,6 +180,9 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/scrollama/1.3.0/scrollama.js'></script>
 	<!-- <script src=assets/scrollama.js></script> -->
 	<script>
+		// seet seed so numbers are always the same
+		Math.seedrandom('seed');
+
 		var container = d3.select('#scroll');
 		var graphic = container.select('.scroll__graphic');
 		var chart = graphic.select('.chart');
@@ -262,6 +266,7 @@
 			   	console.log('7 up')
 		   } else if (response.index == 7 & response.direction == 'down'){
 			   	console.log('7 down')
+			   	transitionSevenDown();
 		   }
 		 } 
 		 // new 2down == 3down
