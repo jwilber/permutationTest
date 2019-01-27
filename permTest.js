@@ -162,7 +162,7 @@ const nodeInitialYPlacement = (d) => {
         fillStyle: 'hachure',
         strokeWidth: 0.25,
         fill: 'rgba(131,131,131, .15)',
-        roughness: 0.75,
+        roughness: 0.54,
           })
         )
       })
@@ -413,7 +413,7 @@ function update(){
       .attr('class', 'histCirc')
       .attr('testStatValue', d => d.permDsn)
       .attr('', function(d,i) {
-        if (i < 1 && d.dataIndex == 12) {
+        if (i < 1 && d.dataIndex == 20) {
           d3.select(this).classed('response1', true)
         } else if (i < 1 && d.dataIndex == 9) {
           d3.select(this).classed('response2', true)
@@ -605,6 +605,7 @@ function transitionThreeDown() {
   d3.selectAll('circle.response1')
     .transition()
     .attr('r', d => d.radius / 1.05)
+    .attr('fill', 'coral')
 
 }
 
@@ -684,7 +685,9 @@ function transitionFiveDown() {
 }
 
 function transitionSixUp() {
-  return 'pass'
+  d3.selectAll('circle.extreme')
+    .attr('fill', 'pink')
+    .attr('stroke-width', 0.3)
 }
 
 function transitionSixDown() {
