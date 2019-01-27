@@ -143,10 +143,24 @@ a:hover {
 
 .groupTitle { 
   text-decoration-line: underline;
-  text-decoration-style: dotted;
-  font-weight: 100;
-  font-size: 1.3rem;
+/*  text-decoration-style: dotted;
+*/  font-weight: 500;
+  font-size: 1.4rem;
   font-family: "Indie Flower";
+}
+
+.axis {
+	font-family: Arial;
+	font-weight: 10;
+	opacity: .55;
+}
+
+g.tick line {
+	opacity: .4;
+}
+
+path.domain {
+	opacity: .5;
 }
 
 .subheader {
