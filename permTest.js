@@ -720,6 +720,73 @@ function transitionSevenDown() {
     .attr('stroke-width', 0.3)
 }
 
+function transitionSevenUp() {
+
+  svgD3.append("g")
+  .attr("class", "axis axis--x")
+  .attr("transform", "translate(0," + (height/1.12) + ")")
+  .call(d3.axisBottom(x));
+
+  d3.selectAll('circle.notExtreme')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
+
+  d3.selectAll('circle.extreme')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
+}
+
+function transitionEightDown() {
+
+  svgD3.append('text')
+    .attr('x', width / 4.8)
+    .attr('y', height / 1.11)
+    .text('n = 200')
+    .style('font-family', 'Indie Flower')
+    .attr('font-size', 0)
+    .transition()
+    .duration(1500)
+    .attr('font-size', 18)
+
+  svgD3.append('text')
+    .attr('x', width / 1.68)
+    .attr('y', height / 1.11)
+    .text('n = 16')
+    .style('font-family', 'Indie Flower')
+    // .style('font-weight', 'bold')
+    .attr('font-size', 0)
+    .transition()
+    .duration(1500)
+    .attr('font-size', 18)
+
+    svgD3.append('text')
+    .attr('x', width / 2.5)
+    .attr('y', height / 1.05)
+    .text('P-Value: 16/200 = 0.08')
+    .style('font-family', 'Indie Flower')
+    // .style('font-weight', 'bold')
+    .attr('font-size', 0)
+    .transition()
+    .delay(500)
+    .duration(1500)
+    .attr('font-size', 22)
+
+  // remove axis
+  d3.select('.axis--x').remove();
+
+  d3.selectAll('circle.notExtreme')
+    .transition()
+    .duration(1500)
+    .attr('transform', 'translate(-75,0)')
+
+  d3.selectAll('circle.extreme')
+    .transition()
+    .duration(1500)
+    .attr('transform', 'translate(75,0)')
+}
+
 function calculateTestStatistic() {
   let testStatistics = d3.selectAll('.dot')
   // Calculate TREATMENT mean
