@@ -167,6 +167,8 @@ const nodeInitialYPlacement = (d) => {
         )
       })
     })
+    // scale icon size
+    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.85)')
 }
 
 var rc = rough.svg(svg);
