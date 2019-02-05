@@ -26,16 +26,13 @@ const width = svgD3.node().getBoundingClientRect().width;
 const height = svgD3.node().getBoundingClientRect().height;
 const margin = 20;
 
-const initialScale = 0.01;
-const showScale = 15;
-
 // const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
 
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = height / 1.8;
 
-const radius = 5;
+// const radius = 5;
 
 //////////////////////////
 ///// node functions /////
@@ -70,7 +67,7 @@ const nodeGroupMoveForceCollide = (d) => {
   if (d.nodeGroup == 'resp') {
     return 15
   } else if (d.nodeGroup == 'llama') {
-    return 45
+    return 37
   } else {
     return 0
   }
@@ -80,7 +77,7 @@ const nodeGroupMoveForceCollideUp = (d) => {
   if (d.nodeGroup == 'resp') {
     return 15
   } else if (d.nodeGroup == 'llama') {
-    return 45
+    return 37
   } else {
     return 15
   }
@@ -168,7 +165,7 @@ const nodeInitialYPlacement = (d) => {
       })
     })
     // scale icon size
-    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.85)')
+    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.8)')
 }
 
 var rc = rough.svg(svg);
@@ -454,7 +451,7 @@ function update(){
           .style('opacity', 1)
           .attr('fill' ,'pink')
           .transition()
-          .attr('stroke-width', .3)
+          .attr('stroke-width', 0.2)
           .attr('stroke', 'black')
 
     binContainerEnter.merge(binContainer)
@@ -564,15 +561,15 @@ function transitionTwoDown() {
     .style('font-size', '.6rem')
     .attr('stroke', 'black')
     .attr('stroke-width', .3)
-    .attr('x', 17.8)
-    .attr('y', 65.2)
+    .attr('x', 8.8)
+    .attr('y', 52.2)
     // .style('font-family', 'Indie Flower')
     .attr('visibility', 'hidden')
     .raise()
 
   d3.selectAll('.responseText')
     .transition()
-    .delay(900)
+    .delay(200)
     .attr('visibility', 'visible')
     .transition()
     .delay(0)
@@ -582,20 +579,6 @@ function transitionTwoDown() {
 function transitionThreeUp() {
   // move llamas back to original group
   moveNodes()
-
-  // move testStat2 back to original position
-  d3.selectAll('.testStat2')
-    .transition()
-    .duration(1000)
-    .attr('transform', 'translate(0, 0)')
-    .attr('r', 0)
-
-  // move testStat1 back to center of focus
-  d3.selectAll('.testStat0')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -150)`)
-    .attr('r', 10)
 
   d3.selectAll('circle.response2')
     .transition()
@@ -689,7 +672,7 @@ function transitionFiveDown() {
 function transitionSixUp() {
   d3.selectAll('circle.extreme')
     .attr('fill', 'pink')
-    .attr('stroke-width', 0.3)
+    .attr('stroke-width', 0.2)
 }
 
 function transitionSixDown() {
@@ -719,7 +702,7 @@ function transitionSevenDown() {
     .attr('fill', 'coral')
     .transition()
     .attr('r', d => d.radius / 1.05)
-    .attr('stroke-width', 0.3)
+    .attr('stroke-width', 0.2)
 }
 
 function transitionSevenUp() {
@@ -738,42 +721,49 @@ function transitionSevenUp() {
     .transition()
     .duration(1000)
     .attr('transform', 'translate(0, 0)')
+
+  d3.selectAll('.finalText').remove()
+
+
 }
 
 function transitionEightDown() {
 
   svgD3.append('text')
-    .attr('x', width / 4.8)
-    .attr('y', height / 1.11)
+    .attr('x', width / 3.1)
+    .attr('y', height / 1.105)
     .text('n = 200')
+    .attr('class', 'finalText')
     .style('font-family', 'Indie Flower')
     .attr('font-size', 0)
     .transition()
     .duration(1500)
-    .attr('font-size', 18)
+    .attr('font-size', 20)
 
   svgD3.append('text')
-    .attr('x', width / 1.68)
-    .attr('y', height / 1.11)
+    .attr('x', width / 1.55)
+    .attr('y', height / 1.105)
     .text('n = 16')
+    .attr('class', 'finalText')
     .style('font-family', 'Indie Flower')
     // .style('font-weight', 'bold')
     .attr('font-size', 0)
     .transition()
     .duration(1500)
-    .attr('font-size', 18)
+    .attr('font-size', 20)
 
     svgD3.append('text')
     .attr('x', width / 2.5)
-    .attr('y', height / 1.05)
+    .attr('y', margin * 2)
     .text('P-Value: 16/200 = 0.08')
+    .attr('class', 'finalText')
     .style('font-family', 'Indie Flower')
-    // .style('font-weight', 'bold')
+    .style('font-weight', 'bold')
     .attr('font-size', 0)
     .transition()
     .delay(500)
     .duration(1500)
-    .attr('font-size', 22)
+    .attr('font-size', 30)
 
   // remove axis
   d3.select('.axis--x').remove();
@@ -787,6 +777,7 @@ function transitionEightDown() {
     .transition()
     .duration(1500)
     .attr('transform', 'translate(75,0)')
+      
 }
 
 function calculateTestStatistic() {
