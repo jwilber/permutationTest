@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Gaegu');
+@import url('https://fonts.googleapis.com/css?family=Amatic+S');
+/*@import url('https://fonts.googleapis.com/css?family=Nanum+Pen+Script');*/
 /* default / demo page */
 * {
 	box-sizing: border-box;
@@ -23,11 +26,14 @@ a {
 	font-weight: 300;
 }
 a,
-a:visited,
-a:hover {
+a:visited {
 	color: skyblue;/*#f30;*/
 	text-decoration: none;
 	border-bottom: 1px solid currentColor;
+}
+
+a:hover {
+	font-weight: bold;
 }
 #intro {
 	max-width: 45rem;
@@ -146,13 +152,13 @@ a:hover {
 /*  text-decoration-style: dotted;
 */  font-weight: 500;
   font-size: 1.4rem;
-  font-family: "Indie Flower";
+  font-family: "Gaegu";
 }
 
 .axis {
 	font-family: Arial;
 	font-weight: 10;
-	opacity: .55;
+	opacity: .55
 }
 
 g.tick line {
@@ -166,11 +172,11 @@ path.domain {
 .subheader {
 	text-align: center;
 	font-weight: 900;
-	font-family: 'Indie Flower';
+	font-family: "Gaegu";
 }
 
 .llamaText {
-	font-family: 'Indie Flower';
+	font-family: "Gaegu";
 }
 
 .muTreat
@@ -188,14 +194,14 @@ path.domain {
 }
 
 
-h1 { font-family: "Indie Flower"; font-size: 64px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } 
-h3 { font-family: "Indie Flower"; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } 
-p { font-family: "Indie Flower"; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 23px; } 
-blockquote { font-family: "Indie Flower"; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
-pre { font-family: "Indie Flower"; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 1rem; }
+h1 { font-family: "Gaegu"; font-size: 64px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 26.4px; } 
+h3 { font-family: "Gaegu"; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px; } 
+p { font-family: "Gaegu"; font-size: 14px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 23px; } 
+blockquote { font-family: "Gaegu"; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; } 
+pre { font-family: "Gaegu"; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 1rem; }
 
       
-.IndieFlower{font-size: 12px; font-family: 'Indie Flower', cursive;}
+.IndieFlower{font-size: 12px; font-family: "Gaegu", cursive;}
 .cursive{font-family: cursive;}
 
 /* Background stuff*/
@@ -210,4 +216,72 @@ body, .scroll__graphic, svg {
 	background-color: var(--main-bg-color);
 }
 
+.chartTitle {
+        font-family: "Gaegu";
+        font-size: 1.2rem;
+        font-weight: bold;
+ }
 
+.annotation-note-title, text.title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  font-family: "Gaegu";
+  margin: 'auto';
+}
+
+.annotation-note-label {
+  font-size: 0.9rem;
+  font-family: "Gaegu";
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.sidenote {
+  font-size: .75em;
+  float: right;
+  margin: 0 -18em 0 0;
+  width: 13em;
+  line-height: normal;
+}
+
+ol {
+	font-family: 'Gaegu';
+	font-style: 2.3rem;
+	font-weight: 500;
+}
+
+li {
+	font-family: 'Gaegu';
+	font-style: 2.3rem;
+	font-weight: 500;
+}
+
+hr {
+	width: 50%;
+	opacity: .25;
+}

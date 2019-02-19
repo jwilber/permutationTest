@@ -15,6 +15,7 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.4/seedrandom.min.js"></script>
 	<!-- <script src=assets/d3v4.js></script> -->
 	<stylesheet href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+	<!-- <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Just+Me+Again+Down+Here" /> -->
 	<style>
     @import 'https://fonts.googleapis.com/css?family=Indie+Flower';
 
@@ -27,19 +28,24 @@
 <body>
 	<section id='intro'>
 		<p class='intro__overline'>
-			May 2018 By <a href='https://twitter.com/jdwlbr'>Jared Wilber</a>
+			February 2019 By <a href='https://twitter.com/jdwlbr'>Jared Wilber</a>
 		</p>
 		<h1 class='intro__hed'>The Permutation Test</h1>
 		<p class='intro__dek'>
 			A Visual Explanation of Statistical Testing
 		</p>
 		<p class='intro__bod'>
-			The permutation test is a nonparametric statistical test. 
-			Statistical tests, also known as hypothesis tests, are used in the design of experiments, and are used to measure the <i>effect(s)</i> of some <i>treatment(s)</i> on <i>experimental units</i>. For example, we may wish to determine whether or not drug A is better than drug B at curing some disease, or whether facebook using <span class="fb_highlight_one">#3b5998</span> instead of <span class="fb_highlight_two">#8b9dc3</span> for it's LIKE button results in a higher number of clicks. 
+			Statistics is big right now, and <i>nothing</i> in the field is hotter than statistical testing.*
+			<!-- <span class='tooltip'>*<span class="tooltiptext"></span></span> -->
+			<span class="sidenote"><span style='font-size:25px;'>*</span> <i>Everything</i> in the field is hotter than statistical testing.</span>
+			Statistical tests, also known as hypothesis tests, are used in the design of experiments to measure the <i>effect</i> of some <i>treatment(s)</i> on <i>experimental units</i>. For example, we may wish to determine if drug A reduces the symptoms of a new virus, or whether or not Facebook's LIKE button using <span class="fb_highlight_one">this blue</span> instead of <span class="fb_highlight_two">this blue</span> yields a higher number of clicks. 
 			<br><br>
-			We determine the results of such experiments via a summary statistic known as a <a href="">p-value</a>. 
-			For many statistical tests, the calculation of the p-value is complicated and unintuituve. 
-			To calculate the p-value for a permutation test, we employ the following:
+		<!-- 	Unfortunately, the majority of testing methods taught in introductory statistics courses are unintuitive. That's why I'm writing about the coolest test around - the permutation test.
+			The permutation test is a nonparametric statistical test. This means is has less assumptions underpinning it than other popular tests, and is 
+			Unlike other testing methods, and, the one test to rule them all.
+			But they're not all like this. In fact, there exists one test to rule them all,  -->
+			Unfortunately, a lot of statistical tests require complex assumptions and convoluted formula. They are uninspiring and unintuitive. This is especially true of those methods taught in introductory courses, leading to the false impression that experimental design is boring and unintuitive. 
+			But what if I told you not all tests were like this? In fact, what if i told you that there exists one test to rule them all - a test that is intuitive, effective, and (<i>inhales deeply</i>) interesting.
 		</p>
 
 	</section>
@@ -53,51 +59,61 @@
 		</div>
 		<div class='scroll__text'>
 			<div class='step' data-step='1'>
-				<h2 class="subheader">Now You're a Llama Herder</h2>
+				<h2 class="subheader">You're a Llama Shepherd, Harry</h2>
 				<p>
- 				You're a llama herder and would like to determine if a popular new llama diet increases the fleece quality of your llamas.<br><br>
+ 				You've finally made it as a llama herder and would like to determine if a popular new llama diet increases the wool quality of your llamas.<br><br>
  				In statistical testing, experiments are often structured in terms of a <a href="">null</a> and a <a href="">alternative</a> hypothesis.
- 				We'll conduct our test with the following hypothesis schema<b>:</b>
+ 				<br><br> We'll develop a statistical test to see if the diet does effect the quality of our llama wool.<br><br>
+ 				Our test will have the following hypothesis schema<b>:</b>
 				$$ {H_0: \mu_{treatment} = \mu_{control}} $$
 				$$ {H_A: \mu_{treatment} \neq \mu_{control}} $$
-				Our null hypothesis claims that the new llama diet has no effect<b>;</b> both the regular diet and the new diet yield the same fleece quality. The alternative claims the opposite; that diets yield differences in fleece quality.<br><br>
-				We determine the experiment's results via a <a href="">p-value</a>. More on those soon.
-				<p></p>
+				Our null hypothesis claims that the new llama diet has no effect<b>;</b> both the regular diet and the new diet yield the same wool quality. The alternative claims the opposite: different diets yield differences in wool quality.<br><br>
+<!-- 				We determine the experiment's results via a <a href="">p-value</a>. More on those soon.
+ -->			</p>
+				
 
- 				
- 			</p>
+ 			
 			</div>
 			<div class='step' data-step='2'>
 				<h2 class='subheader'>Randomization</h2>
-				<p>Before carrying out our experiment, we must randomly assign half of our llamas to the new diet. <br><br>
-				We say that the llamas receiving the new diet belong to the <i>treatment</i> group. The others to the <i>control</i> group. The assignment of a llama to a given diet is known as its <i>treatment assignment</i>.
+				<p>Before carrying out our experiment, we must randomly assign half of our llamas to the new diet, and half to the old. <br><br>
+				We say that the llamas receiving the new diet belong to the <i>treatment</i> group, and the other llamas to the <i>control</i> group. The assignment of a llama to a given diet is known as its <i>treatment assignment</i>.
 				<br><br>
-				Randomization of treatment assignment is very important. It removes bias and conofunding from our results, and provides the basis for the theory underpinning out statistical test.
+				Randomization of treatment assignment is very important. It removes bias and conofunding from our results, and provides the basis for the theory underpinning our statistical test.
 				</p>
 			</div>
+			<br>
+			<br>
 			<div class='step' data-step='3'>
+				<br>
+				<br><br><br><br><br><br>
 				<h2 class='subheader'>Response Values</h2>
 				<p>
-				Every experimental unit receives a response value.
+					After a sufficient amount of time has passed, we can begin to determine if the new diets had any effect.
+					<br><br>
+					In statistics jargon, every experimental unit receives a response value. 
+					For us, that corresponds to each llama's measure of wool quality after the diet.
+					<br><br>
+					While we can eyeball these values and determine any perceived differences between the two diets, we'll
+					have to create a <i>test statistic</i> to compare the diets with statistical rigor.
 				 </p>
 			</div>
 			<div class='step' data-step='4'>
 				<h2 class='subheader'>Test Statistic</h2>
 				<p>
-				Our <i>test statistic</i> is a numerical summary of our data that we'll use to  distinguish the null hypothesis from the alternative hypothesis. 
+				Our <i>test statistic</i> is a numerical summary of our data that allows us to quantify the differences between our null and alternative hypotheses. 
 				<br><br>
-				 Each llama has its own value for fleece quality, or "<i>response</i>" value. To detect any differences between the groups, we need a test statistic. Permutation tests allow us to use any value we want for our test statistic. 
-				  We'll keep things simple and use the difference in mean response values between the two diets:
+				A benefit of the permutation tests is that it allows us to use any numerical value that we want for our test statistic. Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two diets:
 				$$ {T = \mu_{treatment} - \mu_{control}} $$
 				<br>
 				<!-- As you'll soon see, this value will be used to obtain our <i>p-value</i>. -->
-				Once our llamas have gone through their assigned diets and we get our fleece quality response values, we calculate our initial test statistic and save it for later.
+				Using our response values obtained earlier, we calculate our initial test statistic and save it for later.
 				 </p>
 			</div>
 			<div class='step' data-step='5'>
 				<h2 class='subheader'>The 'P' in  'Permutation Test'</h2>
 				<p>
-					This is the most important step in the test, as well as its namesake.
+					This is the most important step in the permutation test, as well as its namesake.
 					<br><br>
 					While keeping the same response values we received earlier, we permute (shuffle) the treatment assignments of our llamas, and re-calculate our test statistic.
 					<br><br>
@@ -109,72 +125,72 @@
 				</p>
 			</div>
 			<div class='step' data-step='6'>
-				<h2 class='subheader'>Create Test Statistic Distribution</h2>
+				<h2 class='subheader'>More Permutations</h2>
 				<p>
 					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
 					<br><br>
 					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample <a href="">enough</a> permutations to build an approximation to our distribution. 
 					<br><br>
-					This distribution approximates all possible mean-difference values we could have seen under the assumption that fleece quality is independent of llama diet. 
-					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test. <br>The <i>p-value</i>.
+					
+					
 				</p>
 			</div>
 			<div class='step' data-step='7'>
-				<h2 class='subheader'>Create Test Statistic Distribution</h2>
+				<h2 class='subheader'>Test Statistic Distribution</h2>
 				<p>
-					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
+					Eventually, after a sufficient number of permutated test statistic calculations, we create a test statistic distribution.
 					<br><br>
-					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample <a href="">enough</a> permutations to build an approximation to our distribution. 
-					<br><br>
-					This distribution approximates all possible mean-difference values we could have seen under the assumption that fleece quality is independent of llama diet. 
-					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test. <br>The <i>p-value</i>.
+					This distribution approximates all possible mean-difference values we could have seen under the assumption that wool quality is independent of llama diet. 
+					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test: The magical <i>p-value</i>.
 				</p>
 			</div>
 			<div class='step' data-step='8'>
-				<h2 class='subheader'>Create Test Statistic Distribution</h2>
+				<h2 class='subheader'>The P-Value</h2>
 				<p>
-					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
+					The P-Value is simply the probability of observing the values we did, assuming the null hypothesis were true. For us, it's the probability of obtaining the differences in wool quality we did, assuming the diets did <i>not</i> affect wool quality. Thus, high p-values allow us to conclude that 
+
 					<br><br>
-					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample <a href="">enough</a> permutations to build an approximation to our distribution. 
-					<br><br>
-					This distribution approximates all possible mean-difference values we could have seen under the assumption that fleece quality is independent of llama diet. 
-					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test. <br>The <i>p-value</i>.
+					Calculating the p-value for a permutation test could not be simpler. We simply count the number of test-statistics <i> as or more extreme</i> than our initial test statistics, and divide that number by the total number of test-statistics we calculated.
 				</p>
 			</div>
 			<div class='step' data-step='9'>
-				<h2 class='subheader'>Results: The P-Value</h2>
-				<p> The p-value is the probability of observing the response values we did, if the null hypothesis was true.
-					<br><br>
-					For some statistical tests, calculating the p-value can get quite complicated. For permutation tests, it's simple. We simply count the number of values as or more extreme than our initial test statistic, and divide it by __.
-					For some statistical tests, calculating the p-value can get quite complicated. For permutation tests, it's simple. We simply count the number of values as or more extreme than our initial test statistic, and divide it by __.
-					For some statistical tests, calculating the p-value can get quite complicated. For permutation tests, it's simple. We simply count the number of values as or more extreme than our initial test statistic, and divide it by __.
-					<br><br>
-										For some statistical tests, calculating the p-value can get quite complicated. For permutation tests, it's simple. We simply count the number of values as or more extreme than our initial test statistic, and divide it by __.
-
+				<h2 class='subheader'>Our Results</h2>
+				<p> Only nine out of our two-hundred test statistics were more extreme than our initial test statistic (which had a value of ). 
+					<br><br> Thus, our p-value is:
+					$$ \text{P-Value} = 9 \ / \ 200 $$
+					$$ \ \ \approx 4\% $$
+					In other words, if there really were no difference between the diets of our llamas, the probability of getting the differences in wool quality we did across the two diets is about four-percent. This is pretty unlikely, so we can determine that a tiny probability, and so unlikely* [in a real experiment, we call this threshold <i>level of significance</i>, and determine it a priori.] that we reject this original hypothesis and conclude that the new llama diet is having <i>some</i> effect on wool quality.
 				</p>
 			</div>
 			
 		</div>
-		<p class='intro__bod'>
-			The permutation test is a nonparametric statistical test. 
-			Statistical tests, also known as hypothesis tests, are used in the design of experiments, and are used to measure the <i>effect(s)</i> of some <i>treatment(s)</i> on <i>experimental units</i>. For example, we may wish to determine whether or not drug A is better than drug B at curing some disease, or whether facebook using <span class="fb_highlight_one">#3b5998</span> instead of <span class="fb_highlight_two">#8b9dc3</span> for it's LIKE button results in a higher number of clicks. 
-			<br><br>
-			We determine the results of such experiments via a summary statistic known as a <a href="">p-value</a>. 
-			For many statistical tests, the calculation of the p-value is complicated and unintuituve. 
-			To calculate the p-value for a permutation test, we employ the following:
-		</p>
 	</section>
 	<section id='intro'>
 		<p><br></p><p><br></p><p><br></p>
-		<h2 class='groupTitle'> Conclusion</h2>
+		<h2 class='subheader'> Conclusion</h2>
 		<p class='intro__bod'>
-			The permutation test is a nonparametric statistical test. 
-			Statistical tests, also known as hypothesis tests, are used in the design of experiments, and are used to measure the <i>effect(s)</i> of some <i>treatment(s)</i> on <i>experimental units</i>. For example, we may wish to determine whether or not drug A is better than drug B at curing some disease, or whether facebook using <span class="fb_highlight_one">#3b5998</span> instead of <span class="fb_highlight_two">#8b9dc3</span> for it's LIKE button results in a higher number of clicks. 
-			<br><br>
-			We determine the results of such experiments via a summary statistic known as a <a href="">p-value</a>. 
-			For many statistical tests, the calculation of the p-value is complicated and unintuituve. 
-			To calculate the p-value for a permutation test, we employ the following:
+			So that's the permutation test. Pretty simple, huh? To recap, the algorithm only comprises three steps:</p>
+			<ol>
+				<li style='font-size: 1.35rem;'> Determine & calculate initial test-statistic.</li>
+				<li style='font-size: 1.35rem;'> Create permuted distribution of test statistics.</li>
+				<li style='font-size: 1.35rem;'> Calculate the p-value.</li>
+			</ol>
+			<p class='intro__bod'>
+			Not only is it simple, but it requires much less assumptions than other testing methods, 
+			Additionally, because it is nonparametric, it's free from the restriction of meeting particular assumptions for employment (e.g. sample size, ).
+
 		</p>
+
+		<br><br><br><hr><br><br><br>
+		<h2 class='subheader'>Resources</h2>
+		<p class='intro__bod'>
+			<ol>
+				<li style='font-size: 1.35rem;'><a href="https://github.com/russellgoldenberg/scrollama">Scrollama</a> (Russel Goldenberg)</li>
+				<li style='font-size: 1.35rem;'><a href="https://roughjs.com/">Rough.js</a> (Preet Shihn)</li>
+				<li style='font-size: 1.35rem;'><a href="https://d3js.org/">D3.js</a> (Mike Bostock)</li>
+			</ol>
+		</p>
+			
 	</section>
 	<div class='debug'></div>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/scrollama/1.3.0/scrollama.js'></script>
@@ -271,9 +287,12 @@
 			   	transitionSevenDown()
 		   } else if (response.index == 8 & response.direction == 'up'){
 			   	console.log('8 up')
+			   	transitionEightUp()
 		   } else if (response.index == 8 & response.direction == 'down'){
 			   	console.log('8 down')
 			   	transitionEightDown()
+		   } else {
+		   	console.log('else case, response index: ', response.index)
 		   }
 		 } 
 		 // new 2down == 3down
@@ -292,6 +311,10 @@
 			// un-sticky the graphic, and pin to top/bottom of container
 			graphic.classed('is-fixed', false);
 			graphic.classed('is-bottom', response.direction === 'down');
+			if (response.direction === 'down') {
+				console.log('exit baby');
+				transitionExit()
+			}
 		}
 
 		function init() {

@@ -165,7 +165,7 @@ const nodeInitialYPlacement = (d) => {
       })
     })
     // scale icon size
-    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.8)')
+    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.7)')
 }
 
 var rc = rough.svg(svg);
@@ -386,8 +386,7 @@ function update(){
 
     //g container for each bin
     let binContainer = svgD3.append('g')
-          .attr('transform', `translate({x(d.x0)}, ${-height/8})`)
-          .selectAll(".gBin")
+      .selectAll(".gBin")
       .data(bins);
 
 //     binContainer.exit().remove()
@@ -558,18 +557,18 @@ function transitionTwoDown() {
     .attr('class', 'responseText')
     .html(d => d.dotValue)
     .attr('fill', 'white')
-    .style('font-size', '.6rem')
+    .style('font-size', '.8rem')
     .attr('stroke', 'black')
-    .attr('stroke-width', .3)
+    .attr('stroke-width', .45)
     .attr('x', 8.8)
     .attr('y', 52.2)
-    // .style('font-family', 'Indie Flower')
+    .style('font-family', 'Gaegu')
     .attr('visibility', 'hidden')
     .raise()
 
   d3.selectAll('.responseText')
     .transition()
-    .delay(200)
+    .delay(100)
     .attr('visibility', 'visible')
     .transition()
     .delay(0)
@@ -734,7 +733,7 @@ function transitionEightDown() {
     .attr('y', height / 1.105)
     .text('n = 200')
     .attr('class', 'finalText')
-    .style('font-family', 'Indie Flower')
+    .style('font-family', 'Gaegu')
     .attr('font-size', 0)
     .transition()
     .duration(1500)
@@ -745,7 +744,7 @@ function transitionEightDown() {
     .attr('y', height / 1.105)
     .text('n = 16')
     .attr('class', 'finalText')
-    .style('font-family', 'Indie Flower')
+    .style('font-family', 'Gaegu')
     // .style('font-weight', 'bold')
     .attr('font-size', 0)
     .transition()
@@ -757,7 +756,7 @@ function transitionEightDown() {
     .attr('y', margin * 2)
     .text('P-Value: 16/200 = 0.08')
     .attr('class', 'finalText')
-    .style('font-family', 'Indie Flower')
+    .style('font-family', 'Gaegu')
     .style('font-weight', 'bold')
     .attr('font-size', 0)
     .transition()
@@ -780,6 +779,18 @@ function transitionEightDown() {
       
 }
 
+function transitionEightUp() {
+  d3.selectAll('circle')
+    .transition()
+    .duration(1000)
+    .attr('r', d => d.radius / 1.05)
+}
+function transitionExit() {
+  // d3.selectAll('circle')
+  //   .transition()
+  //   .duration(4000)
+  //   .attr('r', 0)
+}
 function calculateTestStatistic() {
   let testStatistics = d3.selectAll('.dot')
   // Calculate TREATMENT mean
