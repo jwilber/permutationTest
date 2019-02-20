@@ -389,8 +389,6 @@ function update(){
       .selectAll(".gBin")
       .data(bins);
 
-//     binContainer.exit().remove()
-
     let binContainerEnter = binContainer.enter()
       .append("g")
         .attr("class", "gBin")
@@ -403,14 +401,13 @@ function update(){
                   dataIndex: i,
                   value: p.Value,
                   radius: (x(d.x1)-x(d.x0))/1.9
-                  // permDsn: d.permDsn
                 }
         }))
       .enter()
       .append("circle")
       .attr('class', 'histCirc')
       .attr('testStatValue', d => d.permDsn)
-      .attr('', function(d,i) {
+      .attr('', function(d, i) {
         if (i < 1 && d.dataIndex == 20) {
           d3.select(this).classed('response1', true)
         } else if (i < 1 && d.dataIndex == 9) {
@@ -465,9 +462,6 @@ function update(){
                 }
         }))
 
-
-    //UPDATE old elements present in new data.
-
     //ENTER new elements present in new data.
     dots.enter()
       .append("circle")
@@ -479,8 +473,12 @@ function update(){
       .merge(dots)
         .transition()
           .duration(500)
-          .attr("r", function(d) {
-          return (d.length==0) ? 0 : d.radius; })
+          .attr("r", d => d.radius )
+          // .attr("r", function(d) {
+          // return (d.length==0) ? 0 : d.radius; })
+
+
+
 };//update
 
 
@@ -529,7 +527,7 @@ function transitionOneDown() {
     d3.select(this).transition().delay(800).attr('visibility', 'visible')
   })
 
-  update()
+  update();
 
 }
 
@@ -674,6 +672,9 @@ function transitionSixUp() {
     .attr('stroke-width', 0.2)
 }
 
+// hacky way to ensure smallest node keeps relative size (idk why this is a problem, but this solves it!)
+let small_node_size_force = 5.5;
+
 function transitionSixDown() {
   // move llamas off-screen, test-statistics off-screen & hide titles
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
@@ -684,7 +685,10 @@ function transitionSixDown() {
   d3.selectAll('circle.histogramNode')
     .transition()
     .duration(1400)
-    .attr('r', d => d.radius / 1.05)
+    .attr('r', (d,i) => {
+      if (i === 190) small_node_size_force = d.radius / 1.05;
+      return i === 200 ? small_node_size_force : d.radius / 1.05;
+    })
 
   svgD3.append("g")
   .attr("class", "axis axis--x")
@@ -696,11 +700,11 @@ function transitionSevenDown() {
   d3.selectAll('circle.extreme')
     .transition()
     .duration(500)
-    .attr('r', d => d.radius / .9)
+    .attr('r', (d,i) => i === 15 ? small_node_size_force + 2 : 2 + d.radius / 1.05)
     .attr('stroke-width', .5)
     .attr('fill', 'coral')
     .transition()
-    .attr('r', d => d.radius / 1.05)
+    .attr('r', (d,i) => i === 15 ? small_node_size_force : d.radius / 1.05)
     .attr('stroke-width', 0.2)
 }
 
