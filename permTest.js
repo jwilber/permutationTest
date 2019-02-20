@@ -165,7 +165,7 @@ const nodeInitialYPlacement = (d) => {
       })
     })
     // scale icon size
-    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.7)')
+    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.75)')
 }
 
 var rc = rough.svg(svg);
@@ -618,8 +618,8 @@ function transitionFourDown() {
 
 function transitionFiveUp() {
   // return llamas to their positions
-  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0)');
-  d3.selectAll('.responseText').transition().duration(1600).attr('y', 65.2) 
+  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0) scale(.8)');
+  d3.selectAll('.responseText').transition().duration(1600).attr('y', 52.2) 
   // re-add group titles
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'visible')
 
