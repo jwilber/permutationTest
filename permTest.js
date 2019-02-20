@@ -26,22 +26,20 @@ const width = svgD3.node().getBoundingClientRect().width;
 const height = svgD3.node().getBoundingClientRect().height;
 const margin = 20;
 
-const initialScale = 0.01;
-const showScale = 15;
-
-const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
+// const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
 
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = height / 1.8;
 
+// const radius = 5;
 
 //////////////////////////
 ///// node functions /////
 //////////////////////////
 
 const nodeTreatmentWidth = (d) => {
-  if (d.nodeGroup == 'resp') {
+  if (d.nodeGroup === 'resp' || d.nodeGroup === 'dsn') {
     return width / 2
   } else if (d.index % 2 == 0) {
     return trtCenter
@@ -56,34 +54,40 @@ const nodeTreatmentHeight = (d) => {
   } else if (d.nodeGroup == 'llama') {
     return height / 3.5
   } else {
-    return height * 1.5
+    return height / 1.1
   }
 };
-
-
-  // if (d.nodeGroup === 'llama') {
-  //     return (height / 3)
-  //   } else if (d.nodeGroup === 'resp') {
-  //     return (width / 1.1)
-  //   } else {
-  //     return height
-  //   }
-  // };
 
 const nodeGroupInitialForceCollide = (d) => {
     return d.nodeGroup === 'llama' ? 35 : 10;
   }
 
 const nodeGroupMoveForceCollide = (d) => {
-    return d.nodeGroup === 'llama' ? 45 : 15;
+  if (d.nodeGroup == 'resp') {
+    return 15
+  } else if (d.nodeGroup == 'llama') {
+    return 37
+  } else {
+    return 0
   }
+};
+
+const nodeGroupMoveForceCollideUp = (d) => {
+  if (d.nodeGroup == 'resp') {
+    return 15
+  } else if (d.nodeGroup == 'llama') {
+    return 37
+  } else {
+    return 15
+  }
+};
 
 const nodeInitialXPlacement = (d) => {
     if (d.nodeGroup === 'llama') {
       return (width / 2)
     } else if (d.nodeGroup === 'resp') {
       return (width / 5)
-    } else {
+    } else { // dsn
       return (width / 5)
     }
   };
@@ -92,9 +96,9 @@ const nodeInitialYPlacement = (d) => {
   if (d.nodeGroup === 'llama') {
       return (height / 3)
     } else if (d.nodeGroup === 'resp') {
-      return (width / 1.1)
-    } else {
-      return height
+      return (height / 1.1)
+    } else { // dsn
+      return height / 1.1
     }
   };
 
@@ -105,12 +109,14 @@ const nodeInitialYPlacement = (d) => {
     
 
   // dsn dots need to live off-screen, until the final dsn build (so don't mess w/ other nodes)
-  let sampleData = d3.range(100).map((d,i) => ({r: 40 - i * 0.5,
-                                               nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
-                                               dotValue: i % 2 === 0 ? 
-                                                 d3.randomNormal(8, 2.5)().toFixed(1): 
-                                                 d3.randomNormal(4.5, .75)().toFixed(1)
-                                              }));
+      let sampleData = d3.range(250).map((d,i) => ({r: 40 - i * 0.5,
+                                                    value: width/2 + d3.randomNormal(0, 1.5)() * 50,
+                                                    nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
+                                                    dotValue: i % 2 === 0 ? 
+                                                      d3.randomNormal(7, 2.5)().toFixed(1): 
+                                                      d3.randomNormal(4.5, .75)().toFixed(1),
+                                                    'permDsn': d3.randomNormal(0, 1)().toFixed(1)
+                                                    }));
   
   // set params for force layout
 
@@ -135,22 +141,12 @@ const nodeInitialYPlacement = (d) => {
     .attr('class', d => d.nodeGroup === 'llama' ? 'dot' : 'dotResponse')
     .attr('group', (d,i) => i % 2 == 0 ? 'true' : 'false');
 
-  d3.selectAll('.dotResponse')
-    .attr('testStatGroup', function(d,i) {
-      if (d.nodeGroup === 'resp') {
-        testStatClass = 'testStat'.concat(i)
-        d3.select(this).classed(testStatClass, true)
-      } else {
-        d3.select(this).classed('testStatDsn', true)
-      }
-    })
-
   function changeNetwork() {
     d3.selectAll('g.dot')
       .attr('transform', d=> `translate(${d.x}, ${d.y})`)
 
-    d3.selectAll('g.dotResponse')
-      .attr('transform', d=> `translate(${d.x}, ${d.y})`)
+    // d3.selectAll('g.dotResponse')
+    //   .attr('transform', d=> `translate(${d.x}, ${d.y})`)
   }
   
   function loadRoughsvgD3(svgD3Data) {
@@ -162,31 +158,18 @@ const nodeInitialYPlacement = (d) => {
         fillStyle: 'hachure',
         strokeWidth: 0.25,
         fill: 'rgba(131,131,131, .15)',
-        roughness: 0.75,
+        roughness: 0.54,
           })
         )
       })
     })
+    // scale icon size
+    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.75)')
 }
 
 var rc = rough.svg(svg);
 
 d3.html("noun_28240_cc.svg", loadRoughsvgD3) 
-
-
-// add test statistics
-d3.selectAll('.dotResponse').append('g').attr('class', 'testStat').each(function(d,i) {
-      d3.select(this).node().appendChild( rc.path(roundPath, {
-      stroke: 'black',
-      fillStyle: 'hachure',
-      strokeWidth: 2.25,
-      fill: 'red',
-      roughness: 6.85,
-        })
-      )
-    });
-
-d3.selectAll('.dotResponse').selectAll('path').attr("transform", `scale(${initialScale}, ${initialScale}) translate(-250,-50)`)
 
 function nodeRandomPos(d) {
   if (d.nodeGroup === 'llama') {
@@ -238,6 +221,7 @@ function nodeRandomPosSix(d) {
 
 function nodeRandomPosSeven(d) {
   if (d.nodeGroup === 'llama') {
+    // randomly assign i-th llamas to treatment center, others to control center
     return [2, 4, 6, 9, 11, 16, 17, 18, 19, 3, 5, 7].indexOf(d.index) > -1 ? trtCenter : cntrlCenter;
   } else {
     return (width / 2)
@@ -277,14 +261,13 @@ function nodeRandomPosition(d) {
 };
 
 
-function shuffleTestStat(nodePositions, testStat) {
+function shuffleTestStat(nodePositions, responseNode) {
   randomizeNodes(nodePositions)
   // select chosen class and move it
-  d3.selectAll(testStat)
-    .select('.testStat')
+  d3.selectAll(responseNode)
     .transition()
-    .duration(700)
-    .attr('transform', `translate(0, 0) scale(${showScale}, ${showScale})`)
+    .duration(800)
+    .attr('r', d => d.radius / 1.05)
 }
 
 
@@ -300,6 +283,23 @@ function moveNodes() {
   force.alpha(.1).restart();
 }
 
+function showAllTestDsnNodes() {
+  d3.selectAll('.testStatDsn')
+    .transition()
+    .duration(100) //1000
+    .attr('r', 10);
+
+  force.force('center', null)
+    .force('collision', d3.forceCollide(d => 33))
+    .alphaDecay(.02)
+    .velocityDecay(0.5)
+  force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
+  force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollideUp))
+    .on('tick', changeNetwork)
+  force.alpha(.1).restart();
+}
+
 function randomizeNodes(nodePositions) {
   // shuffle ('permute') nodes
   force.force('center', null)
@@ -309,6 +309,17 @@ function randomizeNodes(nodePositions) {
     .force('x', d3.forceX().strength(1).x(nodePositions))
     .alpha(.1).restart();
 }
+
+function randomizeNodes2(nodePositions) {
+  // shuffle ('permute') nodes
+  force.force('center', null)
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    .force('x', d3.forceX().strength(1).x(nodePositions))
+    .alpha(.6).restart();
+}
+
 
 
 function moveToCenter() {
@@ -344,6 +355,132 @@ let controlTitle = svgD3.append('text')
   .attr('visibility', 'hidden')
 
 
+  // stuff for distribution
+  //x scales
+const x = d3.scaleLinear()
+    .domain(d3.extent(sampleData.filter(d => d.nodeGroup === 'dsn'), d => +d.permDsn))
+    .rangeRound([width/4, width/1.5]); // hist width(left, right)
+
+const nbins = 18;
+
+function assignResponseNodes(d,i) {
+  'testStat'.concat(i)
+  if (i < 1 && d.dataIndex < 15) {
+    d3.select(this).classed('resonse'.concat(d.dataIndex), true)
+  }
+}
+
+function update(){
+
+    let data = sampleData.filter(d => d.nodeGroup === 'dsn')
+
+    //histogram binning
+    const histogram = d3.histogram()
+      .domain(x.domain())
+      .thresholds(x.ticks(nbins))
+      .value(d => d.permDsn);
+
+    //binning data and filtering out empty bins
+    const bins = histogram(data);
+
+    //g container for each bin
+    let binContainer = svgD3.append('g')
+      .selectAll(".gBin")
+      .data(bins);
+
+    let binContainerEnter = binContainer.enter()
+      .append("g")
+        .attr("class", "gBin")
+        .attr("transform", d => `translate(${x(d.x0)}, ${height})`)
+
+    //need to populate the bin containers with data the first time
+    binContainerEnter.selectAll(".preHistPosit")
+        .data((d,i) => d.map((p, j) => {
+          return {idx: j,
+                  dataIndex: i,
+                  value: p.Value,
+                  radius: (x(d.x1)-x(d.x0))/1.9
+                }
+        }))
+      .enter()
+      .append("circle")
+      .attr('class', 'histCirc')
+      .attr('testStatValue', d => d.permDsn)
+      .attr('', function(d, i) {
+        if (i < 1 && d.dataIndex == 20) {
+          d3.select(this).classed('response1', true)
+        } else if (i < 1 && d.dataIndex == 9) {
+          d3.select(this).classed('response2', true)
+        } else if (i < 1 && d.dataIndex == 5) {
+          d3.select(this).classed('response3', true)
+        } else if (i < 1 && d.dataIndex == 11) {
+          d3.select(this).classed('response4', true)
+        } else if (i < 1 && d.dataIndex == 7) {
+          d3.select(this).classed('response5', true)
+        } else if (i < 1 && d.dataIndex == 6) {
+          d3.select(this).classed('response6', true)
+        } else if (i < 1 && d.dataIndex == 13) {
+          d3.select(this).classed('response7', true)
+        } else if (i < 1 && d.dataIndex == 8) {
+          d3.select(this).classed('response8', true)
+        } else if (i < 1 && d.dataIndex == 2) {
+          d3.select(this).classed('response9', true)
+        } else {
+          d3.select(this).classed('histogramNode', true)
+        }
+      })
+      .attr('', function(d) {
+        if (d.dataIndex > 19) { // determine which test-stat nodes to highlight
+          d3.select(this).classed('extreme', true)
+        } else {
+          d3.select(this).classed('notExtreme', true)
+        }
+      })
+      .transition()
+        .attr("cx", 0) //g element already at correct x pos
+        .attr("cy", d => - d.idx * 2 * d.radius - d.radius - (height/8)) // control height here
+        .attr("r", 0)
+        .transition()
+          .duration(800)
+          .attr('r', d => 0)
+          .style('opacity', 1)
+          .attr('fill' ,'pink')
+          .transition()
+          .attr('stroke-width', 0.2)
+          .attr('stroke', 'black')
+
+    binContainerEnter.merge(binContainer)
+        .attr("transform", d => `translate(${x(d.x0)}, ${height})`)
+
+    //enter/update/exit for circles, inside each container
+    let dots = binContainer.selectAll("circle")
+        .data(d => d.map((p, i) => {
+          return {idx: i,
+                  value: p.Value,
+                  radius: (x(d.x1)-x(d.x0))/2
+                }
+        }))
+
+    //ENTER new elements present in new data.
+    dots.enter()
+      .append("circle")
+        .attr("class", "enter")
+        .attr("cx", 0) //g element already at correct x pos
+        .attr("cy", function(d) {
+          return - d.idx * 2 * d.radius - d.radius; })
+        .attr("r", 0)
+      .merge(dots)
+        .transition()
+          .duration(500)
+          .attr("r", d => d.radius )
+          // .attr("r", function(d) {
+          // return (d.length==0) ? 0 : d.radius; })
+
+
+
+};//update
+
+
 //////////////////////////////////////////////////
 ////////// Transition Functions /////////////////
 //////////////////////////////////////////////////
@@ -370,12 +507,6 @@ function transitionZeroDown() {
 
 function transitionOneUp() {
   d3.selectAll('text.responseText').remove();
-  // d3.selectAll('circle.responseValue')
-  //   .attr('stroke-width', 0)
-  //   .transition()
-  //   .duration(1000)
-  //   .attr('r', 0)
-  //   .remove()
 
   d3.selectAll('g.responseStuff')
     .transition().duration(1100).remove()
@@ -389,19 +520,28 @@ function transitionOneDown() {
 
   // position llamas in treatment groups
     moveNodes()
+
   // // show titles
   d3.selectAll('.groupTitle').each(function() {
     d3.select(this).transition().delay(800).attr('visibility', 'visible')
   })
+
+  update();
+
 }
 
 function transitionTwoUp() {
   // move node back to original position
   d3.selectAll('.testStat0')
-    .select('.testStat')
     .transition()
     .duration(2000)
     .attr('transform', 'translate(0, 0)')
+    .attr('r', 0)
+
+  // hide response node
+  d3.selectAll('circle.response1')
+    .transition()
+    .attr('r', d => 0)
 }
 
 function transitionTwoDown() {
@@ -410,93 +550,53 @@ function transitionTwoDown() {
     .append('g')
     .attr('class', 'responseStuff');
 
-  // respGroups.append('circle')
-  //   .attr('class', 'responseValue')
-  //   .attr('r', 0)
-  //   .attr('cx', 20)
-  //   .attr('cy', 62)
-  //   .style('opacity', .75)
-  //   .transition()
-  //   .duration(1000)
-  //   .attr('r', d => 6.4)
-  //   .attr('fill' ,'pink')
-  //   // .attr('stroke', 'black')
-  //   .attr('stroke-width', .1)
-  //   .transition()
-  //   .duration(100)
-  //   .attr('r', 8)
-  //   .attr('stroke-width', .51)
-  //   .attr('stroke', 'black')
-  //   .transition()
-  //   .delay(450)
-
   respGroups.append('text')
     .attr('class', 'responseText')
     .html(d => d.dotValue)
     .attr('fill', 'white')
-    .style('font-size', '.6rem')
+    .style('font-size', '.8rem')
     .attr('stroke', 'black')
-    .attr('stroke-width', .3)
-    .attr('x', 17.8)
-    .attr('y', 65.2)
-    // .style('font-family', 'Indie Flower')
+    .attr('stroke-width', .45)
+    .attr('x', 8.8)
+    .attr('y', 52.2)
+    .style('font-family', 'Gaegu')
     .attr('visibility', 'hidden')
     .raise()
 
   d3.selectAll('.responseText')
     .transition()
-    .delay(900)
+    .delay(100)
     .attr('visibility', 'visible')
     .transition()
     .delay(0)
+
 }
 
 function transitionThreeUp() {
   // move llamas back to original group
   moveNodes()
 
-  // move testStat2 back to original position
-  d3.selectAll('.testStat2')
-    .select('.testStat')
+  d3.selectAll('circle.response2')
     .transition()
-    .duration(1000)
-    .attr('transform', 'translate(0, 0)')
-
-  // move testStat1 back to center of focus
-  d3.selectAll('.testStat0')
-    .select('.testStat')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
+    .attr('r', d => 0)
 }
 
 function transitionThreeDown() {
-  // select chosen class and move it
-  d3.selectAll('.testStat0')
-    .select('.testStat')
+
+  d3.selectAll('circle.response1')
     .transition()
-    .duration(50)
-    .attr('transform', 'translate(-50, -150)')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
+    .attr('r', d => d.radius / 1.05)
+    .attr('fill', 'coral')
+
 }
 
 function transitionFourUp() {
-  // move node back to original position
-  d3.selectAll('.testStat0')
-    .select('.testStat')
-    .transition()
-    .duration(1000)
-    .attr('transform', 'translate(0, 0)')
 
-  // hide all test statistic nodes
-  Array.from(Array(16).keys()).slice(3,16).map(i => '.testStat'.concat(i)).map( testStat => {
-      d3.selectAll(testStat)
-        .select('.testStat')
+  Array.from(Array(10).keys()).slice(3,10).map(i => '.response'.concat(i)).map( responseNode => {
+      d3.selectAll(responseNode)
         .transition()
         .duration(700)
-        .attr('transform', 'translate(0, 0) scale(0, 0)') 
+        .attr('r', 0)
   });
 
 }
@@ -505,35 +605,38 @@ function transitionFourDown() {
   // shuffle ('permute') nodes
   randomizeNodes(nodeRandomPos)
 
-  // move test statistic1 back to it's original position
-  d3.selectAll('.testStat0')
-    .select('.testStat')
+  // HIST ENTER
+  d3.selectAll('circle.response2')
     .transition()
-    .duration(2000)
-    .attr('transform', `translate(0, 0) scale(${showScale}, ${showScale})`)
-
-  // move test statistic 2 to center of focus
-  d3.selectAll('.testStat2')
-    .select('.testStat')
-    .transition()
-    .duration(50)
-    .attr('transform', 'translate(-50, -150)')
-    .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -150) scale(${showScale}, ${showScale})`)
-
-  // TODO, calculate desired test-statistic value. (left response - right response)
-  // give it to .teststat0.testStat as an attribute
-  // function should be global
+    .attr('r', d => d.radius / 1.05)
 }
 
 function transitionFiveUp() {
   // return llamas to their positions
-  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0)');
-  d3.selectAll('.responseText').transition().duration(1600).attr('y', 65.2) 
+  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0) scale(.8)');
+  d3.selectAll('.responseText').transition().duration(1600).attr('y', 52.2) 
   // re-add group titles
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'visible')
 
+  // remove histogram nodes
+  d3.selectAll('circle.histogramNode')
+    .transition()
+    .duration(800)
+    .attr('r', 0)
+
+  // remove axis
+  d3.select('.axis--x').remove();
+
+
+  force.force('center', null)
+    .force('collision', d3.forceCollide(d => 33))
+    .alphaDecay(.0005)
+    .velocityDecay(0.5)
+    force.force('x', d3.forceX().strength(1).x(nodeTreatmentWidth))
+    force.force('y', d3.forceY().strength(1).y(nodeTreatmentHeight))
+    .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
+    .on('tick', changeNetwork)
+  force.alpha(.1).restart();
 }
 
 
@@ -541,57 +644,149 @@ function transitionFiveDown() {
 
   // move test statistic1 back to it's original position
   d3.selectAll('.testStat2')
-    .select('.testStat')
     .transition()
     .duration(700)
-    .attr('transform', `translate(0, 0) scale(${showScale}, ${showScale})`)
+    .attr('transform', `translate(0, 0)`)
 
   // permute llama groupings multiple times
   loop(
-    function() { shuffleTestStat(nodeRandomPosTwo, '.testStat3') },
-    function() { shuffleTestStat(nodeRandomPosThree, '.testStat4') },
-    function() { shuffleTestStat(nodeRandomPosFour, '.testStat5') }, 
-    function() { shuffleTestStat(nodeRandomPosFive, '.testStat6') },
-    function() { shuffleTestStat(nodeRandomPosSix, '.testStat7') },
-    function() { shuffleTestStat(nodeRandomPosSeven, '.testStat8') },
-    function() { shuffleTestStat(nodeRandomPosEight, '.testStat9') },
-    function() { shuffleTestStat(nodeRandomPosNine, '.testStat10') },
-    function() { shuffleTestStat(nodeRandomPosTen, '.testStat11') },
-    function() { shuffleTestStat(nodeRandomPosEight, '.testStat0') }, )
-  ;
+    function() { shuffleTestStat(nodeRandomPosTwo, '.response3') },
+    function() { shuffleTestStat(nodeRandomPosThree, '.response4') },
+    function() { shuffleTestStat(nodeRandomPosFour, '.response5') }, 
+    function() { shuffleTestStat(nodeRandomPosFive, '.response6') },
+    function() { shuffleTestStat(nodeRandomPosSix, '.response7') },
+    function() { shuffleTestStat(nodeRandomPosSeven, '.response8') },
+    function() { shuffleTestStat(nodeRandomPosEight, '.response9') },
+    );
 }
 
 function transitionSixUp() {
-  return 'pass'
+  d3.selectAll('circle.extreme')
+    .attr('fill', 'pink')
+    .attr('stroke-width', 0.2)
 }
+
+// hacky way to ensure smallest node keeps relative size (idk why this is a problem, but this solves it!)
+let small_node_size_force = 5.5;
 
 function transitionSixDown() {
   // move llamas off-screen, test-statistics off-screen & hide titles
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
-  // d3.selectAll('.responseValue').transition().duration(2000).attr('cy', -2000) 
   d3.selectAll('.responseText').transition().duration(2000).attr('y', -2000) 
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'hidden')
 
-  // do stuff with test-statistic nodes
-  d3.selectAll('.testStatDsn')
-    .selectAll('.testStat')
+  // move nodes to distribution
+  d3.selectAll('circle.histogramNode')
     .transition()
-    .duration(2000)
-    .attr('transform', `translate(-50, -550) scale(${showScale}, ${showScale})`)
+    .duration(1400)
+    .attr('r', (d,i) => {
+      if (i === 190) small_node_size_force = d.radius / 1.05;
+      return i === 200 ? small_node_size_force : d.radius / 1.05;
+    })
+
+  svgD3.append("g")
+  .attr("class", "axis axis--x")
+  .attr("transform", "translate(0," + (height/1.12) + ")")
+  .call(d3.axisBottom(x));
 }
 
-function calculateTestStatistic() {
-  let testStatistics = d3.selectAll('.dot')
-  // Calculate TREATMENT mean
-  leftStats = testStatistics.filter(d => d.x < (width / 2) + 15)['_groups'][0];
-  leftMean = d3.mean(leftStats, d => d['__data__'].dotValue);
-  // Calculate CONTROL mean
-  rightStats = testStatistics.filter(d => d.x >= (width / 2) + 15)['_groups'][0];
-  rightMean = d3.mean(rightStats, d => d['__data__'].dotValue);
+function transitionSevenDown() {
+  d3.selectAll('circle.extreme')
+    .transition()
+    .duration(500)
+    .attr('r', (d,i) => i === 15 ? small_node_size_force + 2 : 2 + d.radius / 1.05)
+    .attr('stroke-width', .5)
+    .attr('fill', 'coral')
+    .transition()
+    .attr('r', (d,i) => i === 15 ? small_node_size_force : d.radius / 1.05)
+    .attr('stroke-width', 0.2)
+}
 
-  return leftMean - rightMean;
+function transitionSevenUp() {
+
+  svgD3.append("g")
+  .attr("class", "axis axis--x")
+  .attr("transform", "translate(0," + (height/1.12) + ")")
+  .call(d3.axisBottom(x));
+
+  d3.selectAll('circle.notExtreme')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
+
+  d3.selectAll('circle.extreme')
+    .transition()
+    .duration(1000)
+    .attr('transform', 'translate(0, 0)')
+
+  d3.selectAll('.finalText').remove()
+
 
 }
 
+function transitionEightDown() {
 
+  svgD3.append('text')
+    .attr('x', width / 3.1)
+    .attr('y', height / 1.105)
+    .text('n = 200')
+    .attr('class', 'finalText')
+    .style('font-family', 'Gaegu')
+    .attr('font-size', 0)
+    .transition()
+    .duration(1500)
+    .attr('font-size', 20)
+
+  svgD3.append('text')
+    .attr('x', width / 1.55)
+    .attr('y', height / 1.105)
+    .text('n = 16')
+    .attr('class', 'finalText')
+    .style('font-family', 'Gaegu')
+    // .style('font-weight', 'bold')
+    .attr('font-size', 0)
+    .transition()
+    .duration(1500)
+    .attr('font-size', 20)
+
+    svgD3.append('text')
+    .attr('x', width / 2.5)
+    .attr('y', margin * 2)
+    .text('P-Value: 16/200 = 0.08')
+    .attr('class', 'finalText')
+    .style('font-family', 'Gaegu')
+    .style('font-weight', 'bold')
+    .attr('font-size', 0)
+    .transition()
+    .delay(500)
+    .duration(1500)
+    .attr('font-size', 30)
+
+  // remove axis
+  d3.select('.axis--x').remove();
+
+  d3.selectAll('circle.notExtreme')
+    .transition()
+    .duration(1500)
+    .attr('transform', 'translate(-75,0)')
+
+  d3.selectAll('circle.extreme')
+    .transition()
+    .duration(1500)
+    .attr('transform', 'translate(75,0)')
+      
+}
+
+function transitionEightUp() {
+  d3.selectAll('circle')
+    .transition()
+    .duration(1000)
+    .attr('r', d => d.radius / 1.05)
+}
+function transitionExit() {
+  // d3.selectAll('circle')
+  //   .transition()
+  //   .duration(4000)
+  //   .attr('r', 0)
+}
 
