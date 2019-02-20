@@ -65,8 +65,11 @@
  				In statistical testing, experiments are often structured in terms of <a href="https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#The_testing_process">null & alternative</a> hypotheses.
  				<br><br> We'll develop a statistical test to see if the diet does effect the quality of our llama wool.<br><br>
  				Our test will have the following hypothesis schema<b>:</b>
-				$$ {H_0: \mu_{treatment} = \mu_{control}} $$
-				$$ {H_A: \mu_{treatment} \neq \mu_{control}} $$
+				<br><br>
+				&Eta;<sub>0</sub>: &mu;<sub>treatment</sub> = &mu;<sub>control</sub>
+				<br>
+				&Eta;<sub>A</sub>: &mu;<sub>treatment</sub> &ne; &mu;<sub>control</sub>
+				<br><br>
 				Our null hypothesis claims that the new llama diet has no effect<b>;</b> both the regular diet and the new diet yield the same wool quality. The alternative claims the opposite: different diets yield differences in wool quality.<br><br>
 <!-- 				We determine the experiment's results via a <a href="">p-value</a>. More on those soon.
  -->			</p>
@@ -103,8 +106,10 @@
 				<p>
 				Our <i>test statistic</i> is a numerical summary of our data that allows us to quantify the differences between our null and alternative hypotheses. 
 				<br><br>
-				A benefit of the permutation tests is that it allows us to use any numerical value that we want for our test statistic. Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two diets:
-				$$ {T = \mu_{treatment} - \mu_{control}} $$
+				A benefit of the permutation tests is that it allows us to use any numerical value that we want for our test statistic, &tau;. Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two diets:
+				<br><br>
+				&tau; = &mu;<sub>Treatment</sub> - &mu;<sub>Control</sub>
+					<br>
 				<br>
 				<!-- As you'll soon see, this value will be used to obtain our <i>p-value</i>. -->
 				Using our response values obtained earlier, we calculate our initial test statistic and save it for later.
@@ -156,9 +161,10 @@
 			<div class='step' data-step='9'>
 				<h2 class='subheader'>Our Results</h2>
 				<p> Only nine out of our two-hundred test statistics were more extreme than our initial test statistic (which had a value of ). 
-					<br><br> Thus, our p-value is:
-					$$ \text{P-Value} = 9 \ / \ 200 $$
-					$$ \ \ \approx 4\% $$
+					<br><br> Thus, our p-value is: 
+					<br><br> P-Value = 16 / 200
+					<br><br> &nbsp;&nbsp;&nbsp;&nbsp;= 0.8
+					<br><br>
 					In other words, if there really were no difference between the diets of our llamas, the probability of getting the differences in wool quality we did across the two diets is about four-percent. This is pretty unlikely, so we can determine that a tiny probability, and so unlikely* [in a real experiment, we call this threshold <i>level of significance</i>, and determine it a priori.] that we reject this original hypothesis and conclude that the new llama diet is having <i>some</i> effect on wool quality.
 				</p>
 			</div>
