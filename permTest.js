@@ -750,8 +750,8 @@ function transitionEightDown() {
     .attr('font-size', 20)
 
     svgD3.append('text')
-    .attr('x', width / 2.5)
-    .attr('y', margin * 2)
+    .attr('x', width / 2.8)
+    .attr('y', margin * 4)
     .text('P-Value: 16/200 = 0.08')
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
