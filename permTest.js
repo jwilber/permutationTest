@@ -117,6 +117,9 @@ const nodeInitialYPlacement = (d) => {
                                                       d3.randomNormal(4.5, .75)().toFixed(1),
                                                     'permDsn': d3.randomNormal(0, 1)().toFixed(1)
                                                     }));
+
+      console.log('sampledata here')
+      console.log(sampleData.filter(d => d.nodeGroup === 'llama'))
   
   // set params for force layout
 
@@ -265,6 +268,8 @@ function shuffleTestStat(nodePositions, responseNode) {
   randomizeNodes(nodePositions)
   // select chosen class and move it
   d3.selectAll(responseNode)
+    .transition()
+    .attr('r', d => d.radius / 0.8)
     .transition()
     .duration(800)
     .attr('r', d => d.radius / 1.05)
@@ -552,9 +557,22 @@ function transitionTwoDown() {
 
   respGroups.append('text')
     .attr('class', 'responseText')
-    .html(d => d.dotValue)
+    // .html(d => d.dotValue)
+    .html(d => {
+      if (d.dotValue == 9.4) {
+        return 4.4
+      } else if (d.dotValue == 8.2) {
+        return 5.8
+      } else if (d.dotValue == 9.1) {
+        return 4.1
+      } else if (d.dotValue == 8.7) {
+        return 7.7
+      } else {
+        return d.dotValue
+      }
+    })
     .attr('fill', 'white')
-    .style('font-size', '.8rem')
+    .attr('font-size', '.95rem')
     .attr('stroke', 'black')
     .attr('stroke-width', .45)
     .attr('x', 8.8)
@@ -567,8 +585,9 @@ function transitionTwoDown() {
     .transition()
     .delay(100)
     .attr('visibility', 'visible')
+    .attr('font-size', '1.2rem')
     .transition()
-    .delay(0)
+    .attr('font-size', '.95rem');
 
 }
 
@@ -584,6 +603,9 @@ function transitionThreeUp() {
 function transitionThreeDown() {
 
   d3.selectAll('circle.response1')
+    .transition()
+    .attr('r', d => d.radius / .8)
+    .attr('fill', 'coral')
     .transition()
     .attr('r', d => d.radius / 1.05)
     .attr('fill', 'coral')
@@ -607,6 +629,8 @@ function transitionFourDown() {
 
   // HIST ENTER
   d3.selectAll('circle.response2')
+    .transition()
+    .attr('r', d => d.radius / 0.8 )
     .transition()
     .attr('r', d => d.radius / 1.05)
 }
@@ -751,7 +775,7 @@ function transitionEightDown() {
 
     svgD3.append('text')
     .attr('x', width / 2.8)
-    .attr('y', margin * 4)
+    .attr('y', margin * 4 )
     .text('P-Value: 16/200 = 0.08')
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
