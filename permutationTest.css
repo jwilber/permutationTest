@@ -234,35 +234,32 @@ body, .scroll__graphic, svg {
   font-family: "Gaegu";
 }
 
-/* Tooltip container */
 .tooltip {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
-/* Tooltip text */
 .tooltip .tooltiptext {
+  font-size: .85rem;
   visibility: hidden;
-  width: 120px;
+  width: 11rem;
   background-color: black;
   color: #fff;
   text-align: center;
-  padding: 5px 0;
+  padding: 1px 0;
   border-radius: 6px;
- 
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
+  bottom: 30%;
+   position: absolute;
   z-index: 1;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
 
 .sidenote {
-  font-size: .75em;
+  font-size: .85em;
   float: right;
   margin: 0 -18em 0 0;
   width: 13em;

@@ -35,15 +35,21 @@
 			A Visual Explanation of Statistical Testing
 		</p>
 		<p class='intro__bod'>
-			<!-- Statistics is big right now, and <i>nothing</i> in the field is hotter than statistical testing.*
-			<span class='tooltip'>*<span class="tooltiptext"></span></span>
-			<span class="sidenote"><span style='font-size:25px;'>*</span> <i>Everything</i> in the field is hotter than statistical testing.</span> -->
-			Statistical tests, also known as hypothesis tests, are used in the design of experiments to measure the effect of some treatment(s) on experimental units. For example, we may wish to determine if drug A reduces the symptoms of a new virus, or whether or not Facebook's LIKE button using <span class="fb_highlight_one">this blue</span> instead of <span class="fb_highlight_two">this blue</span> yields a higher number of clicks. 
+			Statistical tests, also known as hypothesis tests, are used in the design of experiments to measure the effect of some treatment(s) on experimental units. 
+
+			<!-- For example, we can determine whether changing the color of Facebook's LIKE button (e.g. from <span class="fb_highlight_one">this blue</span> to <span class="fb_highlight_two">this blue</span>) results in higher user-engagement by comparing the average number of clicks for each color.
+			<br><br> -->
+
+			They are employed in a large number of contexts. Oncologists use them to measure the efficacy of new treatment options for cancer. Google uses them to determine which color of blue (e.g. <span class="fb_highlight_one">this blue</span> vs <span class="fb_highlight_two">this blue</span>) is most effective for outgoing links. 
+			And entomologists use them to study the sex habits of flies*<span class="sidenote"><span style='font-size:25px;'>*</span> Proof that, yes, statistics is definitely very sexy</span>.
+
+			<!-- And I use them to measure <a href="#">which pick-up line I should use on Tinder</a>. -->
+
+
 			<br><br>
 			Unfortunately, a lot of statistical tests require complex assumptions and convoluted formula. This is especially true of those methods taught in introductory courses, giving the false impression that experimental design is boring and unintuitive. 
-			But they're not all so bad!
-			 <!-- Enter the permutation test, a nonparametric statistical test that is powerful, light on assumptions*, and , as you'll see by scrolling below, very inuitive. -->
-			In what follows, I present a visual explanation for the permutation test: a badass nonparametric test that is light on assumptions, widely applicable, and very intuitive.
+			But fret not, my valued reader - not all tests are so bad!
+			In what follows, I present a visual explanation for the <a href="#">permutation test</a>: an awesome nonparametric test that is light on assumptions, widely applicable, and very intuitive.
 		</p>
 
 	</section>
@@ -57,19 +63,21 @@
 		</div>
 		<div class='scroll__text'>
 			<div class='step' data-step='1'>
-				<h2 class="subheader">You're a Llama Shepherd, Harry</h2>
+				<h2 class="subheader">You're An Alpaca Shepherd Now</h2>
 				<p>
-				You've finally achieved your lifelong dream: you're a llama shepherd.
- 				You would like to determine if a popular new llama diet increases the wool quality of your llamas.<br><br>
- 				In statistical testing, experiments are often structured in terms of <a href="https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#The_testing_process">null & alternative</a> hypotheses.
- 				<br><br> We'll develop a statistical test to see if the diet does effect the quality of our llama wool.<br><br>
+				You've finally achieved your lifelong dream: you're an alpaca shepherd. And like any alpaca shepherd will tell you, your foremost concern is the wool quality of your herd.<span class='tooltip'>*<span class="tooltiptext">this may or may not be true</span></span>  <br><br>
+				Word on the street in Cusco is that a popular new shampoo increases with wool quality of your llamas. But you're no sucker - you're going to find out for sure. You're going to test the difference with statistics.<br><br>
+ 				In statistical testing, we structure experiments in terms of <a href="https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#The_testing_process">null & alternative</a> hypotheses.
  				Our test will have the following hypothesis schema<b>:</b>
 				<br><br>
 				&Eta;<sub>0</sub>: &mu;<sub>treatment</sub> = &mu;<sub>control</sub>
 				<br>
 				&Eta;<sub>A</sub>: &mu;<sub>treatment</sub> &ne; &mu;<sub>control</sub>
+				<!-- <br><br>
+				Treatment llamas receive the shampoo. 
+				Control llamas do not. -->
 				<br><br>
-				Our null hypothesis claims that the new llama diet has no effect<b>;</b> both the regular diet and the new diet yield the same wool quality. The alternative claims the opposite: different diets yield differences in wool quality.<br><br>
+				Our null hypothesis claims that the new shampoo has no effect<b>;</b> both the regular shampoo and the new shampoo yield the same wool quality. The alternative claims the opposite: new shampoo yields superior wool quality.<br><br>
 <!-- 				We determine the experiment's results via a <a href="">p-value</a>. More on those soon.
  -->			</p>
 				
@@ -78,60 +86,64 @@
 			</div>
 			<div class='step' data-step='2'>
 				<h2 class='subheader'>Randomization</h2>
-				<p>Before carrying out our experiment, we must randomly assign half of our llamas to the new diet, and half to the old. <br><br>
-				We say that the llamas receiving the new diet belong to the <i>treatment</i> group, and the other llamas to the <i>control</i> group. The assignment of a llama to a given diet is known as its <i>treatment assignment</i>.
+				<p>As a first step, we randomly assign half of our sampled 	alpaca to the new shampoo, and half to the old. <br><br>
+				We say that the alpaca receiving the new shampoo belong to the <i>treatment</i> group, and the others to the <i>control</i> group. The assignment of an alpaca to a given diet is known as its <i>treatment assignment</i>.
 				<br><br>
-				Randomization of treatment assignment is very important. It removes bias and conofunding from our results, and provides the basis for the theory underpinning our statistical test.
+				Randomization of treatment assignment is very important. It removes bias and confunding from our results, and provides the basis for the theory underpinning our statistical test.
 				</p>
 			</div>
-			<br>
-			<br>
+			
 			<div class='step' data-step='3'>
-				<br>
-				<br><br><br><br><br><br>
 				<h2 class='subheader'>Response Values</h2>
 				<p>
-					After a sufficient amount of time has passed, we can begin to determine if the new diets had any effect.
+					After a sufficient amount of time has allowed the shampoo to take, we determine if the new shampoo has any effect on wool quality.
 					<br><br>
 					In statistics jargon, every experimental unit receives a response value. 
-					For us, that corresponds to each llama's measure of wool quality after the diet.
+					For us, each alpaca is an experimental unit. Each alpaca's measure of wool quality is its response value. 
 					<br><br>
-					While we can eyeball these values and determine any perceived differences between the two diets, we'll
-					have to create a <i>test statistic</i> to compare the diets with statistical rigor.
+					While we can eyeball these values and determine any perceived differences between the two diets, we'll need a more rigourous method to determine if any differences are <a href="https://www.statpac.com/surveys/statistical-significance.htm">statistically significant</a>.
 				 </p>
 			</div>
 			<div class='step' data-step='4'>
 				<h2 class='subheader'>Test Statistic</h2>
 				<p>
-				Our <i>test statistic</i> is a numerical summary of our data that allows us to quantify the differences between our null and alternative hypotheses. 
+				To determine whether or not the new shampoo is effective, we need a way to quantify the difference between our null and alternative hypotheses. 
 				<br><br>
-				A benefit of the permutation tests is that it allows us to use any numerical value that we want for our test statistic, &tau;. Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two diets:
+				Luckily for us, such a numerical summary exists: the <a href="https://en.wikipedia.org/wiki/Test_statistic">test statistic</a>.
 				<br><br>
-				&tau; = &mu;<sub>Treatment</sub> - &mu;<sub>Control</sub>
+				A benefit of the permutation test is that it allows us to use any numerical values that we want for our test statistic.<span class='tooltip'>*<span class="tooltiptext">many tests require complex test statistics</span></span> Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two shampoos:
+				<br><br>
+				<i>Test Statistic</i> = &mu;<sub>Treatment</sub> - &mu;<sub>Control</sub>
 					<br>
 				<br>
 				<!-- As you'll soon see, this value will be used to obtain our <i>p-value</i>. -->
-				Using our response values obtained earlier, we calculate our initial test statistic and save it for later.
+				<!-- Taking the mean difference in wool quality between groups and calculate our initial test statistic.
+				This provides us with a quantifiable  -->
+				To obtain our initial test statistic, we simply subtract the mean wool quality of the alpaca that used the new shampoo (treatment group) from the mean wool quality of the alpaca that did not use the new shampoo (control group).
 				 </p>
 			</div>
 			<div class='step' data-step='5'>
-				<h2 class='subheader'>The 'P' in  'Permutation Test'</h2>
+				<h2 class='subheader'>The 'P' in  'Permutation'</h2>
 				<p>
-					This is the most important step in the permutation test, as well as its namesake.
+					This is likely the most important step of the permutation test, and for sure its namesake.<span class='tooltip'>*<span class="tooltiptext">Although it's also called the 'randomization test'</span></span>
+					<!-- This is the most important step in the permutation test, as well as its namesake. -->
 					<br><br>
-					While keeping the same response values we received earlier, we permute (shuffle) the treatment assignments of our llamas, and re-calculate our test statistic.
+					While keeping the same response values we received earlier, we permute (shuffle) the treatment assignments of our alpaca, and re-calculate our test statistic.
 					<br><br>
-					We do this because we analyze the results of our experiment relative to the null hypothesis, which posits both llama diets (the new and the original) as having identical effects on fleece quality. 
+					We do this because we analyze the results of our experiment relative to the null hypothesis, which posits both shampoos (the new and the original) as having identical effects on wool quality. 
 					<br><br>
-					In other words, we think the new diet has no effect on the fleece quality of our llamas, so
-					shuffling the diets of our llamas and recalculating our test statistic (without re-running our experiment) won't matter - we'll obtain similar fleece quality values for both groups.
+					Thus, if the new shampoo has no effect on wool quality,
+					shuffling the shampoo label of our llamas and recalculating our test statistic (without re-running our experiment) won't matter - we'll obtain similar fleece quality values for both groups.
 					<br>
 				</p>
 			</div>
 			<div class='step' data-step='6'>
 				<h2 class='subheader'>More Permutations</h2>
 				<p>
-					Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values.
+					We do this over and over again, calculating many more permuted test statistics.
+					<br><br>
+	<!-- 				Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values. -->
+				Ideally, we'd calculate a test statistic for every possible permutation of shampoo assignment to our alpaca, creating an exact distribution of all possible test statistics under our null hypothesis.
 					<br><br>
 					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample enough permutations to build an approximation to our distribution. 
 					<br><br>
@@ -142,7 +154,7 @@
 			<div class='step' data-step='7'>
 				<h2 class='subheader'>Test Statistic Distribution</h2>
 				<p>
-					Eventually, after a sufficient number of permutated test statistic calculations, we create a test statistic distribution.
+					Once we've calculcated a sufficient number of permutated test statistic calculations, we have ourselves an approximate test statistic distribution.
 					<br><br>
 					This distribution approximates all possible mean-difference values we could have seen under the assumption that wool quality is independent of llama diet. 
 					<br><br>By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test: The magical <i>p-value</i>.
@@ -151,7 +163,7 @@
 			<div class='step' data-step='8'>
 				<h2 class='subheader'>The P-Value</h2>
 				<p>
-					The P-Value is simply the probability of observing the values we did, assuming the null hypothesis were true. For us, it's the probability of obtaining the differences in wool quality we did, assuming the diets did <i>not</i> affect wool quality. Thus, high p-values allow us to conclude that 
+					The P-Value is simply the probability of observing the values we did, assuming the null hypothesis were true. For us, it's the probability of obtaining the differences in wool quality we did, assuming the new shampoo did <i>not</i> increase wool quality. Thus, high p-values allow us to conclude that 
 
 					<br><br>
 					Calculating the p-value for a permutation test could not be simpler. We simply count the number of test-statistics <i> as or more extreme</i> than our initial test statistics, and divide that number by the total number of test-statistics we calculated.
@@ -174,7 +186,7 @@
 		<p><br></p><p><br></p><p><br></p>
 		<h2 class='subheader'> Conclusion</h2>
 		<p class='intro__bod'>
-			So that's the permutation test. Pretty simple, huh? To recap, the algorithm only comprises three steps:</p>
+			So that's the permutation test. Pretty simple. Pretty cool. Pretty intuitive. To recap, the algorithm only comprises three steps:</p>
 			<br>
 				<p class='intro__bod'>1). Determine & calculate initial test-statistic.</p>
 				<p class='intro__bod'>2). Create permuted distribution of test statistics.</p>
@@ -183,6 +195,8 @@
 			<p class='intro__bod'>
 			Not only is it simple, but it requires much less assumptions than other testing methods, 
 			Additionally, because it is nonparametric, it's free from the restriction of meeting particular assumptions for employment (e.g. sample size, ).
+			<br><br>
+			Thanks for reading.
 
 		</p>
 
