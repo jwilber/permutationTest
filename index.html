@@ -41,7 +41,8 @@
 			<br><br> -->
 
 			They are employed in a large number of contexts: Oncologists use them to measure the efficacy of new treatment options for cancer. Google uses them to determine which color of blue (e.g. <span class="fb_highlight_one">this blue</span> vs <span class="fb_highlight_two">this blue</span>) is most effective for outgoing links. 
-			And entomologists use them to study the sex habits of flies*<span class="sidenote"><span style='font-size:25px;'>*</span> Proof that, yes, statistics is definitely very sexy</span>.
+			And entomologists use them to study the sex habits of flies
+			<span class='tooltip'>*<span class="tooltiptext">Proof that, yes, statistics is definitely very sexy</span></span>.
 
 			<!-- And I use them to measure <a href="#">which pick-up line I should use on Tinder</a>. -->
 
@@ -239,6 +240,7 @@
 		var text = container.select('.scroll__text');
 		var step = text.selectAll('.step');
 
+
 		var scroller = scrollama();
 
 		// generic window resize listener event
@@ -251,9 +253,10 @@
 			graphic
 				.style('width', bodyWidth + 'px')
 				.style('height', window.innerHeight + 'px');
-			var chartMargin = 32;
+			var chartMargin = bodyWidth > 350 ? 32 : 10;
 			var textWidth = text.node().offsetWidth;
 			var chartWidth = graphic.node().offsetWidth - textWidth - chartMargin;
+			console.log('chartwidth:', chartWidth)
 			chart
 				.style('width', chartWidth + 'px')
 				.style('height', Math.floor(window.innerHeight / 1.2) + 'px');

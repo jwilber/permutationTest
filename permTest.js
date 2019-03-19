@@ -25,12 +25,15 @@ const svgD3 = d3.select('svg');
 const width = svgD3.node().getBoundingClientRect().width;
 const height = svgD3.node().getBoundingClientRect().height;
 const margin = 20;
-
+const mobileWidth = 350;
+console.log(width)
+console.log(height)
 // const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
 
 const trtCenter = width / 5;
 const cntrlCenter = width / 1.5;
 const heightMuCenter = height / 1.8;
+let scaleWidth = width > mobileWidth ? 0.75 : 0.35;
 
 // const radius = 5;
 
@@ -42,9 +45,17 @@ const nodeTreatmentWidth = (d) => {
   if (d.nodeGroup === 'resp' || d.nodeGroup === 'dsn') {
     return width / 2
   } else if (d.index % 2 == 0) {
-    return trtCenter
+    if (width > mobileWidth) {
+      return trtCenter
+    } else {
+      return trtCenter
+    }
   } else {
-    return cntrlCenter
+    if (width > mobileWidth) {
+      return cntrlCenter
+    } else {
+      return width / 1.35
+    }
   }
 };
 
@@ -59,14 +70,21 @@ const nodeTreatmentHeight = (d) => {
 };
 
 const nodeGroupInitialForceCollide = (d) => {
-    return d.nodeGroup === 'llama' ? 35 : 10;
+    // return d.nodeGroup === 'llama' ? 35 : 10;
+    if (d.nodeGroup === 'llama' & width > mobileWidth) {
+      return 35
+    } else if (d.nodeGroup === 'llama') {
+      return 18 // mobile cluster of llama
+    } else {
+      return 10
+    }
   }
 
 const nodeGroupMoveForceCollide = (d) => {
-  if (d.nodeGroup == 'resp') {
-    return 15
-  } else if (d.nodeGroup == 'llama') {
+  if (d.nodeGroup === 'llama' & width > mobileWidth) {
     return 37
+  } else if (d.nodeGroup === 'llama') {
+    return 14
   } else {
     return 0
   }
@@ -109,19 +127,15 @@ const nodeInitialYPlacement = (d) => {
     
 
   // dsn dots need to live off-screen, until the final dsn build (so don't mess w/ other nodes)
-      let sampleData = d3.range(250).map((d,i) => ({r: 40 - i * 0.5,
-                                                    value: width/2 + d3.randomNormal(0, 1.5)() * 50,
-                                                    nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
-                                                    dotValue: i % 2 === 0 ? 
-                                                      d3.randomNormal(7, 2.5)().toFixed(1): 
-                                                      d3.randomNormal(4.5, .75)().toFixed(1),
-                                                    'permDsn': d3.randomNormal(0, 1)().toFixed(1)
-                                                    }));
+  let sampleData = d3.range(250).map((d,i) => ({r: 40 - i * 0.5,
+                                                value: width/2 + d3.randomNormal(0, 1.5)() * 50,
+                                                nodeGroup: i <= 23 ? 'llama' : i <= 39 ? 'resp' : 'dsn',
+                                                dotValue: i % 2 === 0 ? 
+                                                  d3.randomNormal(7, 2.5)().toFixed(1): 
+                                                  d3.randomNormal(4.5, .75)().toFixed(1),
+                                                'permDsn': d3.randomNormal(0, 1)().toFixed(1)
+                                                }));
 
-      console.log('sampledata here')
-      console.log(sampleData.filter(d => d.nodeGroup === 'llama'))
-  
-  // set params for force layout
 
   const center = d3.forceCenter().x(centPositions.x).y(centPositions.y)
 
@@ -166,8 +180,12 @@ const nodeInitialYPlacement = (d) => {
         )
       })
     })
+
+
+    // get window height to help with scale
+    // console.log(document.body);
     // scale icon size
-    d3.selectAll('g.dot').selectAll('path').attr('transform', 'scale(.75)')
+    d3.selectAll('g.dot').selectAll('path').attr('transform', `scale(${scaleWidth})`)
 }
 
 var rc = rough.svg(svg);
@@ -176,7 +194,11 @@ d3.html("noun_28240_cc.svg", loadRoughsvgD3)
 
 function nodeRandomPos(d) {
   if (d.nodeGroup === 'llama') {
-    return d.index  <= 12 ? trtCenter : cntrlCenter;
+    if (width > mobileWidth) {
+      return d.index  <= 12 ? trtCenter : cntrlCenter;
+    } else {
+      return d.index  <= 12 ? trtCenter : (width / 1.35);
+    }
   } else {
     return (width / 2)
   }
@@ -340,21 +362,21 @@ function moveToCenter() {
 
 
 // group titles (transition 1 -> beyond)
-const treatmentTitleCenter = trtCenter
+const treatmentTitleCenter = trtCenter;
+// const treatmentTitleCenter = width > mobileWidth ? trtCenter : (width / 2);
 const controlTitleCenter =   cntrlCenter
 let treatmentTitle = svgD3.append('text')
   .html('TREATMENT')
-  .attr('x', treatmentTitleCenter - 10)
-  .attr('y', margin)
+  .attr('x', width > mobileWidth ? trtCenter - 10 : trtCenter - 30)
+  .attr('y', width > mobileWidth ? margin : (margin * 3))
   .attr('class', 'groupTitle')
-  // .style('fill', d3.rgb('coral').darker(2))
   .style('fill', 'black')
   .attr('text-align', 'right')
   .attr('visibility', 'hidden')
 let controlTitle = svgD3.append('text')
   .html('CONTROL')
   .attr('x', controlTitleCenter)
-  .attr('y', margin)
+  .attr('y', width > mobileWidth ? margin : (margin * 3))
   .attr('class', 'groupTitle')
   .style('fill', 'black')
   .attr('visibility', 'hidden')
@@ -549,6 +571,11 @@ function transitionTwoUp() {
     .attr('r', d => 0)
 }
 
+let responseTextSize = width > mobileWidth ? '0.95rem' : '0.5rem';
+  let responseTextX = width > mobileWidth ? 8.8 : 1;
+  let responseTextY = width > mobileWidth ? 52.2 : 24;
+  let responseTextStrokWidth = width > mobileWidth ? 0.45 : 0.25;
+
 function transitionTwoDown() {
       
   let respGroups = dots.filter(d => d.nodeGroup === 'llama')
@@ -557,7 +584,6 @@ function transitionTwoDown() {
 
   respGroups.append('text')
     .attr('class', 'responseText')
-    // .html(d => d.dotValue)
     .html(d => {
       if (d.dotValue == 9.4) {
         return 4.4
@@ -572,14 +598,16 @@ function transitionTwoDown() {
       }
     })
     .attr('fill', 'white')
-    .attr('font-size', '.95rem')
+    .attr('font-size', responseTextSize)
     .attr('stroke', 'black')
-    .attr('stroke-width', .45)
-    .attr('x', 8.8)
-    .attr('y', 52.2)
+    .attr('stroke-width', responseTextStrokWidth)
+    .attr('x', responseTextX)
+    .attr('y', responseTextY)
     .style('font-family', 'Gaegu')
     .attr('visibility', 'hidden')
     .raise()
+
+    
 
   d3.selectAll('.responseText')
     .transition()
@@ -587,7 +615,7 @@ function transitionTwoDown() {
     .attr('visibility', 'visible')
     .attr('font-size', '1.2rem')
     .transition()
-    .attr('font-size', '.95rem');
+    .attr('font-size', `${responseTextSize}`);
 
 }
 
@@ -604,16 +632,25 @@ function transitionThreeDown() {
 
   d3.selectAll('circle.response1')
     .transition()
-    .attr('r', d => d.radius / .8)
+    .attr('r', d => d.radius / .5)
     .attr('fill', 'coral')
     .transition()
     .attr('r', d => d.radius / 1.05)
-    .attr('fill', 'coral')
+
+  d3.select('circle.histCirc.response1.extreme')
+    .append('g')
+    .attr('class', 'fuck')
+    .append('text')
+    .html('FUCK')
+    .attr('font-size', '10.95rem')
+    .attr('x', width / 3.1)
+    .attr('y', height / 1.105)
 
 }
 
 function transitionFourUp() {
 
+  shuffleTestStat(nodeRandomPosTwo, '.response3')
   Array.from(Array(10).keys()).slice(3,10).map(i => '.response'.concat(i)).map( responseNode => {
       d3.selectAll(responseNode)
         .transition()
@@ -637,8 +674,8 @@ function transitionFourDown() {
 
 function transitionFiveUp() {
   // return llamas to their positions
-  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', 'translate(0, 0) scale(.8)');
-  d3.selectAll('.responseText').transition().duration(1600).attr('y', 52.2) 
+  d3.selectAll('.dot').selectAll('path').transition().duration(1600).attr('transform', `translate(0, 0) scale(${scaleWidth})`);
+  d3.selectAll('.responseText').transition().duration(1600).attr('y', responseTextY) 
   // re-add group titles
   d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'visible')
 
@@ -661,6 +698,7 @@ function transitionFiveUp() {
     .force('collision', d3.forceCollide(nodeGroupMoveForceCollide))
     .on('tick', changeNetwork)
   force.alpha(.1).restart();
+shuffleTestStat(nodeRandomPosFive, '.response6')
 }
 
 
