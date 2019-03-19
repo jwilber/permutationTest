@@ -1,6 +1,12 @@
+// Ensure refresh starts at top (so scrolly stuff doesn't get weird)
+window.onbeforeunload = function () {
+  window.scrollTo(0, 0);
+}
+
 //////////////////////////
 ////// util funcs ////////
 //////////////////////////
+
 
 function loop() {
   // loop through async func calls
@@ -25,7 +31,7 @@ const svgD3 = d3.select('svg');
 const width = svgD3.node().getBoundingClientRect().width;
 const height = svgD3.node().getBoundingClientRect().height;
 const margin = 20;
-const mobileWidth = 350;
+const mobileWidth = 390;
 console.log(width)
 console.log(height)
 // const roundPath = "M251.249,127.907c17.7,0,32.781-6.232,45.254-18.7c12.467-12.467,18.699-27.554,18.699-45.253 c0-17.705-6.232-32.783-18.699-45.255C284.029,6.233,268.948,0,251.249,0c-17.705,0-32.79,6.23-45.254,18.699 c-12.465,12.469-18.699,27.55-18.699,45.255c0,17.703,6.23,32.789,18.699,45.253C218.462,121.671,233.549,127.907,251.249,127.907 z";
@@ -383,10 +389,13 @@ let controlTitle = svgD3.append('text')
 
 
   // stuff for distribution
+  let dotDistRangeStart = width > mobileWidth ? (width / 4) : (width / 8);
+  let dotDistRangeEnd = width > mobileWidth ? (width / 1.5) : (width / 1.15);
+  let dotDistHeight = width > mobileWidth ? height : height - 35;
   //x scales
 const x = d3.scaleLinear()
     .domain(d3.extent(sampleData.filter(d => d.nodeGroup === 'dsn'), d => +d.permDsn))
-    .rangeRound([width/4, width/1.5]); // hist width(left, right)
+    .rangeRound([dotDistRangeStart, dotDistRangeEnd]); // hist width(left, right)
 
 const nbins = 18;
 
@@ -397,7 +406,7 @@ function assignResponseNodes(d,i) {
   }
 }
 
-function update(){
+function dotDistribution(){
 
     let data = sampleData.filter(d => d.nodeGroup === 'dsn')
 
@@ -418,7 +427,7 @@ function update(){
     let binContainerEnter = binContainer.enter()
       .append("g")
         .attr("class", "gBin")
-        .attr("transform", d => `translate(${x(d.x0)}, ${height})`)
+        .attr("transform", d => `translate(${x(d.x0)}, ${dotDistHeight})`)
 
     //need to populate the bin containers with data the first time
     binContainerEnter.selectAll(".preHistPosit")
@@ -465,7 +474,7 @@ function update(){
       })
       .transition()
         .attr("cx", 0) //g element already at correct x pos
-        .attr("cy", d => - d.idx * 2 * d.radius - d.radius - (height/8)) // control height here
+        .attr("cy", d => - d.idx * 2 * d.radius - d.radius - (dotDistHeight/8)) // control height here
         .attr("r", 0)
         .transition()
           .duration(800)
@@ -477,7 +486,7 @@ function update(){
           .attr('stroke', 'black')
 
     binContainerEnter.merge(binContainer)
-        .attr("transform", d => `translate(${x(d.x0)}, ${height})`)
+        .attr("transform", d => `translate(${x(d.x0)}, ${dotDistHeight})`)
 
     //enter/update/exit for circles, inside each container
     let dots = binContainer.selectAll("circle")
@@ -553,7 +562,7 @@ function transitionOneDown() {
     d3.select(this).transition().delay(800).attr('visibility', 'visible')
   })
 
-  update();
+  dotDistribution();
 
 }
 
@@ -735,7 +744,7 @@ function transitionSixDown() {
   // move llamas off-screen, test-statistics off-screen & hide titles
   d3.selectAll('.dot').selectAll('path').transition().duration(2000).attr('transform', `translate(0, ${-height})`);
   d3.selectAll('.responseText').transition().duration(2000).attr('y', -2000) 
-  d3.selectAll('.groupTitle').transition().delay(1400).attr('visibility', 'hidden')
+  d3.selectAll('.groupTitle').transition().delay(700).attr('visibility', 'hidden')
 
   // move nodes to distribution
   d3.selectAll('circle.histogramNode')
@@ -748,7 +757,7 @@ function transitionSixDown() {
 
   svgD3.append("g")
   .attr("class", "axis axis--x")
-  .attr("transform", "translate(0," + (height/1.12) + ")")
+  .attr("transform", "translate(0," + (dotDistHeight/1.12) + ")")
   .call(d3.axisBottom(x));
 }
 
@@ -768,7 +777,7 @@ function transitionSevenUp() {
 
   svgD3.append("g")
   .attr("class", "axis axis--x")
-  .attr("transform", "translate(0," + (height/1.12) + ")")
+  .attr("transform", "translate(0," + (dotDistHeight/1.12) + ")")
   .call(d3.axisBottom(x));
 
   d3.selectAll('circle.notExtreme')
@@ -786,22 +795,27 @@ function transitionSevenUp() {
 
 }
 
+let finalTextSize = width > mobileWidth ? 20 : 14;
+let finalTextY = width > mobileWidth ? (height / 1.105) : (height / 1.205);
+let finalTitleSize = width > mobileWidth ? 28 : 16;
+let finalTitleY = width > mobileWidth ? (margin * 4) : (height - margin * 1.5);
+
 function transitionEightDown() {
 
   svgD3.append('text')
-    .attr('x', width / 3.1)
-    .attr('y', height / 1.105)
+    .attr('x', width > mobileWidth ? (width / 3.1) : (width / 4))
+    .attr('y', finalTextY)
     .text('n = 200')
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
     .attr('font-size', 0)
     .transition()
     .duration(1500)
-    .attr('font-size', 20)
+    .attr('font-size', finalTextSize)
 
   svgD3.append('text')
-    .attr('x', width / 1.55)
-    .attr('y', height / 1.105)
+    .attr('x', width > mobileWidth ? (width / 1.55) : (width / 1.2))
+    .attr('y', finalTextY)
     .text('n = 16')
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
@@ -809,33 +823,36 @@ function transitionEightDown() {
     .attr('font-size', 0)
     .transition()
     .duration(1500)
-    .attr('font-size', 20)
+    .attr('font-size', finalTextSize)
 
     svgD3.append('text')
-    .attr('x', width / 2.8)
-    .attr('y', margin * 4 )
+    .attr('x', width > mobileWidth ? (width / 2.9) : (width / 3.2))
+    .attr('y', finalTitleY)
     .text('P-Value: 16/200 = 0.08')
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
-    .style('font-weight', 'bold')
+    .style('font-weight', width > mobileWidth ? 'bold' : '500')
     .attr('font-size', 0)
     .transition()
     .delay(500)
     .duration(1500)
-    .attr('font-size', 30)
+    .attr('font-size', finalTitleSize)
 
   // remove axis
   d3.select('.axis--x').remove();
 
+  // split dot distribution into two
+  let splitValue = width > mobileWidth ? 75 : 35;
+
   d3.selectAll('circle.notExtreme')
     .transition()
     .duration(1500)
-    .attr('transform', 'translate(-75,0)')
+    .attr('transform', `translate(-${splitValue},0)`)
 
   d3.selectAll('circle.extreme')
     .transition()
     .duration(1500)
-    .attr('transform', 'translate(75,0)')
+    .attr('transform', `translate(${splitValue + 5},0)`)
       
 }
 

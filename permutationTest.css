@@ -257,14 +257,6 @@ body, .scroll__graphic, svg {
   visibility: visible;
 }
 
-/*.sidenote {
-  font-size: .85em;
-  float: right;
-  margin: 0 -18em 0 0;
-  width: 13em;
-  line-height: normal;
-}*/
-
 ol {
 	font-family: 'Gaegu';
 	font-style: 2.3rem;
@@ -357,19 +349,23 @@ hr {
 
 @media (max-width: 600px) {
 
+	.intro__bod {
+		font-size: 1.2rem;
+	}
+
 	#scroll {
 		max-width: 100vw;
 		padding-right: 0;
 	}
 
 	.scroll__text {
-			position: relative;
-			padding: 0 .1rem;
-			width: 100%;
-		}
+		position: relative;
+		padding: 0 1rem;
+		width: 100%;
+	}
 
 	.step {
-		margin: 25rem auto;
+		margin: 20rem auto;
 	}
 
 	.groupTitle { 
@@ -380,7 +376,16 @@ hr {
 	}
 
 	body {
-  overflow-x: hidden;
+	  overflow-x: hidden;
+	}
+
+	p.intro__bod {
+		font-size: .86rem;
+		padding: 0 1rem;
+	}
+
+	.finalStep {
+		padding-bottom: 50rem;
+	}
 }
 
-}

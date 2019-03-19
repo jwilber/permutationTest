@@ -74,13 +74,10 @@
 				&Eta;<sub>0</sub>: &mu;<sub>treatment</sub> <= &mu;<sub>control</sub>
 				<br>
 				&Eta;<sub>A</sub>: &mu;<sub>treatment</sub> >  &mu;<sub>control</sub>
-				<!-- <br><br>
-				Treatment llamas receive the shampoo. 
-				Control llamas do not. -->
+
 				<br><br>
 				Our null hypothesis claims that the new shampoo does <i>not</i> increase wool quality. The alternative hypothesis claims the opposite; new shampoo yields superior wool quality.<br><br>
-<!-- 				We determine the experiment's results via a <a href="">p-value</a>. More on those soon.
- -->			</p>
+			</p>
 				
 
  			
@@ -171,10 +168,10 @@
 					To calculate the p-value for a permutation test, we simply count the number of test-statistics <i> as or more extreme</i> than our initial test statistic, and divide that number by the total number of test-statistics we calculated.
 				</p>
 			</div>
-			<div class='step' data-step='9'>
+			<div class='step finalStep' data-step='9'>
 				<h2 class='subheader'>Our Results</h2>
 				<p> 
-					<br><br> -->
+					<br><br>
 					Only nine out of our two-hundred test statistics were more extreme than our initial test statistic. 
 					<br><br> Thus, our p-value is: 
 					<br><br> P-Value = 16 / 200
@@ -184,6 +181,7 @@
 					<br><br>
 				</p>
 			</div>
+
 			
 		</div>
 	</section>
@@ -328,6 +326,7 @@
 		   } else if (response.index == 8 & response.direction == 'down'){
 			   	console.log('8 down')
 			   	transitionEightDown()
+			   	console.log(mobileWidth)
 		   } else {
 		   	console.log('else case, response index: ', response.index)
 		   }
