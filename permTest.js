@@ -374,7 +374,7 @@ const controlTitleCenter =   cntrlCenter
 let treatmentTitle = svgD3.append('text')
   .html('TREATMENT')
   .attr('x', width > mobileWidth ? trtCenter - 10 : trtCenter - 30)
-  .attr('y', width > mobileWidth ? margin : (margin * 3))
+  .attr('y', width > mobileWidth ? margin : (margin * 4))
   .attr('class', 'groupTitle')
   .style('fill', 'black')
   .attr('text-align', 'right')
@@ -382,7 +382,7 @@ let treatmentTitle = svgD3.append('text')
 let controlTitle = svgD3.append('text')
   .html('CONTROL')
   .attr('x', controlTitleCenter)
-  .attr('y', width > mobileWidth ? margin : (margin * 3))
+  .attr('y', width > mobileWidth ? margin : (margin * 4))
   .attr('class', 'groupTitle')
   .style('fill', 'black')
   .attr('visibility', 'hidden')
@@ -391,7 +391,7 @@ let controlTitle = svgD3.append('text')
   // stuff for distribution
   let dotDistRangeStart = width > mobileWidth ? (width / 4) : (width / 8);
   let dotDistRangeEnd = width > mobileWidth ? (width / 1.5) : (width / 1.15);
-  let dotDistHeight = width > mobileWidth ? height : height - 35;
+  let dotDistHeight = width > mobileWidth ? height : height/1.5;
   //x scales
 const x = d3.scaleLinear()
     .domain(d3.extent(sampleData.filter(d => d.nodeGroup === 'dsn'), d => +d.permDsn))
@@ -796,9 +796,9 @@ function transitionSevenUp() {
 }
 
 let finalTextSize = width > mobileWidth ? 20 : 14;
-let finalTextY = width > mobileWidth ? (height / 1.105) : (height / 1.205);
+let finalTextY = width > mobileWidth ? (height / 1.105) : (height / 1.605);
 let finalTitleSize = width > mobileWidth ? 28 : 16;
-let finalTitleY = width > mobileWidth ? (margin * 4) : (height - margin * 1.5);
+let finalTitleY = width > mobileWidth ? (margin * 4) : (height / 1.45);
 
 function transitionEightDown() {
 
@@ -809,6 +809,7 @@ function transitionEightDown() {
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
     .attr('font-size', 0)
+    .attr('font-weight', 'bold')
     .transition()
     .duration(1500)
     .attr('font-size', finalTextSize)
@@ -819,7 +820,7 @@ function transitionEightDown() {
     .text('n = 16')
     .attr('class', 'finalText')
     .style('font-family', 'Gaegu')
-    // .style('font-weight', 'bold')
+    .style('font-weight', 'bold')
     .attr('font-size', 0)
     .transition()
     .duration(1500)
