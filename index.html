@@ -178,15 +178,12 @@
 					<br><br> &nbsp;&nbsp;&nbsp;&nbsp;= 0.8
 					<br><br>
 					In other words, if it's truly the case that the new shampoo doesn't improve wool quality, then obtaining the initial difference in wool quality we did occurs with a probability of only 4%. That's an awfully low probability. So much so, in fact, that we reject our null hypothesis and accept our alternative: the new shampoo does appear to be increasing wool quality. Time to buy some more!
-					<br><br>
 				</p>
 			</div>
-
-			
+			<div class='step finalStep' data-step='10'>
 		</div>
 	</section>
-	<section id='intro'>
-		<p><br></p><p><br></p><p><br></p>
+	<section id='conclusion'>
 		<h2 class='subheader'> Conclusion</h2>
 		<p class='intro__bod'>
 
@@ -326,7 +323,6 @@
 		   } else if (response.index == 8 & response.direction == 'down'){
 			   	console.log('8 down')
 			   	transitionEightDown()
-			   	console.log(mobileWidth)
 		   } else {
 		   	console.log('else case, response index: ', response.index)
 		   }
@@ -344,7 +340,6 @@
 			graphic.classed('is-fixed', false);
 			graphic.classed('is-bottom', response.direction === 'down');
 			if (response.direction === 'down') {
-				console.log('exit baby');
 				transitionExit()
 			}
 		}

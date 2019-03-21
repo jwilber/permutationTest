@@ -40,6 +40,11 @@ a:hover {
 	margin: 1rem auto;
 	text-align: center;
 }
+#conclusion {
+	max-width: 45rem;
+	margin: 1rem auto;
+	text-align: center;
+}
 .intro__overline {
 	font-size: .8rem;
 }
@@ -61,6 +66,9 @@ a:hover {
 
 /* demo */
 #intro {
+	margin-bottom: 200px;
+}
+#conclusion {
 	margin-bottom: 200px;
 }
 #outro {
@@ -274,11 +282,18 @@ hr {
 	opacity: .25;
 }
 
+
 @media (max-width: 700px) {
 	#intro {
 		max-width: 25rem;
 		/*margin: 1rem auto;*/
 		text-align: center;
+	}
+	#conclusion {
+		max-width: 25rem;
+		/*margin: 1rem auto;*/
+		text-align: center;
+		margin-top: 0rem;
 	}
 	.intro__overline {
 		font-size: .8rem;
@@ -336,7 +351,7 @@ hr {
 	}
 
 	.step.is-active p {
-		font-size: 0.75rem;
+		font-size: 0.9rem;
 		/*font-weight: bold;*/
 	}
 
@@ -375,17 +390,33 @@ hr {
 	  font-family: "Gaegu";
 	}
 
-	body {
-	  overflow-x: hidden;
-	}
+	body { overflow-x: hidden; }
+	html { overflow-x: hidden; }​
 
 	p.intro__bod {
 		font-size: .86rem;
 		padding: 0 1rem;
 	}
+	svg {
+		/*padding-top: 8rem;*/
+	}
+	.step.finalStep.is-active {
+		max-height: 10rem;
+	}
+	/*.subheader{ padding-top: 0rem; }*/
+	#scroll {
+		margin-bottom: 0rem;
+	}
+	#conclusion {
+		margin-top: 0rem;
+	}
 
 	.finalStep {
-		padding-bottom: 50rem;
+		padding-bottom: 0rem;
+	}
+
+	.step.is-active {
+		/*background-color: coral;*/
 	}
 }
 
