@@ -5,30 +5,18 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Permutation Test: Visual Explanation</title>
-	<meta name="description" content="Scrollama Demo: Fixed CSS">
+	<meta name="description" content="Permutation Test: Visual Explanation">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js'></script>
-	<link rel="stylesheet" href="permutationTest.css">
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/rough.js/2.2.5/rough.min.js"></script>
-	<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.4/seedrandom.min.js"></script>
-	<!-- <script src=assets/d3v4.js></script> -->
-	<stylesheet href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
-	<!-- <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Just+Me+Again+Down+Here" /> -->
-	<style>
-    @import 'https://fonts.googleapis.com/css?family=Indie+Flower';
-
-	</style>
- 
-
-
+	<script src=assets/d3.min.js></script>
+	<link rel="stylesheet" href="css/permutationTest.css">
+	<script src=assets/rough.min.js></script>
+	<script src=assets/seedrandom.min.js></script>
 </head>
 
 <body>
 	<section id='intro'>
 		<p class='intro__overline'>
-			February 2019 By <a href='https://twitter.com/jdwlbr'>Jared Wilber</a>
+			March 2019 By <a href='https://twitter.com/jdwlbr'>Jared Wilber</a>
 		</p>
 		<h1 class='intro__hed'>The Permutation Test</h1>
 		<p class='intro__dek'>
@@ -37,15 +25,9 @@
 		<p class='intro__bod'>
 			Statistical tests, also known as hypothesis tests, are used in the design of experiments to measure the effect of some treatment(s) on experimental units. 
 
-			<!-- For example, we can determine whether changing the color of Facebook's LIKE button (e.g. from <span class="fb_highlight_one">this blue</span> to <span class="fb_highlight_two">this blue</span>) results in higher user-engagement by comparing the average number of clicks for each color.
-			<br><br> -->
-
 			They are employed in a large number of contexts: Oncologists use them to measure the efficacy of new treatment options for cancer. Google uses them to determine which color of blue (e.g. <span class="fb_highlight_one">this blue</span> vs <span class="fb_highlight_two">this blue</span>) is most effective for outgoing links. 
 			And entomologists use them to study the sex habits of flies
 			<span class='tooltip'>*<span class="tooltiptext">Proof that, yes, statistics is definitely very sexy</span></span>.
-
-			<!-- And I use them to measure <a href="#">which pick-up line I should use on Tinder</a>. -->
-
 
 			<br><br>
 			Unfortunately, a lot of statistical tests require complex assumptions and convoluted formula. This is especially true of those methods taught in introductory courses, giving the false impression that experimental design is boring and unintuitive. 
@@ -57,7 +39,6 @@
 	<section id='scroll'>
 		<div class='scroll__graphic'>
 			<div class='chart'>
-				<!-- <svg style="width:100%;height:100%;"> -->
 				<svg id='svg' style="width:100%;height:100%;"></svg>
 
 			</div>
@@ -67,7 +48,7 @@
 				<h2 class="subheader">You're An Alpaca Shepherd Now</h2>
 				<p>
 				You've finally achieved your lifelong dream: you're an alpaca shepherd. And like any alpaca shepherd will tell you, your foremost concern is the wool quality of your herd.<span class='tooltip'>*<span class="tooltiptext">this may or may not be true</span></span>  <br><br>
-				Word on the street in Cusco is that a popular new shampoo increases with wool quality of your alpaca. But you're no sucker - you're going to find out for sure. You're going to test the difference with statistics.<br><br>
+				Word on the street in Cusco is that a popular new shampoo increases the wool quality of your alpaca. But you're no sucker - you're going to find out for sure. You're going to test the difference with statistics.<br><br>
  				In statistical testing, we structure experiments in terms of <a href="https://en.wikipedia.org/wiki/Statistical_hypothesis_testing#The_testing_process">null & alternative</a> hypotheses.
  				Our test will have the following hypothesis schema<b>:</b>
 				<br><br>
@@ -76,11 +57,10 @@
 				&Eta;<sub>A</sub>: &mu;<sub>treatment</sub> >  &mu;<sub>control</sub>
 
 				<br><br>
-				Our null hypothesis claims that the new shampoo does <i>not</i> increase wool quality. The alternative hypothesis claims the opposite; new shampoo yields superior wool quality.<br><br>
+				Our null hypothesis claims that the new shampoo does <i>not</i> increase wool quality. The alternative hypothesis claims the opposite; new shampoo yields superior wool quality.
+				<br><br>
 			</p>
 				
-
- 			
 			</div>
 			<div class='step' data-step='2'>
 				<h2 class='subheader'>Randomization</h2>
@@ -96,38 +76,37 @@
 				<p>
 					After giving each alpaca its designated shampoo, we determine if the new shampoo has any effect on wool quality.
 					<br><br>
-					In statistics jargon, every experimental unit receives a response value. 
-					For us, each alpaca is an experimental unit. Each alpaca's measure of wool quality is its response value. 
+					In statistics jargon, every experimental unit has a <i>response</i> value. 
+					For us, each alpaca is an experimental unit, and its measure of wool quality after taking its shampoo is its response value. 
 					<br><br>
-					While we can eyeball these values and determine any perceived differences between the two shampoos, we'll need a more rigourous method to determine if any differences are <a href="https://www.statpac.com/surveys/statistical-significance.htm">statistically significant</a>.
+					We can eyeball these values ourselves and get a feel for any perceived differences between the two shampoos. However, , we'll need a more rigourous method to determine if the differences are <a href="https://www.statpac.com/surveys/statistical-significance.htm">statistically significant</a>.
 				 </p>
 			</div>
 			<div class='step' data-step='4'>
 				<h2 class='subheader'>Test Statistic</h2>
 				<p>
-				To determine whether or not the new shampoo is effective, we need a way to quantify the difference between our null and alternative hypotheses. 
+				To determine whether or not the new shampoo really is effective, we need a way to quantify the difference between our null and alternative hypotheses. 
 				<br><br>
 				Luckily for us, such a numerical summary exists: the <a href="https://en.wikipedia.org/wiki/Test_statistic">test statistic</a>.
 				<br><br>
-				A benefit of the permutation test is that it allows us to use any numerical value that we want for our test statistic.<span class='tooltip'>*<span class="tooltiptext">many tests require complex, specificc test statistics</span></span> Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two shampoos:
+				A benefit of the permutation test is that it allows us to use any numerical value that we want for our test statistic.<span class='tooltip'>*<span class="tooltiptext">many other tests require complex, specificc test statistics</span></span> Because our analysis is fairly straightforward, we'll simply use the difference in mean response values between the two shampoos:
 				<br><br>
 				<i>Test Statistic</i> = &mu;<sub>Treatment</sub> - &mu;<sub>Control</sub>
 					<br>
 				<br>
-				To obtain our initial test statistic, we simply subtract the mean wool quality of the alpacas that used the new shampoo (treatment group) from the mean wool quality of the alpacas that did not use the new shampoo (control group).
+				To obtain our initial test statistic, we simply subtract the mean wool quality of the alpacas that used the new shampoo (<i>treatment group</i>) from the mean wool quality of the alpacas that did not use the new shampoo (<i>control group</i>).
 				 </p>
 			</div>
 			<div class='step' data-step='5'>
 				<h2 class='subheader'>The 'P' in  'Permutation'</h2>
 				<p>
-					This is likely the most important step of the permutation test, and for sure its namesake.<span class='tooltip'>*<span class="tooltiptext">Although it's also called the 'randomization test'</span></span>
-					<!-- This is the most important step in the permutation test, as well as its namesake. -->
+					Enter the most important step of the permutation test, as well as its namesake.<span class='tooltip'>*<span class="tooltiptext">It's also called the 'randomization test'</span></span>
 					<br><br>
 					While keeping the same response values we received earlier, we permute (shuffle) the treatment assignments of our alpaca, and re-calculate our test statistic.
 					<br><br>
 					We do this because we analyze the results of our experiment relative to the null hypothesis, which posits the new shampoo as having no benefit on wool quality. 
 					<br><br>
-					Thus, if the new shampoo truly doesn't improve wool quality, shuffling the shampoo label of our alpaca and recalculating our test statistic  won't matter - we'll obtain similar wool quality values for both groups.
+					While this may seem a bit odd, the logic is quite simple: if the new shampoo truly doesn't improve wool quality, shuffling the shampoo label of our alpaca and recalculating our test statistic  won't matter - we'll obtain similar wool quality values for both groups.
 					<br>
 				</p>
 			</div>
@@ -136,21 +115,18 @@
 				<p>
 					We repeat this process, permuting our data over and over again, and recalculate a test statistic at each iteration.
 					<br><br>
-	<!-- 				Ideally, we'd recalculate our test statistics across all diet assignment permutations among our llamas, creating a distribution of <i>all</i> possible test statistic values. -->
-				Ideally, we'd calculate a test statistic for <i>every</i> possible permutation of shampoo assignment among our alpaca - doing so would create an exact distribution of all possible test statistics under our null hypothesis.
+				Ideally, we'd calculate a test statistic for <i>every</i> possible permutation of shampoo assignment among our alpaca. This would create an exact distribution of all possible test statistics under our null hypothesis.
 					<br><br>
-					Unfortunatley, this number is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality, so instead we resample enough permutations to build an approximation to our distribution. 
+					Unfortunatley, calculating every permutation is often <a href="https://en.wikipedia.org/wiki/Factorial">far too large</a> for practicality. No worries! Instead we'll resample enough permutations to build an approximation to our distribution, as that'll work just as well.
 					<br><br>
-					
-					
 				</p>
 			</div>
 			<div class='step' data-step='7'>
 				<h2 class='subheader'>Test Statistic Distribution</h2>
 				<p>
-					Eventually, after a sufficient number of permutations, we create an approximate test statistic distribution.
+					Eventually, after some sufficient number of permutations, we create the approximate test statistic distribution.
 					<br><br>
-					This distribution approximates all possible test statistic values we could have seen <i>under the null hypothesis</i>. We can then use this distribution to obtain probabilities associated with different mean-difference values<span class='tooltip'>*<span class="tooltiptext">Or whatever calculation you used for your test statistic</span></span> , where we assume that wool quality does not increase with the new shampoo.
+					This distribution approximates all possible test statistic values we could have seen <i>under the null hypothesis</i>. We can then use this distribution to obtain probabilities associated with different mean-difference values<span class='tooltip'>*<span class="tooltiptext">Or whatever calculation you used for your test statistic</span></span> , where we assume that wool quality does not increase with the new shampoo. 
 					<br><br>
 					By observing where our initial test statistic falls within this distribution, we obtain the final piece for our test: The magical <a href="#">p-value</a>.
 				</p>
@@ -158,26 +134,29 @@
 			<div class='step' data-step='8'>
 				<h2 class='subheader'>The P-Value</h2>
 				<p>
-					A p-value represents the probability of observing the values you did, assuming the null hypothesis is true. For us, it's the probability of obtaining the differences in wool quality we did, assuming the new shampoo did <i>not</i> increase wool quality. 
+					A p-value represents the probability of obtaining the observed values, assuming the null hypothesis is true. For us, it's the probability of obtaining the differences in wool quality we did, <i>assuming the new shampoo did not increase wool quality</i>. 
 					<br><br>
-
-					For example, a high p-value indicates that seeing the difference in wool quality we did has a high probability of occuring, <i>when the new shampoo does not increase wool quality</i> (our null hypothesis). 
-					<!-- In such an event, we'd fail to reject the null hypothesis.  -->
-					A low p-value indicates the opposite: the difference in wool quality we obtained is rare if we assume the null hypothesis, thus providing evidence against it.
-					<br><br>
-					To calculate the p-value for a permutation test, we simply count the number of test-statistics <i> as or more extreme</i> than our initial test statistic, and divide that number by the total number of test-statistics we calculated.
+					 To determine the outcome of our test, we compare our p-value to a <a href="https://statisticsbyjim.com/glossary/significance-level/">significance level</a>. This should be determined a prioir, but we'll just say ours is 10%.
+					 If the p-value is less than or equal to the significance level, we reject the null hypothesis; the outcome is said to be statistically significant.
+					 <br><br>
+					 For us, a low p-value signals that, assuming the null hypothesis is true, the probability of obtaining our initial differences in wool quality occurs with a low probability. A high p-value signals the opposite, such an outcome is likely under the null hypothesis.
+					 <br><br>
+					
 				</p>
 			</div>
 			<div class='step finalStep' data-step='9'>
 				<h2 class='subheader'>Our Results</h2>
 				<p> 
+					To calculate the p-value for a permutation test, we simply count the number of test-statistics <i> as or more extreme</i> than our initial test statistic, and divide that number by the total number of test-statistics we calculated.
 					<br><br>
-					Only nine out of our two-hundred test statistics were more extreme than our initial test statistic. 
+					In our case, only sixteen out of our two-hundred test statistics were as or more extreme than our initial test statistic. 
 					<br><br> Thus, our p-value is: 
 					<br><br> P-Value = 16 / 200
-					<br><br> &nbsp;&nbsp;&nbsp;&nbsp;= 0.8
+					<br><br> &nbsp;&nbsp;&nbsp;&nbsp;= 0.08
+					<br><br> &nbsp;&nbsp;&nbsp;&nbsp;= 8%
 					<br><br>
-					In other words, if it's truly the case that the new shampoo doesn't improve wool quality, then obtaining the initial difference in wool quality we did occurs with a probability of only 4%. That's an awfully low probability. So much so, in fact, that we reject our null hypothesis and accept our alternative: the new shampoo does appear to be increasing wool quality. Time to buy some more!
+					In other words, if it's truly the case that the new shampoo doesn't improve wool quality, then obtaining the initial difference in wool quality we did occurs with a probability of only 8%. 
+					<br><br>That's a fairly low probability. In fact, at our 10% level of significance, we reject our null hypothesis and accept our alternative: the new shampoo does appear to be increasing wool quality. Time to buy some more!
 				</p>
 			</div>
 			<div class='step finalStep' data-step='10'>
@@ -187,21 +166,19 @@
 		<h2 class='subheader'> Conclusion</h2>
 		<p class='intro__bod'>
 
-			So that's the permutation test, or at least my attempt at explaining it. Pretty cool. Pretty simple. And (hopefully) pretty intuitive.
+			So that's the permutation test, or at least my attempt at explaining it. Pretty cool. Pretty simple. And, hopefully, pretty intuitive.
 
-<!-- 			At this point, you may be thinking to yourself, "Wow, Jared, that is one cool statistical test!" To which I respond: you bet your ass it is.  It's also simple. And intuitive.
- -->	<br><br>
+ 	<br><br>
 			 To recap, the algorithm comprises three steps:</p>
 			<br>
 				<p class='intro__bod'>1). Determine & calculate the initial test-statistic.</p>
 				<p class='intro__bod'>2). Construct approximate test-statistic distribution.</p>
-				<p class='intro__bod'>3). Calculate the p-value..</p>
+				<p class='intro__bod'>3). Calculate the p-value.</p>
 			<br>
 			<p class='intro__bod'>
-<!-- 			As a method of inference, it is versatile, effective, and widely applicable. Moreover,
-			its simulation-based approach removes any cognitive load away from pains of traditional testing methods (e.g. ), to more important aspect of statistical testing, such as selecting an appropriate test-statistic to model the null hypothesis. -->
-			To be fair, this was not an <i>exhaustive</i> treatment of the method (check out the resource below!), and there are some things I left out. But I hope it was helpful in explaining the permutation test specifically, and, more broadly, for communicating that statistics is more than just memorizing formulae. <br><br>
-			In any case, I just hope that at some point you found yourself muttering aloud to yourself, "Woah, statistic <i>is</i> kind of cool." To which I'd respond yes, anonymous reader - you bet your ass it is.  
+			This was not an <i>exhaustive</i> treatment of the statistical testing, some things were left out. But I hope it was helpful in explaining the permutation test, and, more broadly, for communicating that statistical testing involves more than just memorizing formulae. 
+			<br><br>
+			In any case, I just hope that at some point you found yourself muttering aloud to yourself, "Woah, statistics <i>is</i> kind of cool." To which I'd respond yes, anonymous reader - you're damn right it is.  
 			<br><br>
 
 		</p>
@@ -223,8 +200,7 @@
 			
 	</section>
 	<div class='debug'></div>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/scrollama/1.3.0/scrollama.js'></script>
-	<!-- <script src=assets/scrollama.js></script> -->
+	<script src=assets/scrollama.min.js></script>
 	<script>
 		// seet seed so numbers are always the same
 		Math.seedrandom('seed');
@@ -329,14 +305,10 @@
 		 } 
 
 		function handleContainerEnter(response) {
-			// response = { direction }
-			// sticky the graphic (old school)
 			graphic.classed('is-fixed', true);
 			graphic.classed('is-bottom', false);
 		}
 		function handleContainerExit(response) {
-			// response = { direction }
-			// un-sticky the graphic, and pin to top/bottom of container
 			graphic.classed('is-fixed', false);
 			graphic.classed('is-bottom', response.direction === 'down');
 			if (response.direction === 'down') {
@@ -345,11 +317,7 @@
 		}
 
 		function init() {
-			// 1. force a resize on load to ensure proper dimensions are sent to scrollama
 			handleResize();
-			// 2. setup the scroller passing options
-			// this will also initialize trigger observations
-			// 3. bind scrollama event handlers (this can be chained like below)
 			scroller.setup({
 				container: '#scroll',
 				graphic: '.scroll__graphic',
@@ -360,13 +328,11 @@
 				.onStepEnter(handleStepEnter)
 				.onContainerEnter(handleContainerEnter)
 				.onContainerExit(handleContainerExit);
-			// setup resize event
 			window.addEventListener('resize', handleResize);
 		}
-		// kick things off
 		init();
 	</script>
-	<script src="permTest.js"></script>
+	<script src="js/permutationTest.js"></script>
 </body>
 
 </html>
